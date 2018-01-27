@@ -8,8 +8,7 @@ import { AddcollectionComponent } from '@collections/start/addcollection/addcoll
 import { CanDeactivateGuard } from '@collections/start/can-deactivate-guard.service';
 import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
-import { CollectioncomponentComponent } from '@collections/collection/collectioncomponent/collectioncomponent.component';
-import { PageComponent } from '@collections/collection/page/page.component';
+import { PageComponent, PagesComponent } from '@collections/collection/page/page.component';
 
 const collectionsRoutes: Routes = [
     {
@@ -19,7 +18,10 @@ const collectionsRoutes: Routes = [
           { path: '', component: IndexComponent},
           { path: ':string', component: CollectionComponent,
           children: [
-             {path: ':string', component: CollectioncomponentComponent}
+             {path: 'pages', component:  PagesComponent},
+             {path: 'forums', component: PagesComponent},
+             {path: 'videos', component: PagesComponent},
+             {path: 'photos', component: PagesComponent}
           ]}
       ]
   },

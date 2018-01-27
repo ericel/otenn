@@ -13,9 +13,11 @@ import { CanDeactivateGuard } from '@collections/start/can-deactivate-guard.serv
 import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { NotifyService } from '@shared/services/notify.service';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
-import { CollectioncomponentComponent } from '@collections/collection/collectioncomponent/collectioncomponent.component';
-import { PageComponent } from './collection/page/page.component';
+import { PageComponent, PagesComponent } from './collection/page/page.component';
 import { NgMasonryGridModule } from 'ng-masonry-grid';
+import { ForumsComponent } from './collection/forums/forums.component';
+import { PhotosComponent } from './collection/photos/photos.component';
+import { VideosComponent } from './collection/videos/videos.component';
 
 
 
@@ -35,9 +37,12 @@ import { NgMasonryGridModule } from 'ng-masonry-grid';
     AddcollectionComponent,
     AddpageComponent,
     EditcollectionComponent,
-    CollectioncomponentComponent,
     PageComponent,
-    COLLECTION_COMPONENTS
+    PagesComponent,
+    COLLECTION_COMPONENTS,
+    ForumsComponent,
+    PhotosComponent,
+    VideosComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, ]
 

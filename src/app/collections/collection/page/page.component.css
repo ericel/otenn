@@ -73,6 +73,43 @@
 .text-muted-m {
   color: rgba(51, 51, 51, 0.6196078431372549);
 }
+
+/*PAGES CSS */
+.mat1-card img {
+  width: 100% !important;
+}
+.mat-card {
+  height: 350px;
+}
+.mat-card-image {
+  height: 200px;
+}
+
+.collection-card {
+  color: #fff;
+}
+.checkit {
+  position: absolute;
+  top: 35px;
+  left: 25px;
+  z-index: 999;
+}
+.collection-img {
+  position: absolute;
+  top: 150px;
+  margin-bottom: 10px;
+}
+.text-muted {
+  margin-top: 10px;
+  color: rgba(255,255,255,0.54) !important;
+}
+.collection-img img {
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+}
+
+/* END PAGES CSS */
 @media screen and (max-width: 992px){
   .h1, h1 {
     font-size: 1.5rem;
