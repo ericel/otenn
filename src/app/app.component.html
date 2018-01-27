@@ -1,20 +1,50 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<app-notify></app-notify>
+<mat-drawer-container class="nav-container"
+autosize
+[class.side-is-mobile]="mobileQuery.matches"
+>
+<app-header [mobilequery]="mobileQuery.matches"
+(toggleDrawer)="onToggle($event)"
+></app-header>
+
+
+<mat-drawer   #drawer class="nav-sidenav" mode="over">
+  <div class="card-header">Side Menu</div>
+<mat-nav-list>
+    <a mat-list-item><mat-icon>send</mat-icon> <span>Send Money</span> </a>
+    <a mat-list-item><mat-icon>pages</mat-icon> <span>Blogs</span> </a>
+    <a mat-list-item><mat-icon>business_center</mat-icon> <span>Become a Dealer</span> </a>
+    <a mat-list-item><mat-icon>supervisor_account</mat-icon> <span>Otenn Users</span> </a>
+    <a mat-list-item routerLink="about" routerLinkActive="active"><mat-icon>info_outline</mat-icon> <span>About Otenn</span> </a>
+    <mat-divider></mat-divider>
+    <a mat-list-item routerLink="contact" routerLinkActive="active"><mat-icon>mail</mat-icon> <span> Contact Us </span></a>
+    <a mat-list-item><mat-icon>help</mat-icon> <span>Frequently Asked Questions</span> </a>
+    <a mat-list-item><mat-icon>trending_up</mat-icon> <span>Getting started</span> </a>
+  </mat-nav-list>
+</mat-drawer>
+
+  <router-outlet></router-outlet>
+
+  <app-footer></app-footer>
+</mat-drawer-container>
+<!--<div class="side-container" [class.side-is-mobile]="mobileQuery.matches">
+  <mat-toolbar color="primary" class="side-toolbar mat-elevation-z6">
+    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    <h1 class="side-app-name"><img src="./assets/logo.png"></h1>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="side-sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-nav-list>
+        <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <p *ngFor="let content of fillerContent">{{content}}</p>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>-->
 

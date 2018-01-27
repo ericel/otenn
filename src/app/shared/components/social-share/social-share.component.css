@@ -1,0 +1,14 @@
+.share-top .count {
+    position: absolute;
+    top: -25px;
+    left: 0px;
+    right: 0px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+
+.share-top .fa-2x {
+    font-size: 1.4em;
+}
+.share-top button:focus { outline: thin dotted; }

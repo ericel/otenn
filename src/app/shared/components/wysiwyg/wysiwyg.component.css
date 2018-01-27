@@ -1,0 +1,17 @@
+.richtextfield {
+  width: 100%;
+  border: none;
+  display: block;
+  min-height: 100vh;
+}
+.richtextfield img {
+  max-width: 100%;
+}
+.close-btn {
+  position: absolute;
+  top:5px;
+  right: 5px;
+}
+.button-row button{
+  margin: 5px 10px;
+}

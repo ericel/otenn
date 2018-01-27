@@ -1,0 +1,20 @@
+
+.collection-name-pick {
+
+}
+.collection-name-pick .input-group-lg>.form-control, .input-group-lg>.input-group-addon, .input-group-lg>.input-group-btn>.btn {
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 2.5;
+}
+.startform {
+  display: block;
+  padding: 30px 0;
+}
+
+@media screen and (min-width: 922px) {
+  .collection-input {
+    max-width: 700px;
+    margin: 70px auto;
+  }
+}

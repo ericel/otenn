@@ -1,1 +1,265 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+    margin:0;
+    padding:0;
+    height:auto;
+ }
+body {
+    background-color:#e5e5e5;
+    /* Margin bottom by footer height */
+    font: inherit;
+    vertical-align: baseline;
+    min-height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column nowrap;
+    flex-flow: column nowrap;
+    font-family: Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-size: 1em;
+    line-height: 1.3em;
+    color: #242729;
+}
+.mat-drawer-container {
+    background-color: #f1f1f1;
+}
+img {
+    width: 100%;
+    height: auto;
+}
+a {
+    color: #006064;
+
+}
+a:hover{
+    color: #00c7ce;
+    text-decoration: none;
+}
+a:active{
+    text-decoration: none;
+}
+embed,
+iframe,
+object,
+video {
+    max-width: 100%;
+}
+.main {
+    /*align-items: center;
+    justify-content: center;*/
+    padding-top: 75px;
+    min-height: 789px;
+}
+.drop-1 {
+    position: absolute;
+    z-index: 0 !important;
+    top: 48px;
+    right: -30px;
+    padding: 0 10px;
+    width: 250px;
+}
+.acpt-1 {
+    height: 100px;
+    background: #00897b;
+    text-align: center;
+    line-height: 100px;
+}
+.facebook {
+    background-color: #29487d;
+}
+.google {
+    background-color: #e0482f;
+}
+.justify-vertically {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+}
+
+.title_h {
+    padding: 20px 0;
+}
+.desc_01 {
+    font: 300 24px/32px Roboto,sans-serif;
+    letter-spacing: -.01em;
+    margin: 40px 0 20px;
+}
+.mar-30 {
+    margin: 30px 0;
+}
+.mar-10 {
+    margin: 10px 0;
+}
+.mar-20 {
+    margin: 20px 0;
+}
+.btn-100 {
+    width:100%;
+    padding: 10px 0;
+}
+.padding-30{
+    padding: 30px 0 !important;
+}
+.padding-30 .mat-button-wrapper{
+    font-size: 1.8em;
+    font-weight: bold;
+}
+.padding-10{
+    padding: 10px 0 !important;
+}
+.padding-10 .mat-button-wrapper{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.mat-dialog-container{
+    padding: 0px !important;
+    min-width: 300px;
+    min-height: 300px;
+    background: transparent;
+    box-shadow: none !important;
+}
+.mat-card.nopadding{
+    padding: 0px;
+}
+.or-cl {
+    position: relative;
+    right:0px;
+    left: 0px;
+    width:80%; text-align:center; border-bottom: 1px solid #eee; line-height:0.1em; margin:20px auto;
+
+}
+.or-cl span {
+   background:rgb(216, 214, 214);
+   padding:0 10px;
+   color: #333;
+   border-radius: 4px;
+}
+.signupbuttons {
+    padding-bottom: 10px;
+}
+.signupbuttons button{
+  width: 100%;
+  padding: 10px 0;
+  margin: 2px 0;
+  color: #fff;
+}
+.signupbuttons .fa {
+    padding-right: 10px;
+}
+/* Pop-Over */
+.pop-over {
+    position: absolute;
+    margin-top: 50.9px !important;
+}
+.collections .mat-list .mat-list-item .mat-list-item-content:hover
+, .collections .mat-nav-list .mat-list-item-content.mat-list-item-focus {
+  background: #eee !important;
+  border-right: solid 2px #006064 !important;
+}
+.collections .mat-list .mat-list-item, .mat-nav-list .mat-list-item, .mat-selection-list .mat-list-item {
+  color: rgba(136, 122, 122, 0.87);
+}
+.card-block {
+  padding: 10px;
+}
+.mat-spinner.indicator {
+  margin: 0 auto;
+}
+.mat-list-icon {
+
+  overflow: hidden;
+}
+.mat-icon {
+  display: inline-flex;
+  vertical-align: middle;
+}
+/*Color Picker*/
+.color-selector {
+  padding: 15px;
+  text-align: center;
+  margin: 0 auto;
+}
+ .color-selector i{
+  color: #efefef;
+  cursor: pointer;
+}
+.selector {
+  padding: 5px;
+}
+.color {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  float: left;
+}
+.color:hover {
+  border: 2px solid darkgrey;
+}
+.icon {
+  font-size: 1.4rem;
+  color: grey;
+  cursor: pointer;
+}
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  width:100%;
+}
+
+.collections .mat-list .mat-list-item .mat-list-item-content:hover, .collections .mat-nav-list .mat-list-item-content.mat-list-item-focus {
+  background: rgba(238, 238, 238, 0) !important;
+  border-right: solid 2px #006064 !important;
+}
+.collections .mat-card-image {
+  min-height: 250px;
+  max-height: 300px;
+}
+.left .mat-list-text, .afix {
+  color: rgb(214, 208, 208) !important;
+}
+.left .h4 a {
+  color: aliceblue !important;
+}
+.menu-button .mat-icon-button .mat-icon, .menu-button .mat-icon-button i {
+  color: #fff !important;
+}
+@media screen and (max-width: 991px){
+    .drop-1 {
+        right: -70px;
+    }
+
+    .heading{
+        font-size: 1.5em;
+    }
+    .heading-3{
+        font-size: 1em;
+    }
+    .hidden-md-down{
+        display: none;
+    }
+}
+@media screen and (min-width: 992px){
+    .container-fluid {
+        width: 81%;
+    }
+    .gutter-2.row {
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+    .gutter-2 > [class^="col-"], .gutter-2 > [class^=" col-"] {
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+}

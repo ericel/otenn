@@ -1,0 +1,103 @@
+<main class="main mar-30" *ngIf="startIntro" [@myAnimation]>
+  <div class="container-fluid">
+     <div class="start mar-30">
+        <h1 class="h1">
+            Hey. Howdy! Let's guide you through.
+        </h1>
+        <p>What is it you want to accomplish today?</p>
+        <div class="container text-center" *ngIf="indicator">
+            <mat-spinner class="indicator"></mat-spinner>
+          </div>
+        <div class="row mar-30">
+          <div class="col-md-6 mar-30">
+              <div class="card">
+                <div class="card-header">
+                    <mat-radio-button value="collection" class="h3" (click)="onCollections()" required>Start A Collection.</mat-radio-button>
+                </div>
+                <div class="card-block">
+                    <p class=" mar-30">
+                        Select this if you have a broad topic in mind. With this collection, you can enter more blogs, communinty pages, forums etc, under the same collection title.
+                        <em>Example: My City-New York, Oreints Coffee</em>
+                     </p>
+                </div>
+              </div>
+          </div>
+          <div class="col-md-6 mar-30">
+              <div class="card">
+                  <div class="card-header">
+                      <mat-radio-button value="page" class="h3" (click)="onPage()" required>Write a Page.</mat-radio-button>
+                  </div>
+                  <div class="card-block">
+                      <p class=" mar-30">
+                          This can be anything from a journal entry, to a diary. We prefer educational journals, but what ever suits you. Just avoid profanity, avoid articles insulting or that can cause harm to other individuals.
+                          <em>Example: How to make coffee with milk.</em>
+                       </p>
+                  </div>
+              </div>
+          </div>
+        </div>
+     </div>
+  </div>
+</main>
+<main class="main collection-name-pick justify-vertically" *ngIf="startCollect" [@myAnimation]>
+  <div class="container-fluid">
+     <h2 class="h2 text-center">Starting a collection is exciting. Isn't it?</h2>
+      <p class="text-center">Time to choose a good name for your collection! Something catching and memorable.<em>Ex. Funkyme, My Village Onaku.</em></p>
+
+   <div class="collection-input">
+    <form  [formGroup]="startCollectF" (ngSubmit)="onSubmit()">
+
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">Enter a collection name</span>
+        <input type="text" class="form-control"
+        id="collectionName"
+        formControlName="collectionName"
+        required
+        [(ngModel)]="collectionName"
+        >
+        <button mat-raised-button type="button" color="primary"
+        type="submit"
+        [disabled]="!startCollectF.valid"
+        > <app-spinner name="showSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner> <mat-icon>send</mat-icon></button>
+      </div>
+      <div *ngIf="formErrors.collectionName" class="alert alert-danger">
+          {{ formErrors.collectionName }}
+       </div>
+    </form>
+    <ul class="list-group" *ngIf="collectionName.length > 3">
+      <li
+        class="list-group-item"
+        *ngFor="let collection of collections | filterBy: ['title']: collectionName "
+        >
+        <span
+          class="badge">
+          45
+        </span>
+        <a mat-button routerLink="/collections/c/{{collection.title | slugify}}" fragment="{{collection.$key}}"><strong>{{ collection.title | shorten:15 }}</strong></a>
+      </li>
+    </ul>
+   </div>
+  </div>
+</main>
+<main class="main collection-input startform " *ngIf="startPage" [@myAnimation]>
+  <div class="container-fluid">
+      <h1 class="h2 mar-20">Choose Page Category</h1>
+      <form (ngSubmit)="onSubmitPage()" #pageForm="ngForm">
+           <mat-form-field class="w-100 mar-20">
+              <mat-select placeholder="Choose Page Category" id="category"
+               ngModel
+               name="category"
+               required>
+                <mat-option *ngFor="let option of collections" value="{{option.title}}">{{option.title}}</mat-option>
+              </mat-select>
+              <mat-hint align="end">Select category ^</mat-hint>
+           </mat-form-field>
+          <button mat-raised-button color="primary" class="w-100 padding-30"
+          type="submit"
+          [disabled]="!pageForm.valid"
+          ><app-spinner name="pageSpinner" [(show)]="pageSpinner"
+          ><i class="fa fa-spinner fa-spin"></i></app-spinner> Click to continue</button>
+      </form>
+  </div>
+</main>
+

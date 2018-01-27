@@ -1,0 +1,28 @@
+<main class="main" id="home" *ngIf="collection">
+    <div class="container-fluid">
+        <div class="row">
+            <div #router></div>
+          <div class="left col-lg-3"  >
+              <mat-card class="collections w-100 afix" [style.background]="collection.color">
+                  <collection-menu (route)='onRoute($event)' [collection]="collection"></collection-menu>
+              </mat-card>
+          </div>
+
+          <div  class="col offset-lg-3">
+                <!--<collection-header [collection]="collection" (route)='onRoute($event)'></collection-header>-->
+
+             <router-outlet></router-outlet>
+             <div class="gutter-2 row" id="awesomePart">
+               <div class="col-lg-8">
+                  <collection-updates [collection]="collection"></collection-updates>
+               </div>
+               <div class="col-lg-4">
+                 <app-ads-right></app-ads-right>
+                 <app-ads-content-match></app-ads-content-match>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+</main>
+

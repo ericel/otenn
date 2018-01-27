@@ -1,0 +1,73 @@
+
+<footer class="footer" *ngIf="_sessions.visible">
+    <div class="footer-2">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-4">
+              <a class="navbar-brand" routerLink="/"><img src="./assets/logo.png" alt="Wildebeests"></a>
+                <div class="def-text">
+                    Otenn Allows you to send money back quickly and in a timely manner. From the comfort of your home, No more bank visits, no more huge bank fees. With just a few clicks, your money is deliverd back home.
+                </div>
+                <ul class="contact-ul text-smo-center">
+                  <li class="font-weight-bold"><mat-icon color="primary">place</mat-icon> A108 Adam Street New York, NY 535022</li>
+                  <li class="font-weight-bold"><mat-icon color="primary">email</mat-icon> webmaster@Shakedown.com</li>
+                  <li class="font-weight-bold"><mat-icon color="primary">phone</mat-icon> +1 038 47 383 </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="container">
+                  <h3>Quick Contact</h3>
+                    <form class="padding-form">
+                      <div class="form-group row has-success">
+                        <label for="inputHorizontalSuccess" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                          <input type="email" class="form-control form-control-success" id="inputHorizontalSuccess" placeholder="John Doe">
+                          <!--<div class="form-control-feedback">Success! You've done it.</div>
+                          <small class="form-text text-muted">Example help text that remains unchanged.</small>-->
+                        </div>
+                      </div>
+                      <div class="form-group row has-warning">
+                        <label for="inputHorizontalWarning" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                          <input type="email" class="form-control form-control-warning" id="inputHorizontalWarning" placeholder="name@example.com">
+                        </div>
+                      </div>
+                      <div class="form-group row has-danger">
+                        <label for="inputHorizontalDnger" class="col-sm-2 col-form-label">Msg</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" id="inputHorizontalDnger" rows="3"></textarea>
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <button mat-raised-button color="accent">Send message!</button>
+                     </div>
+                    </form>
+                  </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <h3>Site Menu</h3>
+                  <ul class="nav-footer">
+                    <li><a routerLink="/">Home</a></li>
+                    <li><a routerLink="/about">About</a></li>
+                    <li><a routerLink="about">Services</a></li>
+                    <li><a routerLink="about">Terms of Use</a></li>
+                    <li><a routerLink="about">User Guide</a></li>
+                    <li><a routerLink="about">Advertising</a></li>
+                    <li class="font-weight-bold"><a routerLink="about">Places Api for developers</a></li>
+                    <li><a routerLink="about">Join Our Team</a></li>
+                  </ul>
+                  <div class="button-row">
+                      <button mat-mini-fab color="primary">fb</button>
+                      <button mat-mini-fab color="accent">tw</button>
+                      <button mat-mini-fab color="warn">gm</button>
+                  </div>
+             </div>
+          </div>
+        </div>
+    </div>
+    <div class="foot-last">
+        <div class="container">
+            &copy; Otenn 2017 All Rights Reserved
+        </div>
+     </div>
+  </footer>

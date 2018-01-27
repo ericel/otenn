@@ -1,0 +1,14 @@
+<div class="notifier ">
+    <div  class="animated fadeInDown alert" *ngIf="_notify.msg | async as msg"
+      [ngClass]="{ 
+        'alert-danger': msg.style == 'error',
+        'alert-success': msg.style == 'success',
+        'alert-info': msg.style == 'info'
+      }">
+
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="_notify.clear()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <div class="container-fluid" [innerHtml]="msg.content"></div>
+  </div>
+</div>

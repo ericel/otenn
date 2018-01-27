@@ -1,0 +1,24 @@
+.notifier {
+    position: fixed;
+    top:0px;
+    width: 100%;
+    z-index: 9999;
+}
+.notifier .alert {
+    overflow: hidden;
+    position: relative;
+    z-index: 9999;
+    width:100%;
+    border-radius: 0 !important;
+    height: 70px;
+    padding: 1.5rem 1.25rem;
+}
+.closeBTN {
+    position: absolute;
+    right: 10px;
+    bottom: -10px;
+    z-index: 9999;
+}
+button.close {
+    cursor: pointer;
+}

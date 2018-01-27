@@ -1,0 +1,299 @@
+.side-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .mat-toolbar {
+    background: #fff;
+    box-shadow: 0 0 1px 1px rgba(11, 39, 36, 0.1), 0 3px 1px 0 rgba(11, 39, 36, 0.1) !important;
+    color: #000;
+  }
+  .fixed {
+    position: fixed !important;
+    z-index: 9999;
+  }
+  .ellipsis {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+button.menu-main{
+  margin: 0px 20px;
+  align-items: center;
+  justify-content: center;
+}
+  .side-is-mobile .side-toolbar {
+    padding-right: 25px;
+  }
+
+  .side-is-mobile a.side-app-name {
+    margin: 0 auto;
+  }
+
+  .side-sidenav-container {
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+       causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    flex: 1;
+
+  }
+
+  .side-is-mobile .side-sidenav-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+       `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+  }
+  .app-toolbar-filler {
+    flex: 1 1 auto;
+  }
+  .app-toolbar-filler-1 {
+    flex: 6 0 auto;
+  }
+  .container-fluid-header {
+    padding: 0 2%;
+  }
+  .side-is-mobile .mat-drawer:not(.mat-drawer-side) {
+
+    z-index: 9;
+}
+.user-image {
+  width: 40px;
+  height: 40px;
+  margin-top: -5px;
+  border-radius: 100%;
+}
+.menu-lang mat-icon{
+  position: relative;
+  color: #333 !important;
+  font-size: 2em !important;
+  font-weight: bolder;
+}
+
+
+
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
+
+
+
+  .Search {
+    position: relative;
+    width: 200px;
+    height: 50px;
+    border: 0;
+    background-color: #eee;
+    border-radius: 4px;
+  }
+
+  .Search-box {
+    position: absolute;
+    top: 0;
+    border-radius: 4px;
+    right: 50px;
+    float: left;
+    width: 100%;
+    height: 50px;
+    border: 0;
+    outline: 0;
+    padding-left: 0.75rem;
+    font-style: italic;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+    opacity: 9;
+    -webkit-transition: -webkit-transform ease 2s;
+    transition: -webkit-transform ease 2s;
+    transition: transform ease 2s;
+    transition: transform ease 2s, -webkit-transform ease 2s;
+    z-index: 999;
+    background-color: #eee;
+  }
+  .Search-box:focus {
+    width: 770px;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+     -webkit-transition: width ease 2s;
+    transition: width ease 2s;
+    transition: width ease 2s;
+    transition: width ease 2s, width ease 2s;
+    opacity: 1;
+    top: 0;
+  }
+  @media screen and (max-width: 1200px){
+    .Search {
+        position: relative;
+        width: 150px;
+    }
+    .Search-box {
+        right: 40px;
+        width:90%;
+    }
+    .Search-box:focus {
+        width: 570px;
+    }
+  }
+  .Search-box:focus + .Search-box-label {
+    z-index: -1;
+    opacity: 0;
+  }
+  .Search-box:focus ~ .Search-close {
+    z-index: 3;
+    opacity: 1;
+  }
+
+  .Search-box-label,
+  .Search-close {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    cursor: pointer;
+    height: 100%;
+    width: 3rem;
+    -webkit-transition: opacity ease 250ms 250ms;
+    transition: opacity ease 250ms 250ms;
+    -webkit-transition: width ease 2s;
+    transition: width ease 2s;
+    transition: width ease 2s;
+    transition: width ease 2s, width ease 2s;
+  }
+
+  .submit-button {
+    position: absolute;
+    right: 0;
+    z-index: 9999;
+    cursor: pointer;
+    height: 100%;
+    width: 3rem;
+    -webkit-transition: opacity ease 250ms 250ms;
+    transition: opacity ease 250ms 250ms;
+    background: transparent;
+    padding: 0;
+    border: none;
+    color: #006064 !important
+
+  }
+  .Search-close {
+    opacity: 0;
+    z-index: 0;
+  }
+
+  .Search-icon,
+  .Search-close-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><defs><path fill='#555' d='M15.477 13.356C16.437 11.98 17 10.306 17 8.5 17 3.806 13.194 0 8.5 0S0 3.806 0 8.5 3.806 17 8.5 17c1.805 0 3.48-.563 4.855-1.522l6.304 6.303c.114.12.3.12.42 0l1.7-1.696c.116-.116.11-.31 0-.423l-6.305-6.303zM8.5 15c3.59 0 6.5-2.91 6.5-6.5S12.09 2 8.5 2 2 4.91 2 8.5 4.91 15 8.5 15z' id='a'/></defs><g fill='none' fill-rule='evenodd'><use xlink:href='#a'/></g></svg>");
+  }
+
+  .Search-close-icon {
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path fill='#555' d='M77.6 21.1l-28 28.1-28.1-28.1-1.9 1.9 28 28.1-28 28.1 1.9 1.9L49.6 53l28 28.1 2-1.9-28.1-28.1L79.6 23z'/></svg>");
+  }
+
+  .Search {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .Search-icon,
+  .Search-close-icon {
+    text-indent: 100%;
+    overflow: hidden;
+  }
+
+  .Search-icon,
+  .Search-close-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+  }
+
+
+  /* Search Mobile */
+.container-m-search{
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    background: #fff;
+    left: 0px;
+    right: 0px;
+    z-index: 9999;
+    height:auto;
+}
+
+.container-m-search .form-control + .input-group-addon:not(:first-child) {
+    border-left: 0px;
+    border-right: 0px;
+}
+.container-m-search .input-group-addon {
+    border:0px;
+}
+.container-m-search .stylish-input-group .form-control {
+    border: 0;
+}
+.stylish-input-group .input-group-addon{
+    background: white !important;
+}
+.stylish-input-group .form-control{
+	border-right:0;
+	box-shadow:0 0 0;
+    border-color:#ccc;
+
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+
+.searchbox {
+    box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+    height: 50px;
+}
+.search-box:hover {
+    background: rgb(128, 89, 89);
+    box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+}
+.container-m-search .mat-icon-button .mat-icon, .mat-icon-button i {
+  line-height: 34px;
+}
+.container-m-search .form-control {
+  border: 0;
+  height: 54px;
+}
+
+/* SIGN UP TO ACCOUNT */
+.signup {
+  min-width: 300px;
+}
+.mat-form-field {
+
+}
+.signup-account {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.signup .mat-icon {
+  display: inline-flex;
+  vertical-align: middle;
+}
+.mat-progress-spinner.mat-progress-spinner-indeterminate-animation[mode=indeterminate] {
+  margin: 0 auto !important;
+}
+
+/*END SIGN UP TO ACCOUNT */

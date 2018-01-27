@@ -1,0 +1,83 @@
+<main class="main" *ngIf="!submitted" [@myAnimation]>
+  <div class="container-fluid">
+      <mat-card>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-block">
+                    <form  #pageForm="ngForm">
+                      <div class="row">
+                        <div class="col-md-6">
+                            <div class="h4">Otenn Page Editor</div>
+                            <p>Use this editor to write and publish your page fast and in time. You have the option to save your work and continue some other time.</p>
+                        </div>
+                        <div class="col-md-6 text-right">
+
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                        <mat-form-field class="w-100 form-control">
+                            <mat-select  placeholder="Choose a Collection" disableRipple [value]="collection" [ngModel]="section"
+                            name="collection"  #collection  required>
+                              <mat-option *ngFor="let option of collections" value="{{option.title}}">{{option.title}}</mat-option>
+                            </mat-select>
+                            <mat-hint align="end">Click to select ^</mat-hint>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-8">
+                        <mat-form-field class="w-100 form-control">
+                            <input matInput placeholder="Enter your blog title here!"   value="title"  ngModel
+                            name="title" #title minlength="30" maxlength="150" required>
+                            <mat-hint align="end">{{title.value?.length || 0}}/150</mat-hint>
+                          </mat-form-field>
+                        </div>
+                   </div>
+                    </form>
+                </div>
+                <div class="alert alert-warning" *ngIf="!pageForm.valid && pageForm.touched"><strong>Invalid Content!</strong> Please Select a collection and enter a valid title!</div>
+            </div>
+            <app-wysiwyg  (publish)="onPublish($event)"  (draft)="onDraft($event)"></app-wysiwyg>
+        </div>
+      </mat-card>
+  </div>
+</main>
+<main class="main collection-input" *ngIf="addImg" [@myAnimation]>
+   <div class="container-fluid">
+      <mat-card>
+        <div class="text-center">
+            <h1 class="h3">Add An Image For this page</h1>
+            <p class="text-muted">Helps your page card to standout!</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="row">
+          <div class="col-md-12  mar-20 text-center">
+              <label class="custom-file">
+                  <input type="file" id="file" #file class="custom-file-input"
+                  (change)="detectFiles($event)">
+                  <span class="custom-file-control"></span>
+                </label>
+                <div *ngIf="currentUpload" class="text-center mar-30" >
+                    <mat-progress-bar mode="determinate" value="{{ currentUpload?.progress }}"></mat-progress-bar>
+                     <div class="alert alert-info">Progress: {{currentUpload?.name}} | {{currentUpload?.progress}}% Complete</div>
+                </div>
+          </div>
+          <div class="col-md-12 ">
+              <mat-card class="mar-30">
+                  <img mat-card-image  [src]="collectionImg || './assets/img/avatar.png'" alt="Photo of a Shiba Inu">
+                  <mat-card-content>
+                    <p>
+                      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+                      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+                      bred for hunting.
+                    </p>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <button mat-button>LIKE</button>
+                    <button mat-button>SHARE</button>
+                  </mat-card-actions>
+                </mat-card>
+          </div>
+        </div>
+      </mat-card>
+   </div>
+</main>

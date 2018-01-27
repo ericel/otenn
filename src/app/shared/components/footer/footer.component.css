@@ -1,0 +1,34 @@
+.footer {
+    width: 100%;
+    background:url('./../../../../assets/img/listings.png') repeat; background-attachment:fixed;
+    clear: both;
+}
+.footer-2 {
+    padding: 15px 0;
+    background: rgba(0, 0, 0, 0.932);
+    color: #fff;
+}
+.foot-last {
+    padding: 20px 0;
+    background: rgb(36, 35, 35);
+    color: #ccc;
+}
+.contact-ul {
+    list-style: none;
+    padding: 10px 0 0 0;
+    color: #ccc;
+}
+.contact-ul li {
+    line-height: 3;
+}
+.def-text{
+    color: #666;
+}
+.padding-form{
+    padding:10px 0 0 0;
+}
+.nav-footer  {
+   list-style: none;
+   padding: 0;
+   
+}

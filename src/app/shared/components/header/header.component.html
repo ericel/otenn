@@ -1,0 +1,89 @@
+
+<mat-toolbar color="primary" class="side-toolbar fixed" [class.container-fluid-header]="!mobilequery">
+    <button mat-icon-button *ngIf="mobilequery" (click)="onToggle()"><mat-icon>menu</mat-icon></button>
+    <button mat-icon-button *ngIf="mobilequery" (click)="onSearch()"><mat-icon>search</mat-icon></button>
+    <span *ngIf="mobilequery" class="app-toolbar-filler"></span>
+    <a routerLink="/" class="side-app-name"><img src="./assets/logo_m.png"></a>
+
+    <button mat-button *ngIf="!mobilequery" class="menu-main" #collectionMenu="matMenuTrigger" [matMenuTriggerFor]="appMenu"
+    (mouseenter)="onCollectionsIn()"  ><mat-icon class="text-muted">view_comfy</mat-icon> <span class="ellipsis">Collections <i class="fa fa-caret-down" aria-hidden="true"></i></span></button>
+    <button mat-button *ngIf="!mobilequery" class="menu-main"><mat-icon class="text-muted" triggers="hover"
+      placement="bottom"
+      [ngbPopover]="popContent"
+       popoverTitle="Popover on bottom"
+      >send</mat-icon> <span class="ellipsis">Send Money</span></button>
+      <ng-template #popContent>
+          <a mat-menu-item routerLink="documents" routerLinkActive="active"><mat-icon>pages</mat-icon> <span>Blogs / Documents</span> </a>
+        <a mat-menu-item><mat-icon>business_center</mat-icon> <span>Become a Dealer</span> </a>
+        <a mat-menu-item><mat-icon>send</mat-icon> <span>Sending money</span> </a>
+        <a mat-menu-item><mat-icon>supervisor_account</mat-icon> <span>Otenn Users</span> </a>
+        <a mat-menu-item routerLink="about" routerLinkActive="active"><mat-icon>info_outline</mat-icon> <span>About Otenn</span> </a>
+        <mat-divider></mat-divider>
+        <a mat-menu-item routerLink="contact" routerLinkActive="active"><mat-icon>mail</mat-icon> <span>Contact Us </span></a>
+        <a mat-menu-item><mat-icon>help</mat-icon> <span>Frequently Asked Questions</span> </a>
+        <a mat-menu-item><mat-icon>trending_up</mat-icon> <span>Getting started</span> </a>
+        </ng-template>
+    <button mat-button *ngIf="!mobilequery" class="menu-main"><mat-icon class="text-muted">business_center</mat-icon> <span class="ellipsis">Become a dealer</span></button>
+    <span  *ngIf="!mobilequery" class="app-toolbar-filler-1"></span>
+    <form class="Search" *ngIf="!mobilequery">
+        <input type="text" class="Search-box" name="Search-box" id="Search-box" placeholder="Search this site...">  <label for="Search-box" class="Search-box-label">
+            <span class="Search-icon">Search</span>  </label>
+        <span class="Search-close"> <button mat-icon-button type="search" value="search" class="submit-button"><span class="Search-icon"><mat-icon>search</mat-icon></span></button> <!--<i class="Search-close-icon">Close</i>-->  </span>
+    </form>
+    <span class="app-toolbar-filler"></span>
+    <span *ngIf="auth else guest"> </span>
+    <!-- User NOT logged in -->
+    <ng-template #guest>
+        <div class="navbar-text">
+            <div class="name-text"><span  *ngIf="!mobilequery">Howdy, GUEST</span>
+                <button mat-icon-button #userMenu="matMenuTrigger" [matMenuTriggerFor]="menuGuest" class="c menu-lang"  xPosition="before"><img class="img-thumbnail user-image"
+                    src="./assets/img/avatar.png" alt="Username" (contextmenu)="showmenu()">
+                </button>
+            </div>
+        </div>
+    </ng-template>
+    <mat-menu class="drop-1" #menuGuest="matMenu">
+        <h3>Howdy, GUEST</h3>
+        <p>Login to get started...</p>
+        <a mat-menu-item routerLink="collections/start/">Start a Collection</a>
+        <a (click)="onLogin()" mat-raised-button color="primary">
+            Login now
+        </a>
+      </mat-menu>
+    <!-- User logged in -->
+    <ng-template #authenticated>
+            <div class="navbar-text">
+                <div *ngIf="auth" class="name-text" >{{ user.displayName.username  | shorten: 8: '' }}
+                    auth
+                </div>
+            </div>
+    </ng-template>
+    <div class="container-m-search" *ngIf="searchOpen">
+        <div class="searchbox effect8">
+            <div class="input-group stylish-input-group">
+                    <span class="input-group-addon">
+                            <button mat-icon-button (click)="onCloseSearch()">
+                                <mat-icon>arrow_back <span>back</span></mat-icon>
+                            </button>
+                        </span>
+                <input type="text" class="form-control"  placeholder="Search" >
+                <span class="input-group-addon">
+                    <button mat-icon-button type="submit">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</mat-toolbar>
+<mat-menu  #appMenu="matMenu" class="pop-over">
+        <a mat-menu-item routerLink="collections/c/" routerLinkActive="active"><mat-icon>pages</mat-icon> <span>Collections</span> </a>
+        <a mat-menu-item><mat-icon>business_center</mat-icon> <span>Become a Dealer</span> </a>
+        <a mat-menu-item><mat-icon>send</mat-icon> <span>Sending money</span> </a>
+        <a mat-menu-item><mat-icon>supervisor_account</mat-icon> <span>Otenn Users</span> </a>
+        <a mat-menu-item routerLink="about" routerLinkActive="active"><mat-icon>info_outline</mat-icon> <span>About Otenn</span> </a>
+        <mat-divider></mat-divider>
+        <a mat-menu-item routerLink="contact" routerLinkActive="active"><mat-icon>mail</mat-icon> <span>Contact Us </span></a>
+        <a mat-menu-item><mat-icon>help</mat-icon> <span>Frequently Asked Questions</span> </a>
+        <a mat-menu-item><mat-icon>trending_up</mat-icon> <span>Getting started</span> </a>
+</mat-menu>

@@ -1,0 +1,132 @@
+<main class="main">
+  <div class="header justify-vertically">
+      <div class="container-fluid ">
+          <div class="row">
+              <div class="col-md-2">
+                  <img class="img-thumbnail page-img" src="./assets/assets/db-box.png" alt="">
+                </div>
+                <div class="col-md-10">
+                    <div class="collection h4 text-muted">{{'Blogs' | uppercase}}</div>
+                    <h1 class="h1">Want to learn how to use color in your website? We’ve assembled a great set of
+                       short and easy tutorials that cover the basics of HTML, CSS and SCSS.</h1>
+
+                </div>
+          </div>
+      </div>
+  </div>
+  <div class="section">
+      <div class="container-fluid">
+          <div class="card">
+             <div class="card-header">
+               <div class="row">
+                 <div class="col-md-6">
+                  <div class="credits">
+                    <a routerLink=""> <img [src]="photo" class="img-thumbnail admins-img" alt="update username"> Oj Obasi</a>
+                       posted a new blog <span>10 mins ago</span>
+                  </div>
+                 </div>
+                 <div class="col-md-6 justify-vertically text-right">
+                   <app-share pageScroll href="#comments"></app-share>
+                 </div>
+               </div>
+             </div>
+             <div class="card-block">
+               <div class="row">
+                 <div class="col-md-2">
+
+                 </div>
+                 <div class="col-md-6">
+                    <p>
+                        Color basics in HTML
+                        Adding color to your website using HTML is actually really simple. Our short and easy to follow tutorials will help you get started using inline styles to color text, links and backgrounds in HTML.
+
+                        PART I
+                        HTML Text Color
+                        PART II
+                        HTML Link Color
+                        PART III
+                        HTML Background Color
+                        Getting started with CSS
+                        CSS, or cascading stylesheets, are a fast and powerful way to add styles to your website. Check out our quick and easy examples below that cover the spectrum (pun intended) of using color codes with CSS.
+                    </p>
+                    <p>
+                        Color basics in HTML
+                        Adding color to your website using HTML is actually really simple. Our short and easy to follow tutorials will help you get started using inline styles to color text, links and backgrounds in HTML.
+
+                        PART I
+                        HTML Text Color
+                        PART II
+                        HTML Link Color
+                        PART III
+                        HTML Background Color
+                        Getting started with CSS
+                        CSS, or cascading stylesheets, are a fast and powerful way to add styles to your website. Check out our quick and easy examples below that cover the spectrum (pun intended) of using color codes with CSS.
+                    </p>
+                    <p>
+                        Color basics in HTML
+                        Adding color to your website using HTML is actually really simple. Our short and easy to follow tutorials will help you get started using inline styles to color text, links and backgrounds in HTML.
+
+                        PART I
+                        HTML Text Color
+                        PART II
+                        HTML Link Color
+                        PART III
+                        HTML Background Color
+                        Getting started with CSS
+                        CSS, or cascading stylesheets, are a fast and powerful way to add styles to your website. Check out our quick and easy examples below that cover the spectrum (pun intended) of using color codes with CSS.
+                    </p>
+                    <p>
+                        Color basics in HTML
+                        Adding color to your website using HTML is actually really simple. Our short and easy to follow tutorials will help you get started using inline styles to color text, links and backgrounds in HTML.
+
+                        PART I
+                        HTML Text Color
+                        PART II
+                        HTML Link Color
+                        PART III
+                        HTML Background Color
+                        Getting started with CSS
+                        CSS, or cascading stylesheets, are a fast and powerful way to add styles to your website. Check out our quick and easy examples below that cover the spectrum (pun intended) of using color codes with CSS.
+                    </p>
+                    <section class="comments" id="comments">
+                      comments
+                    </section>
+                 </div>
+                 <div class="col-md-4">
+                   <div class="text-muted-m">
+                     <h3 class="h3">Start A Collection</h3>
+                     <p>
+                       Today you can own a collection of blogs, forums, vidoes, photos for free at Otenn.
+                       <a routerLink="">Learn More</a>
+                     </p>
+                   </div>
+                    <app-ads-right-2></app-ads-right-2>
+                    <div class="row " [@myAnimation]>
+                      <div class="col-lg-12" *ngFor="let collection of collections">
+                          <a routerLink="/collections/{{collection.title | slugify }}/{{collection.description | slugify }}">
+                            <button mat-raised-button class="checkit"> Check it</button>
+                             <mat-card class="collection-card mar-20" [style.background]="collection.color">
+                                 <img mat-card-image mat-elevation-z2 [src]="collection.photoURL" alt="Photo of a Shiba Inu">
+                                 <div class="collection-img">
+                                     <img [src]="collection.photoURL" class="img-thumbnail">
+                                 </div>
+                                 <mat-card-subtitle class="text-muted">
+                                     {{collection.creator}}
+                                 </mat-card-subtitle>
+                                 <mat-card-content>
+                                   <p>
+                                       {{collection.description | shorten: 100:'..'}}
+                                   </p>
+                                 </mat-card-content>
+                               </mat-card>
+                          </a>
+                         </div>
+                  </div>
+                    <app-ads-right></app-ads-right>
+                 </div>
+               </div>
+             </div>
+          </div>
+        </div>
+  </div>
+</main>

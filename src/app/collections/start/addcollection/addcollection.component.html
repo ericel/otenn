@@ -1,0 +1,126 @@
+<app-notify></app-notify>
+<main class="main" *ngIf="hideCollectionForm">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 mar-20">
+        <mat-card>
+          <h1 class="text-info h1">{{title}} Collection</h1>
+          <mat-divider></mat-divider>
+            <h2>Collection Team</h2>
+            <mat-list role="list">
+                <mat-list-item role="listitem">Oj Obasi</mat-list-item>
+            </mat-list>
+        </mat-card>
+
+        <mat-card class="mar-30">
+            <h2>Collection Settings</h2>
+            <mat-list role="list">
+                <mat-list-item role="listitem" *ngFor="let st of status"><mat-radio-button name="st" (click)="statusmodel.options = st"
+                  [checked]="st === statusmodel.options">{{st}}</mat-radio-button></mat-list-item>
+            </mat-list>
+        </mat-card>
+      </div>
+      <div class="col-md-8">
+           <mat-card [ngStyle]="{'background-color': color}">
+             <div class="row">
+                <div class="col text-left mar-20">
+                  <app-colorcard
+                  (selected)="onColorSelect($event)"
+                ></app-colorcard>
+                 </div>
+                  <div class="col text-right mar-20">
+                      <button mat-raised-button color="primary" (click)="onAddCollection()"><app-spinner name="addspinner"
+                       [(show)]="addspinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
+                       Add Collection</button>
+                    </div>
+             </div>
+               <form #descForm="ngForm">
+                   <textarea class="form-control"  placeholder="Enter A Short Description For Your Collection"
+                   name="description" [(ngModel)]="description" rows="5"></textarea>
+               </form>
+           </mat-card>
+           <div class="mar-20 ten-aloow">
+             <mat-card  [@myAnimation]>
+                <div class="h2 mar-30">Choose What Components your collection will handle</div>
+              <mat-checkbox name="blog" (change)="itemsmodel.blog = !itemsmodel.blog"
+              [checked]="itemsmodel.blog"> Allow Blogs</mat-checkbox>
+              <p>This Allows your team to publish blogs under this collection.</p>
+             </mat-card>
+             <mat-card  [@myAnimation]>
+              <mat-checkbox (change)="itemsmodel.videos = !itemsmodel.videos"
+              [checked]="itemsmodel.videos" name="videos">Allow Videos</mat-checkbox>
+              <p>This Allows your team to share videos under this collection.</p>
+             </mat-card>
+             <mat-card  [@myAnimation]>
+              <mat-checkbox (change)="itemsmodel.photos = !itemsmodel.photos"
+              [checked]="itemsmodel.photos" name="photos">Allow Photos</mat-checkbox>
+              <p>This Allows your team to share photos under this collection.</p>
+             </mat-card>
+             <mat-card  [@myAnimation]>
+              <mat-checkbox (change)="itemsmodel.forum = !itemsmodel.forum"
+              [checked]="itemsmodel.forum" name="forum">Allow Forum</mat-checkbox>
+              <p>This Allows your team to create forums under this collection.</p>
+             </mat-card>
+           </div>
+           <!--
+           <mat-card class="mar-30">
+              <div class="h2 mar-30">For Developers <small>Your Collection API</small></div>
+           </mat-card>
+          -->
+      </div>
+    </div>
+  </div>
+</main>
+<main class="main collection-input" *ngIf="changePhotoUrl" [@myAnimation]>
+    <div class="container-fluid">
+        <mat-card >
+          <div class="text-center">
+              <h1 class="h3  color-black">Change Collection Image</h1>
+              <p class="text-muted">Helps your Collection card to standout!</p>
+              <div *ngIf="currentUpload" class="text-center mar-30" >
+                  <mat-progress-bar mode="determinate" value="{{ currentUpload?.progress }}"></mat-progress-bar>
+                   <div class="alert alert-info">Progress: {{currentUpload?.name}} | {{currentUpload?.progress}}% Complete</div>
+              </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="row">
+            <div class="col-md-12 ">
+                <div class="upload-btn-wrapper">
+                    <button mat-raised-button class="btn" color="warn">Select File</button>
+                    <input type="file" id="file" #file
+                    (change)="detectFiles($event)">
+                  </div>
+                  <mat-card class="collection-card" [ngStyle]="{'background-color': color}">
+
+                      <img mat-card-image mat-elevation-z2 [src]="photoUrl" alt="{{title}}">
+                      <mat-card-title class="collection-name">
+                          {{title}}
+                      </mat-card-title>
+                      <mat-card-subtitle class="text-muted">
+                          Oj Obasi
+                      </mat-card-subtitle>
+                      <mat-card-content>
+                        <p>
+                            {{description | shorten: 100:'..'}}
+                        </p>
+                        <a *ngIf="currentUpload?.progress === 100" routerLink="/collections/c/{{title | slugify}}" fragment="{{$key}}" mat-raised-button color="accent" class="w-100 padding-10">View Collection</a>
+                      </mat-card-content>
+                    </mat-card>
+            </div>
+          </div>
+        </mat-card>
+     </div>
+</main>
+<main class="main collection-input" *ngIf="notify_already" [@myAnimation]>
+  <div class="container-fluid">
+      <mat-card >
+           <div class="alert alert-warning h2">
+             <strong>{{title}}</strong> collection already exist!.
+             <div class="mar-30">
+              <a routerLink="/collections/start"
+              mat-raised-button color="accent" class="w-100 padding-10">Start A New Collection</a>
+             </div>
+           </div>
+      </mat-card>
+   </div>
+</main>

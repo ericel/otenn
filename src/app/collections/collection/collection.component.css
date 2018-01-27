@@ -1,0 +1,110 @@
+.left {
+  overflow: hidden !important;
+  text-align: center
+}
+a.title {
+  font-size: 1.7em;
+  word-break: break-all;
+  font-weight: bolder;
+}
+.left img {
+  width: 100%;
+}
+.header {
+  position: relative;
+  margin-top: -40px;
+  height: 477px;
+  background-size: cover;
+  background-position: fixed;
+  width: 100%;
+}
+.collection-side {
+  position: relative;
+  height: 250px;
+  background-size: cover;
+  background-position: fixed;
+  width: 100%;
+}
+.mar-20-minus {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+.header-mini {
+ position: fixed;
+ z-index: 9997;
+ margin: 0 auto;
+background: #fff;
+padding: 20px;
+}
+
+.mini-bar {
+  z-index: 999;
+  position: fixed; display: inline-flex; width: inherit; max-width: inherit;
+  padding: 10px;
+}
+.admins-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  margin: 0 5px;
+}
+
+.afix {
+  height: 100vh;
+}
+
+.h5 {
+  vertical-align: middle;
+  padding: 10px;
+  border: 1px dashed rgb(218, 217, 217);
+}
+.card-block.padding-10 {
+  padding-top: 30px !important;
+}
+.creator {
+  position: absolute;
+  top: 150px;
+  color: #fff;
+}
+.creator img {
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
+}
+.creator .font-weight-bold {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.menu-button {
+  position: absolute;
+  top: 25px;
+  right: 10px;
+}
+
+/*
+992px comes from the bootstrap grid sizes for 'lg'
+
+https://v4-alpha.getbootstrap.com/layout/grid/#grid-options
+*/
+.h-bottom {
+  min-height: 200px;
+}
+@media (min-width: 992px){
+   .left {
+        position: fixed;
+        z-index: 999;
+        top: 45px;
+        left: -20px;
+    }
+    .offset-lg-3 {
+      margin-left: 20%;
+  }
+  .container-fluid {
+    width: 90%;
+}
+
+
+}
+
+
