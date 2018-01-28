@@ -153,7 +153,8 @@ export class WysiwygComponent implements OnInit, AfterViewInit{
   <span class="custom-file-control"></span>
   </label>
 
-  <button mat-raised-button color="primary" [disabled]="disabled" (click)="onClose()" class="w-100"><mat-icon>add</mat-icon> Click to Upload</button>
+  <button mat-raised-button color="primary"
+   [disabled]="disabled" (click)="onClose()" class="w-100"><mat-icon>add</mat-icon> Click to Upload</button>
   </mat-card>
   `,
   styleUrls: ['./wysiwyg.component.css']
