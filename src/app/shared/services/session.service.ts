@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { NotifyService } from '@shared/services/notify.service';
-
+import * as moment from 'moment';
 @Injectable()
 export class SessionService {
    visible: boolean = true;
    ID_LENGTH = 8;
    ALPHABET = '23456789AbdeGJkmNPQrvWxYz';
   constructor(private _notify: NotifyService) { }
-
 
 
 generate () {
@@ -22,5 +21,9 @@ generate () {
 hide() { this.visible = false; }
 
 show() { this.visible = true; }
+
+getCurrentTime() {
+  return moment().format("YYYY-MM-DD HH:mm:ss");
+}
 }
 

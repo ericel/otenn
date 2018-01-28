@@ -19,6 +19,8 @@ export class WysiwygComponent implements OnInit, AfterViewInit{
   disabled = false;
   draftspinner; publishspinner;
   notifyTXT: string;
+  publishAbled: boolean = true;
+  draftAbled: boolean = true;
   constructor(
     public dialog: MatDialog,
     public _spinner: SpinnerService
@@ -49,10 +51,12 @@ export class WysiwygComponent implements OnInit, AfterViewInit{
 
   onPublish() {
     this._spinner.show('publishspinner');
+    this.draftAbled = !this.publishAbled;
     this.publish.next(this.textarea);
   }
 
   onDraft() {
+    this.publishAbled = !this.draftAbled;
     this._spinner.show('draftspinner');
     this.draft.next(this.textarea);
   }

@@ -58,7 +58,7 @@ export class UploadService {
            this.updateFirestore(uid, upload, firestoreUrl);
           return upload.url;
         } else {
-          this._notify.update("<strong>No download URL!!</strong> upload again.", 'error')
+          this._notify.update('<strong>No download URL!!</strong> upload again.', 'error')
         }
       },
     );

@@ -48,7 +48,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   description: string;
   status = 'Public Private'.split(' ');
   statusmodel = { options: 'Public' };
-  itemsmodel: CollectionItems = {blog: true, videos: false, photos: false, forum: false};
+  itemsmodel: CollectionItems = {pages: true, videos: false, photos: false, forums: false};
   collectionAdmins = ['494949393'];
   addspinner;
   collection;

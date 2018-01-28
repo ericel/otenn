@@ -38,7 +38,7 @@ const collectionsRoutes: Routes = [
     path: 'addpage', component: AddpageComponent, canDeactivate: [CanDeactivateGuard]
   },
   {
-    path: ':string/:string', component: PageComponent
+    path: ':string/:string/:string', component: PageComponent
   }
 ];
 

@@ -1,10 +1,10 @@
 
 export class CollectionItems {
   constructor(
-  public blog: boolean,
+  public pages: boolean,
   public videos: boolean,
   public photos: boolean,
-  public forum: boolean,
+  public forums: boolean,
  ) {}
 }
 

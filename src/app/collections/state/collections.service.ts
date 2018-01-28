@@ -6,6 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Collection } from "@collections/state/collections.model";
 import { Observable } from "rxjs/Observable";
+import { Page } from "@collections/state/page.model";
 @Injectable()
 export class CollectionsService {
   collections = [
@@ -82,9 +83,9 @@ export class CollectionsService {
     const ref = this._afs.collection<any>('o-t-collections').doc(collection.$key);
     ref.set(Object.assign({}, collection))
     .then(() => {
-      this._notify.update("<strong>Collection Added!</strong> Collection Successfully Added. You will be redirected!", "info");
+      this._notify.update('<strong>Collection Added!</strong> Collection Successfully Added. You will be redirected!', 'info');
     }).catch((error) => {
-      this._notify.update(error.message, "error");
+      this._notify.update(error.message, 'error');
     });
     setTimeout(() => {
       this._spinner.hideAll();
@@ -92,20 +93,35 @@ export class CollectionsService {
   }
 
 
-  addPage(page) {
-    this._notify.update(
-      '<strong>Page Published!</strong> Your Page Has Been Published! It May Require Review. You will be redirected in a moment!',
-     'info');
+  addPage(page: Page) {
+    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.$key}/${page.$key}`);
+    ref.set(Object.assign({}, page))
+     .then(() => {
+       this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
+     }).catch((error) => {
+       this._notify.update(error.message, 'error');
+     });
      setTimeout(() => {
       this._spinner.hideAll();
     }, 3000);
   }
 
-  addDraft(page) {
-    this._notify.update('<strong>DRAFT!</strong> Your Draft Has Been Saved!', 'info');
-    setTimeout(() => {
+  addDraft(page: Page) {
+    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.$key}/${page.$key}`);
+    ref.set(Object.assign({}, page))
+     .then(() => {
+      this._notify.update('<strong>DRAFT!</strong> Your Draft Has Been Saved!', 'info');
+     }).catch((error) => {
+       this._notify.update(error.message, 'error');
+     });
+     setTimeout(() => {
       this._spinner.hideAll();
     }, 3000);
+  }
+
+  getPage(collection, component, key): Observable<Page | null> {
+    const item = this._afs.doc(`${collection}/${component}/${key}/${key}`).valueChanges() as Observable<Page | null>;
+    return item;
   }
 
   editcollection(collection) {

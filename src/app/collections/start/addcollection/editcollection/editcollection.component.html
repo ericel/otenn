@@ -59,9 +59,9 @@
              <div class="mar-20 ten-aloow">
                <mat-card  [@myAnimation]>
                   <div class="h2 mar-30">Choose What Components your collection will handle</div>
-                <mat-checkbox name="blog" (change)="itemsmodel.blog = !itemsmodel.blog"
-                [checked]="itemsmodel.blog"> Allow Blogs</mat-checkbox>
-                <p>This Allows your team to publish blogs under this collection.</p>
+                <mat-checkbox name="pages" (change)="itemsmodel.pages = !itemsmodel.pages"
+                [checked]="itemsmodel.pages"> Allow pages</mat-checkbox>
+                <p>This Allows your team to publish pages under this collection.</p>
                </mat-card>
                <mat-card  [@myAnimation]>
                 <mat-checkbox (change)="itemsmodel.videos = !itemsmodel.videos"
@@ -74,8 +74,8 @@
                 <p>This Allows your team to share photos under this collection.</p>
                </mat-card>
                <mat-card  [@myAnimation]>
-                <mat-checkbox (change)="itemsmodel.forum = !itemsmodel.forum"
-                [checked]="itemsmodel.forum" name="forum">Allow Forum</mat-checkbox>
+                <mat-checkbox (change)="itemsmodel.forums = !itemsmodel.forums"
+                [checked]="itemsmodel.forums" name="forums">Allow forums</mat-checkbox>
                 <p>This Allows your team to create forums under this collection.</p>
                </mat-card>
              </div>

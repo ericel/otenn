@@ -8,8 +8,7 @@ import { UcFirstPipe } from 'ngx-pipes';
 import { NgForm } from '@angular/forms';
 import { NotifyService } from '@shared/services/notify.service';
 import { CollectionsService } from '@collections/state/collections.service';
-import { Title } from '@angular/platform-browser';
-import { Meta } from '@angular/platform-browser';
+import { Title, Meta } from '@angular/platform-browser';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {trigger, transition, style, animate, state} from '@angular/animations';
 import { Upload } from '@shared/services/upload/upload.model';
@@ -48,7 +47,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
   description: string;
   status = 'Public Private'.split(' ');
   statusmodel = { options: 'Public' };
-  itemsmodel: CollectionItems = {blog: true, videos: false, photos: false, forum: false};
+  itemsmodel: CollectionItems = {pages: true, videos: false, photos: false, forums: false};
   collectionAdmins = ['494949393'];
   addspinner;
   color: string = '#fff';
