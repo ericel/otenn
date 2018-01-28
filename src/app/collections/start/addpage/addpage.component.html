@@ -45,7 +45,7 @@
                 </div>
                 <div class="alert alert-warning" *ngIf="!pageForm.valid && pageForm.touched"><strong>Invalid Content!</strong> Please Select a collection and enter a valid title!</div>
             </div>
-            <app-wysiwyg  (publish)="onPublish($event)"  (draft)="onDraft($event)"></app-wysiwyg>
+            <app-wysiwyg  (publish)="onPublish($event)"  (draft)="onDraft($event)" [page]="page"></app-wysiwyg>
         </div>
       </mat-card>
   </div>
@@ -68,11 +68,11 @@
           <div class="col-md-12 ">
                 <div class="upload-btn-wrapper">
                     <button mat-raised-button class="btn" color="warn">Select File</button>
-                    <input type="file" id="file" #file
+                    <input type="file" id="file" #file accept="image/*"
                     (change)="detectFiles($event)">
                   </div>
                   <mat-card class="collection-card">
-                      <img mat-card-image mat-elevation-z2 [src]="photoUrl" alt="{{title}}">
+                      <img mat-card-image mat-elevation-z2 [src]="photoUrl || '.assets/img/photo.jpg'" alt="{{title}}">
                       <mat-card-title class="collection-name">
                           {{title}}
                       </mat-card-title>

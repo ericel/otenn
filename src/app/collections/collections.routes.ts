@@ -9,6 +9,7 @@ import { CanDeactivateGuard } from '@collections/start/can-deactivate-guard.serv
 import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
 import { PageComponent, PagesComponent } from '@collections/collection/page/page.component';
+import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.component';
 
 const collectionsRoutes: Routes = [
     {
@@ -33,6 +34,9 @@ const collectionsRoutes: Routes = [
   },
   {
     path: 'editcollection/:string', component: EditcollectionComponent, canDeactivate: [CanDeactivateGuard]
+  },
+  {
+    path: 'editpage/:string', component: EditpageComponent, canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'addpage', component: AddpageComponent, canDeactivate: [CanDeactivateGuard]

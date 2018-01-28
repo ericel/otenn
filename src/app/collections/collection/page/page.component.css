@@ -48,7 +48,7 @@
 }
 
 .collection-card {
-  color: #fff;
+
 }
 .checkit {
   position: absolute;
@@ -78,15 +78,17 @@
 .mat1-card img {
   width: 100% !important;
 }
-.mat-card {
-  height: 350px;
-}
-.mat-card-image {
-  height: 200px;
-}
 
-.collection-card {
-  color: #fff;
+.pages .mat-card-title{
+  margin-top: 10px;
+  line-height: 1.2;
+}
+.menu-button {
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  color: #006064;
+  z-index: 9;
 }
 .checkit {
   position: absolute;

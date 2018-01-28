@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Inject, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Inject, Output, EventEmitter, Input} from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { NotifyService } from '@shared/services/notify.service';
 import { SpinnerService } from '@shared/services/spinner.service';
@@ -11,10 +11,10 @@ import { SpinnerService } from '@shared/services/spinner.service';
 })
 
 export class WysiwygComponent implements OnInit, AfterViewInit{
+  @Input() page: string;
   @ViewChild('richtextarea') richtextarea: ElementRef;
   @Output() publish = new EventEmitter<string>();
   @Output() draft = new EventEmitter<string>();
-  html = 'Please write your page here!';
   img;
   disabled = false;
   draftspinner; publishspinner;
@@ -27,7 +27,7 @@ export class WysiwygComponent implements OnInit, AfterViewInit{
   ) { }
 
   ngOnInit() {
-    this.richtextarea.nativeElement.contentDocument.body.innerHTML = this.html;
+    this.richtextarea.nativeElement.contentDocument.body.innerHTML = this.page;
   }
 
   ngAfterViewInit() {

@@ -66,7 +66,7 @@ export class CollectionsService {
     private _spinner: SpinnerService,
     private _afAuth: AngularFireAuth,
     private _afs: AngularFirestore,
-  ){}
+  ) {}
 
   getAllCollections (): Observable<Collection[]> {
     const ref: AngularFirestoreCollection<Collection> = this._afs.collection(`o-t-collections`);
@@ -94,7 +94,7 @@ export class CollectionsService {
 
 
   addPage(page: Page) {
-    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.$key}/${page.$key}`);
+    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
     ref.set(Object.assign({}, page))
      .then(() => {
        this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
@@ -107,7 +107,7 @@ export class CollectionsService {
   }
 
   addDraft(page: Page) {
-    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.$key}/${page.$key}`);
+    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
     ref.set(Object.assign({}, page))
      .then(() => {
       this._notify.update('<strong>DRAFT!</strong> Your Draft Has Been Saved!', 'info');
@@ -116,16 +116,55 @@ export class CollectionsService {
      });
      setTimeout(() => {
       this._spinner.hideAll();
-    }, 3000);
+    }, 2000);
   }
 
   getPage(collection, component, key): Observable<Page | null> {
-    const item = this._afs.doc(`${collection}/${component}/${key}/${key}`).valueChanges() as Observable<Page | null>;
+    const item = this._afs.doc(`${collection}/${component}/${component}/${key}`).valueChanges() as Observable<Page | null>;
     return item;
+  }
+
+  getCollectionPages ($key, collection): Observable<{}[]> {
+    const item = this._afs.collection(`${collection}/pages/pages`, (ref) => ref.where('collectionKey', '==', $key));
+    return item.valueChanges();
   }
 
   editcollection(collection) {
     const ref = this._afs.collection<any>('o-t-collections').doc(collection.$key);
-    ref.update(Object.assign({}, collection));
+    ref.update(Object.assign({}, collection))
+    .then(() => {
+      this._notify.update('<strong>Collection Updated!</strong> Collection Successfully Updated. You will be redirected!', 'info');
+    }).catch((error) => {
+      this._notify.update(error.message, 'error');
+    });
+    setTimeout(() => {
+      this._spinner.hideAll();
+    }, 2000);
+  }
+
+  updateDraft(page: Page) {
+    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`)
+    item.update(Object.assign({}, page)) .then(() => {
+      this._notify.update('<strong>DRAFT!</strong> Your Draft Has Been Updated!', 'info');
+     }).catch((error) => {
+       this._notify.update(error.message, 'error');
+     });
+     setTimeout(() => {
+      this._spinner.hideAll();
+    }, 2000);
+  }
+
+  updatePage(page: Page){
+    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`)
+    item.update(Object.assign({}, page))
+    .then(() => {
+      this._notify.update('<strong>Update Added!</strong> Page Successfully Updated. It May Require Review! You will be redirected!',
+       'info');
+    }).catch((error) => {
+      this._notify.update(error.message, 'error');
+    });
+    setTimeout(() => {
+     this._spinner.hideAll();
+   }, 2000);
   }
 }

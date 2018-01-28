@@ -1,4 +1,16 @@
-.collection-input {
-  max-width: 600px;
-  margin: 70px auto;
+
+@media screen and (min-width: 992px) {
+  .collection-input {
+    max-width: 600px;
+    margin: 70px auto;
+  }
+  .container-fluid {
+    width: 60%;
+  }
+}
+.collection-input .container-fluid{
+  width: 80%;
+}
+textarea {
+  padding: 10px;
 }

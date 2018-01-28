@@ -164,7 +164,7 @@ validationMessages = {
     this._spinner.show('pageSpinner');
     setTimeout(() => {
        this._spinner.hideAll();
-       this._router.navigate(['/collections/addpage'], { queryParams: { allow: 1 },
+       this._router.navigate(['/collections/addpage'], { queryParams: { allow: 1, collectionkey: this.pageForm.value.key },
         fragment: this.pageForm.value.category });
     }, 2000);
   }

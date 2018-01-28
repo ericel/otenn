@@ -18,6 +18,7 @@ import { NgMasonryGridModule } from 'ng-masonry-grid';
 import { ForumsComponent } from './collection/forums/forums.component';
 import { PhotosComponent } from './collection/photos/photos.component';
 import { VideosComponent } from './collection/videos/videos.component';
+import { EditpageComponent } from './start/addpage/editpage/editpage.component';
 
 
 
@@ -42,7 +43,8 @@ import { VideosComponent } from './collection/videos/videos.component';
     COLLECTION_COMPONENTS,
     ForumsComponent,
     PhotosComponent,
-    VideosComponent
+    VideosComponent,
+    EditpageComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, ]
 

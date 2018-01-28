@@ -88,7 +88,7 @@
                ngModel
                name="category"
                required>
-                <mat-option *ngFor="let option of collections" value="{{option.title}}">{{option.title}}</mat-option>
+                <mat-option *ngFor="let option of collections" value="{{option.$key}}">{{option.title}}</mat-option>
               </mat-select>
               <mat-hint align="end">Select category ^</mat-hint>
            </mat-form-field>

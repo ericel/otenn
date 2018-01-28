@@ -13,6 +13,7 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { Title, Meta } from '@angular/platform-browser';
 import { SessionService } from '@shared/services/session.service';
 import { UploadService } from '@shared/services/upload/upload.service';
+import { Collection } from '@collections/state/collections.model';
 @Component({
   selector: 'app-addpage',
   templateUrl: './addpage.component.html',
@@ -42,6 +43,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
   changesSaved = false;
   sub: Subscription;
   section: string;
+  collectionKey;
   description: string;
   title: string;
   collections;
@@ -52,6 +54,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
   photoUrl: string = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   $key: string;
   component: string = 'pages';
+  page = 'Please write your page here!';
   @ViewChild('pageForm') pageForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -84,8 +87,12 @@ export class AddpageComponent implements OnInit, OnDestroy {
     this.sub = this._route.fragment
     .subscribe(
       (fragment: string) => {
-         this.section = this._ucfirst.transform(fragment);
-         this.description = '';
+        this._collections.getCollection(fragment)
+        .subscribe((collection: Collection) => {
+          this.section = collection.title;
+          this.collectionKey = collection.$key;
+          this.description = '';
+        })
       }
     );
   }
@@ -96,9 +103,9 @@ export class AddpageComponent implements OnInit, OnDestroy {
   onDraft(page: string) {
     if (this.pageForm.form.status === 'VALID') {
       this.$key = this._session.generate();
-      const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, 'photourl',
+      const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'Draft', this.collectValue.value, this.component,
-        this._session.getCurrentTime(), this._session.getCurrentTime(), 'uid');
+        this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
       this._collections.addDraft(newPage);
       this.changesSaved = true;
       setTimeout(() => {
@@ -120,9 +127,9 @@ export class AddpageComponent implements OnInit, OnDestroy {
     this.title = this.titleValue.value;
     if (this.pageForm.form.status === 'VALID') {
       this.$key = this._session.generate();
-      const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, 'photourl',
+      const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'On queue waiting..collection admin', this.collectValue.value, this.component,
-        this._session.getCurrentTime(), this._session.getCurrentTime(), 'uid');
+        this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
       this._collections.addPage(newPage);
       this.changesSaved = true;
       setTimeout(() => {
@@ -151,11 +158,14 @@ export class AddpageComponent implements OnInit, OnDestroy {
       this.currentUpload = new Upload(file.item(0));
       const name = this.$key;
       const path = `${this.section}/${this.component}/${name}`;
-      const firestoreUrl = `${this.section}/${this.component}/${name}/${name}`;
+      const firestoreUrl = `${this.section}/${this.component}/${this.component}/${name}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
       this._collections.getPage(this.section, this.component, this.$key)
       .subscribe( (page) => {
-         this.photoUrl = page.photoURL;
+        if(page){
+          this.photoUrl = page.photoURL;
+        }
+
       });
     } else {
       this._notify.update('<strong>No file found!</strong> upload again.', 'error')
