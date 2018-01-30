@@ -20,6 +20,7 @@ const collectionsRoutes: Routes = [
           { path: ':string', component: CollectionComponent,
           children: [
              {path: 'pages', component:  PagesComponent},
+             {path: 'pages/:string/:key', component: PageComponent},
              {path: 'forums', component: PagesComponent},
              {path: 'videos', component: PagesComponent},
              {path: 'photos', component: PagesComponent}
@@ -40,9 +41,6 @@ const collectionsRoutes: Routes = [
   },
   {
     path: 'addpage', component: AddpageComponent, canDeactivate: [CanDeactivateGuard]
-  },
-  {
-    path: ':string/:string/:string', component: PageComponent
   }
 ];
 

@@ -20,12 +20,12 @@
           <div class="text-right">
               <small class="text-muted"><em [innerHTML]="notifyTXT"></em></small>
               <div class="button-row">
-              <button mat-raised-button  title="Save Draft" (click)="onDraft()" [disabled]="!disabled || !draftAbled">
+              <button mat-raised-button  title="Save Draft" (click)="onDraft()" [disabled]="!disabled">
                   <app-spinner name="draftspinner"
                   [(show)]="draftspinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
                   <mat-icon color="primary" >drafts </mat-icon> <span>Save Draft</span>
                 </button>
-               <button mat-raised-button  title="Publish Page" (click)="onPublish()" [disabled]="!disabled || !publishAbled">
+               <button mat-raised-button  title="Publish Page" (click)="onPublish()" [disabled]="!disabled">
                   <app-spinner name="publishspinner"
                   [(show)]="publishspinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
                  <mat-icon color="primary" >publish </mat-icon> <span>Publish</span>

@@ -51,12 +51,12 @@ export class WysiwygComponent implements OnInit, AfterViewInit{
 
   onPublish() {
     this._spinner.show('publishspinner');
-    this.draftAbled = !this.publishAbled;
+    //this.draftAbled = !this.publishAbled;
     this.publish.next(this.textarea);
   }
 
   onDraft() {
-    this.publishAbled = !this.draftAbled;
+    //this.publishAbled = !this.draftAbled;
     this._spinner.show('draftspinner');
     this.draft.next(this.textarea);
   }

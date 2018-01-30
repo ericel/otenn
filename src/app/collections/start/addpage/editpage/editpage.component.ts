@@ -54,6 +54,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
   $key: string;
   component: string = 'pages'; status;
   page; createdAt; collectionkey;
+  colkey;
   @ViewChild('pageForm') pageForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -69,13 +70,12 @@ export class EditpageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-  this._title.setTitle('Write a page');
+  this._title.setTitle('Edit page');
   this._meta.addTags([
-    { name: 'keywords', content: 'Create an Otenn page'},
-    { name: 'description', content: 'Create an Otenn page' }
+    { name: 'keywords', content: 'Edit an Otenn page'},
+    { name: 'description', content: 'Edit an Otenn page' }
   ]);
 
-  this.collections = this._collections.collections;
    this.sub = this._route.queryParams
     .subscribe(
       (queryParams: Params) => {
@@ -87,6 +87,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
             (collection: Collection) => {
               this._collections.getPage(collection.title, this.component, this.$key).subscribe(
                 (page: Page) => {
+                  this.colkey = fragment;
                   this.title = page.title;
                   this.section = collection.title;
                   this.description = page.description;
@@ -107,15 +108,22 @@ export class EditpageComponent implements OnInit, OnDestroy {
 
   onDraft(page: string) {
     if (this.pageForm.form.status === 'VALID') {
-      const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl, this.status,
+      const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl, 'Draft',
          this.collectValue.value, this.component,
         this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
-      this._collections.updateDraft(newPage);
-      this.changesSaved = true;
-      setTimeout(() => {
-        this.submitted = true;
-        this.addImg = true;
-      }, 3000);
+    this._collections.updateDraft(newPage).then((status: string) => {
+        if (status === 'error') {
+          this.changesSaved = false;
+          this.submitted = false;
+          this.addImg = false;
+        } else {
+          this.changesSaved = true;
+          setTimeout(() => {
+            this.submitted = true;
+            this.addImg = true;
+          }, 3000);
+        }
+    });
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',
@@ -130,15 +138,27 @@ export class EditpageComponent implements OnInit, OnDestroy {
     this.description = this.descriptionValue.value;
     this.title = this.titleValue.value;
     if (this.pageForm.form.status === 'VALID') {
+      if(this.status === 'Approved'){
+         this.status = this.status;
+      } else {
+        this.status = 'On queue waiting..collection admin';
+      }
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       this.status, this.collectValue.value, this.component,
         this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
-      this._collections.updatePage(newPage);
-      this.changesSaved = true;
-      setTimeout(() => {
-        this.submitted = true;
-        this.addImg = true;
-      }, 3000);
+        this._collections.updatePage(newPage).then((status: string) => {
+        if (status === 'error') {
+          this.changesSaved = false;
+          this.submitted = false;
+          this.addImg = false;
+        } else {
+          this.changesSaved = true;
+          setTimeout(() => {
+            this.submitted = true;
+            this.addImg = true;
+          }, 3000);
+        }
+    });
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',

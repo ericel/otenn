@@ -1,7 +1,10 @@
 .nav-sidenav {
   width: 300px;
+
 }
 
 .nav-container {
-  min-height: 100vh;
+  min-height: 100%;
+  height: auto;
+  width: 100%;
 }

@@ -13,7 +13,7 @@ import { Collection } from '@collections/state/collections.model';
 import { CollectionsService } from '@collections/state/collections.service';
 import { UcFirstPipe } from 'ngx-pipes';
 import { SessionService } from '@shared/services/session.service';
-
+import { Title, Meta } from '@angular/platform-browser';
 @Component({
   selector: 'app-collection',
   templateUrl: './collection.component.html',
@@ -36,7 +36,9 @@ export class CollectionComponent implements OnInit, OnDestroy {
     private pageScrollService: PageScrollService,
     private _collections: CollectionsService,
     private _ucfirst: UcFirstPipe,
-    public _sessions: SessionService
+    public _sessions: SessionService,
+    private _title: Title,
+    private _meta: Meta,
   ) { }
 
   ngOnInit() {
@@ -45,6 +47,14 @@ export class CollectionComponent implements OnInit, OnDestroy {
       this._collections.getCollection(fragment).subscribe(
         (collection: Collection) => {
           this.collection = collection;
+          this._title.setTitle(this._ucfirst.transform(collection.title) + ' Otenn Collection');
+          this._meta.addTags([
+            { name: 'keywords',
+            content: this._ucfirst.transform(collection.title) + ' Pages' + this._ucfirst.transform(collection.title) + 'Collection'},
+            { name: 'description',
+             content: this._ucfirst.transform(collection.title) + ' Otenn Collection.'
+             + this._ucfirst.transform(collection.title) + ' Pages, blogs, videos, forums, photos.' }
+          ]);
       });
     });
 

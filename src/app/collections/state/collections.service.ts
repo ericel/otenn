@@ -94,29 +94,37 @@ export class CollectionsService {
 
 
   addPage(page: Page) {
-    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
-    ref.set(Object.assign({}, page))
+   const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
+   return ref.set(Object.assign({}, page))
      .then(() => {
-       this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
+      return this._notify
+       .update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
+     }).then(() => {
+        setTimeout(() => {
+          this._spinner.hideAll();
+        }, 2000);
      }).catch((error) => {
-       this._notify.update(error.message, 'error');
-     });
-     setTimeout(() => {
+      this._notify.update(error.message, 'error');
       this._spinner.hideAll();
-    }, 3000);
+      return 'error';
+     });
   }
 
   addDraft(page: Page) {
     const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
-    ref.set(Object.assign({}, page))
-     .then(() => {
-      this._notify.update('<strong>DRAFT!</strong> Your Draft Has Been Saved!', 'info');
-     }).catch((error) => {
+    return ref.set(Object.assign({}, page))
+      .then(() => {
+       return this._notify
+       .update('<strong>DRAFT!</strong> Your Draft Has Been Saved!', 'info');
+      }).then(() => {
+         setTimeout(() => {
+           this._spinner.hideAll();
+         }, 2000);
+      }).catch((error) => {
        this._notify.update(error.message, 'error');
-     });
-     setTimeout(() => {
-      this._spinner.hideAll();
-    }, 2000);
+       this._spinner.hideAll();
+       return 'error';
+      });
   }
 
   getPage(collection, component, key): Observable<Page | null> {
@@ -125,7 +133,8 @@ export class CollectionsService {
   }
 
   getCollectionPages ($key, collection): Observable<{}[]> {
-    const item = this._afs.collection(`${collection}/pages/pages`, (ref) => ref.where('collectionKey', '==', $key));
+    const item = this._afs.collection(`${collection}/pages/pages`,
+    (ref) => ref.where('collectionKey', '==', $key).orderBy('updatedAt', 'desc'));
     return item.valueChanges();
   }
 
@@ -140,31 +149,40 @@ export class CollectionsService {
     setTimeout(() => {
       this._spinner.hideAll();
     }, 2000);
+
   }
 
   updateDraft(page: Page) {
     const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`)
-    item.update(Object.assign({}, page)) .then(() => {
-      this._notify.update('<strong>DRAFT!</strong> Your Draft Has Been Updated!', 'info');
-     }).catch((error) => {
+    return item.update(Object.assign({}, page))
+      .then(() => {
+       return this._notify
+       .update('<strong>DRAFT!</strong> Your Draft Has Been Updated!', 'info');
+      }).then(() => {
+         setTimeout(() => {
+           this._spinner.hideAll();
+         }, 2000);
+      }).catch((error) => {
        this._notify.update(error.message, 'error');
-     });
-     setTimeout(() => {
-      this._spinner.hideAll();
-    }, 2000);
+       this._spinner.hideAll();
+       return 'error';
+      });
   }
 
   updatePage(page: Page){
     const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`)
-    item.update(Object.assign({}, page))
-    .then(() => {
-      this._notify.update('<strong>Update Added!</strong> Page Successfully Updated. It May Require Review! You will be redirected!',
-       'info');
-    }).catch((error) => {
-      this._notify.update(error.message, 'error');
-    });
-    setTimeout(() => {
-     this._spinner.hideAll();
-   }, 2000);
+   return item.update(Object.assign({}, page))
+   .then(() => {
+    return this._notify
+    .update('<strong>Update Added!</strong> Page Successfully Updated. It May Require Review! You will be redirected!', 'info');
+   }).then(() => {
+      setTimeout(() => {
+        this._spinner.hideAll();
+      }, 2000);
+   }).catch((error) => {
+    this._notify.update(error.message, 'error');
+    this._spinner.hideAll();
+    return 'error';
+   });
   }
 }

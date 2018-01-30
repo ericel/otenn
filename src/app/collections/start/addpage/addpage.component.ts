@@ -101,17 +101,26 @@ export class AddpageComponent implements OnInit, OnDestroy {
   get titleValue () { return this.pageForm.form.get('title')}
 
   onDraft(page: string) {
+    this.description = this.descriptionValue.value;
+    this.title = this.titleValue.value;
     if (this.pageForm.form.status === 'VALID') {
       this.$key = this._session.generate();
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'Draft', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
-      this._collections.addDraft(newPage);
-      this.changesSaved = true;
-      setTimeout(() => {
-        this.submitted = true;
-        this.addImg = true;
-      }, 3000);
+     this._collections.addDraft(newPage).then((status: string) => {
+        if (status === 'error') {
+          this.changesSaved = false;
+          this.submitted = false;
+          this.addImg = false;
+        } else {
+          this.changesSaved = true;
+          setTimeout(() => {
+            this.submitted = true;
+            this.addImg = true;
+          }, 3000);
+        }
+    });
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',
@@ -130,12 +139,19 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'On queue waiting..collection admin', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
-      this._collections.addPage(newPage);
-      this.changesSaved = true;
-      setTimeout(() => {
-        this.submitted = true;
-        this.addImg = true;
-      }, 3000);
+      this._collections.addPage(newPage).then((status: string) => {
+          if (status === 'error') {
+            this.changesSaved = false;
+            this.submitted = false;
+            this.addImg = false;
+          } else {
+            this.changesSaved = true;
+            setTimeout(() => {
+              this.submitted = true;
+              this.addImg = true;
+            }, 3000);
+          }
+      });
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',
@@ -160,7 +176,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const path = `${this.section}/${this.component}/${name}`;
       const firestoreUrl = `${this.section}/${this.component}/${this.component}/${name}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
-      this._collections.getPage(this.section, this.component, this.$key)
+    this._collections.getPage(this.section, this.component, this.$key)
       .subscribe( (page) => {
         if(page){
           this.photoUrl = page.photoURL;
