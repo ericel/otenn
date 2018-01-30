@@ -14,11 +14,13 @@ import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { NotifyService } from '@shared/services/notify.service';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
 import { PageComponent, PagesComponent } from './collection/page/page.component';
-import { NgMasonryGridModule } from 'ng-masonry-grid';
+import { NgMasonryGridModule, NgMasonryGridService } from 'ng-masonry-grid';
 import { ForumsComponent } from './collection/forums/forums.component';
 import { PhotosComponent } from './collection/photos/photos.component';
 import { VideosComponent } from './collection/videos/videos.component';
 import { EditpageComponent } from './start/addpage/editpage/editpage.component';
+import { RecentPages } from '@collections/shared/recent-collection-pages';
+
 
 
 
@@ -44,9 +46,10 @@ import { EditpageComponent } from './start/addpage/editpage/editpage.component';
     ForumsComponent,
     PhotosComponent,
     VideosComponent,
-    EditpageComponent
+    EditpageComponent,
+    RecentPages
   ],
-  providers: [ CollectionsService, CanDeactivateGuard, ]
+  providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 
 })
 export class CollectionsModule { }

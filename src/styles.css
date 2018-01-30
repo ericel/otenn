@@ -238,6 +238,23 @@ video {
 .content-right .mat-nav-list .mat-list-item .mat-list-item-content {
   padding-left: 2px !important;
 }
+.no-content {
+  margin: 0 auto;
+  width: 300px;
+}
+.forums .mat-nav-list .mat-list-item .mat-list-item-content {
+  display: inline-block !important;
+  padding: 10px !important;
+}
+.forums .mat-nav-list .mat-list-item:hover {
+  border-right: 2px solid #006064;
+}
+.forums .mat-nav-list {
+  padding-top: 0px !important;
+}
+.text-primary {
+  color: #006064 !important;
+}
 @media screen and (max-width: 991px){
     .drop-1 {
         right: -70px;
@@ -298,12 +315,7 @@ video {
 	max-width: 100%;
 }
 
-.grid .masonry-item img {
-	outline: none;
-	border: none;
-	display: block;
-	width: calc(100% + 48px) !important;
-}
+
 /* Effect 1: Move Up */
 .grid.effect-1 .masonry-item.animate {
 	-webkit-transform: translateY(200px);
@@ -486,10 +498,22 @@ video {
 	70% { -webkit-transform: scale(1.1); transform: scale(1.1); opacity: .8; -webkit-animation-timing-function: ease-out; animation-timing-function: ease-out; }
 	100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
 }
-
+.grid .masonry-item img {
+  outline: none;
+  border: none;
+  display: block;
+}
+@media screen and (min-width: 992px){
+  .grid .masonry-item img {
+    outline: none;
+    border: none;
+    display: block;
+    width: calc(100% + 48px) !important;
+  }
+}
 @media screen and (max-width: 900px) {
 	.grid .masonry-item {
-		width: 48%;
+		width: 100%;
 	}
 }
 
@@ -497,10 +521,6 @@ video {
 	.grid .masonry-item {
 		width: 100%;
 	}
-}
-
-.collection-card .mat-card-image {
-  width: calc(100% + 48px) !important;
 }
 
 .container {

@@ -10,6 +10,7 @@ import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
 import { PageComponent, PagesComponent } from '@collections/collection/page/page.component';
 import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.component';
+import { ForumsComponent } from '@collections/collection/forums/forums.component';
 
 const collectionsRoutes: Routes = [
     {
@@ -21,7 +22,7 @@ const collectionsRoutes: Routes = [
           children: [
              {path: 'pages', component:  PagesComponent},
              {path: 'pages/:string/:key', component: PageComponent},
-             {path: 'forums', component: PagesComponent},
+             {path: 'forums', component: ForumsComponent},
              {path: 'videos', component: PagesComponent},
              {path: 'photos', component: PagesComponent}
           ]}

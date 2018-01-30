@@ -185,4 +185,15 @@ export class CollectionsService {
     return 'error';
    });
   }
+
+  onDeletePage(page: Page) {
+    console.log(page)
+    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`);
+    item.delete().then(() => {
+      this._notify
+    .update('<strong>Page Deleted!</strong> Your Page Was Deleted!', 'info');
+    }).catch((error) => {
+      this._notify.update(error.message, 'error');
+    });
+  }
 }

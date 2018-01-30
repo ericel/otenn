@@ -1,0 +1,12 @@
+.forums .mat-list-item{
+  height: auto !important;
+}
+h2 {
+  display: block;
+}
+.forums .mat-nav-list .mat-list-item .mat-list-item-content {
+  display: inline-block !important;
+}
+.forums .mat-nav-list .mat-list-item h3{
+  color: rgba(0, 0, 0, 0.87) !important;
+}

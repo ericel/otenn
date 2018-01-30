@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy  } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Inject } from '@angular/core';
 import { CollectionsService } from '@collections/state/collections.service';
 import {trigger, transition, style, animate, state} from '@angular/animations';
 import { Page } from '@collections/state/page.model';
@@ -9,7 +9,9 @@ import { Title, Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { UcFirstPipe } from 'ngx-pipes';
 import { Observable } from '@firebase/util';
-
+import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
+import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
+import { NgMasonryGridService } from 'ng-masonry-grid';
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -39,16 +41,22 @@ export class PageComponent implements OnInit, OnDestroy {
   page: Page;
   pages;
   sub: Subscription;
+  @ViewChild('pageRef') pageRef: ElementRef;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
     private _session: SessionService,
     private _title: Title,
     private _meta: Meta,
-    private _ucFirst: UcFirstPipe
+    private _ucFirst: UcFirstPipe,
+    @Inject(DOCUMENT) private document: Document,
+    private pageScrollService: PageScrollService
   ) { }
 
   ngOnInit() {
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);
+    this.pageScrollService.start(pageScrollInstance);
+
    this.sub = this._route.params.subscribe((section: Params) => {
       this._route.fragment.subscribe( (Collectionkey: string) => {
         this._collections.getCollection(Collectionkey).subscribe((collection: Collection) => {
@@ -82,9 +90,14 @@ export class PageComponent implements OnInit, OnDestroy {
   selector: 'app-pages',
   providers: [UcFirstPipe],
   template: `
+  <div  #pageRef></div>
   <div class="mar-30" *ngIf="pages && pages.length < 1">
-     <div class="display-3">
-     no pages yet.
+     <div class="display-5 text-center">
+        <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+        <div>No Pages Yet! Be the First!</div>
+        <a routerLink="/collections/addpage"
+        [queryParams]="{allow:'1'}"
+        [fragment]="collectionKey">Create a page</a>
      </div>
   </div>
   <div  [@myAnimation] *ngIf="pages">
@@ -103,6 +116,7 @@ export class PageComponent implements OnInit, OnDestroy {
   <a mat-menu-item>Report</a>
   <a mat-menu-item routerLink="/collections/editpage/{{page.title | slugify}}"
   [queryParams]="{ key: page.$key}" [fragment]="page.collectionKey">Edit Page</a>
+  <a mat-menu-item  (click)="onDelete(page)">Delete</a>
   </mat-menu>
   <a routerLink="{{page.title | slugify }}/{{page.$key}}"
   [fragment]="page.collectionKey" [fragment]="page.collectionKey" mat-raised-button class="checkit"> Check it</a>
@@ -151,20 +165,27 @@ export class PageComponent implements OnInit, OnDestroy {
   ]
 })
 export class PagesComponent implements OnInit, OnDestroy {
-
+  @ViewChild('pageRef') pageRef: ElementRef;
   collections;
   pages;
   sub: Subscription;
+  collectionKey: string;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
     private _session: SessionService,
     private _title: Title,
     private _meta: Meta,
-    private _ucFirst: UcFirstPipe
+    private _ucFirst: UcFirstPipe,
+    @Inject(DOCUMENT) private document: Document,
+    private pageScrollService: PageScrollService,
+    private _masonry: NgMasonryGridService
   ) { }
 
   ngOnInit() {
+  const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);
+  this.pageScrollService.start(pageScrollInstance);
+
   this.collections = this._collections.collections;
    this.sub = this._route.fragment
     .subscribe(
@@ -172,6 +193,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         this._collections.getCollection(fragment).subscribe((collection: Collection) => {
           this._collections.getCollectionPages(fragment, collection.title).subscribe(
             (pages) => {
+              this.collectionKey = fragment;
                this.pages = pages;
                this._title.setTitle(this._ucFirst.transform(collection.title) + ' Pages');
                this._meta.addTags([
@@ -185,6 +207,12 @@ export class PagesComponent implements OnInit, OnDestroy {
       });
   }
 
+  onDelete (page: Page) {
+    this._collections.onDeletePage(page);
+    this.removeGridItem(page);
+  }
+
+  private removeGridItem($event){}
   ngOnDestroy () {
     this.sub.unsubscribe();
   }
