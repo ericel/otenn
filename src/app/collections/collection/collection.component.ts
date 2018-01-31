@@ -43,9 +43,10 @@ export class CollectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
   this.sub = this._route.fragment.subscribe(
-    (fragment: string) => {
-      this._collections.getCollection(fragment).subscribe(
+    (collectionKey: string) => {
+      this._collections.getCollection(collectionKey).subscribe(
         (collection: Collection) => {
+          this._router.navigate(['pages'], {relativeTo: this._route, fragment: collectionKey});
           this.collection = collection;
           this._title.setTitle(this._ucfirst.transform(collection.title) + ' Otenn Collection');
           this._meta.addTags([

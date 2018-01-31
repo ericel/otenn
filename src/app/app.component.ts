@@ -13,17 +13,17 @@ export class AppComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
 
   fillerNav = Array(10).fill(0).map((_, i) => `Nav Item ${i + 1}`);
-  
+
 
   private _mobileQueryListener: () => void;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher) {
-  
+
   }
 
   ngOnInit(){
-    
-    this.mobileQuery = this.media.matchMedia('(max-width: 768px)');
+
+    this.mobileQuery = this.media.matchMedia('(max-width: 922px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }

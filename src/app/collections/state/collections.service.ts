@@ -16,7 +16,8 @@ export class CollectionsService {
       description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
       creator: 'Oj Obasi',
       photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      createdAt: '2 June 1987'
+      createdAt: '2 June 1987',
+      $key: 'ue82942j'
     },
     {
       title: 'Angular',
@@ -24,7 +25,8 @@ export class CollectionsService {
       description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
       creator: 'Oj Obasi',
       photoURL: 'https://christianliebel.com/wp-content/uploads/2016/02/Angular2-825x510.png',
-      createdAt: '2 June 1987'
+      createdAt: '2 June 1987',
+      $key: 'ue82942r'
     },
     {
       title: 'Shitholes',
@@ -32,7 +34,8 @@ export class CollectionsService {
       description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
       creator: 'Oj Obasi',
       photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      createdAt: '2 June 1987'
+      createdAt: '2 June 1987',
+      $key: 'te82942j'
     },
     {
       title: 'Economy',
@@ -40,7 +43,8 @@ export class CollectionsService {
       photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
       description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
       creator: 'Oj Obasi',
-      createdAt: '2 June 1987'
+      createdAt: '2 June 1987',
+      $key: 'me82942j'
     },
     {
       title: 'ReactJs',
@@ -48,7 +52,8 @@ export class CollectionsService {
       photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
       description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
       creator: 'Oj Obasi',
-      createdAt: '2 June 1987'
+      createdAt: '2 June 1987',
+      $key: 'we82942j'
     },
     {
       title: 'Wordpress',
@@ -56,7 +61,8 @@ export class CollectionsService {
       photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
       description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
       creator: 'Oj Obasi',
-      createdAt: '2 June 1987'
+      createdAt: '2 June 1987',
+      $key: '3e82942j'
     }
 
   ];
@@ -68,9 +74,11 @@ export class CollectionsService {
     private _afs: AngularFirestore,
   ) {}
 
+
   getAllCollections (): Observable<Collection[]> {
-    const ref: AngularFirestoreCollection<Collection> = this._afs.collection(`o-t-collections`);
-    return ref.valueChanges();
+    const item: AngularFirestoreCollection<Collection> = this._afs.collection(`o-t-collections`,
+    (ref) => ref.orderBy('updatedAt', 'desc'));
+    return item.valueChanges();
   }
 
   getCollection(key): Observable<Collection | null> {

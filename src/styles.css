@@ -513,11 +513,11 @@ video {
 }
 @media screen and (max-width: 900px) {
 	.grid .masonry-item {
-		width: 100%;
+		width: 48%;
 	}
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 600px) {
 	.grid .masonry-item {
 		width: 100%;
 	}

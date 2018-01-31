@@ -20,6 +20,7 @@ import { PhotosComponent } from './collection/photos/photos.component';
 import { VideosComponent } from './collection/videos/videos.component';
 import { EditpageComponent } from './start/addpage/editpage/editpage.component';
 import { RecentPages } from '@collections/shared/recent-collection-pages';
+import { ForumComponent } from './collection/forums/forum/forum.component';
 
 
 
@@ -47,7 +48,8 @@ import { RecentPages } from '@collections/shared/recent-collection-pages';
     PhotosComponent,
     VideosComponent,
     EditpageComponent,
-    RecentPages
+    RecentPages,
+    ForumComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

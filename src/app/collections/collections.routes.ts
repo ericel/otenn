@@ -11,6 +11,7 @@ import { EditcollectionComponent } from '@collections/start/addcollection/editco
 import { PageComponent, PagesComponent } from '@collections/collection/page/page.component';
 import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.component';
 import { ForumsComponent } from '@collections/collection/forums/forums.component';
+import { ForumComponent } from '@collections/collection/forums/forum/forum.component';
 
 const collectionsRoutes: Routes = [
     {
@@ -23,6 +24,7 @@ const collectionsRoutes: Routes = [
              {path: 'pages', component:  PagesComponent},
              {path: 'pages/:string/:key', component: PageComponent},
              {path: 'forums', component: ForumsComponent},
+             {path: 'forums/:string/:key', component: ForumComponent},
              {path: 'videos', component: PagesComponent},
              {path: 'photos', component: PagesComponent}
           ]}

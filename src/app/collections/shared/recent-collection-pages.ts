@@ -9,11 +9,12 @@ import { Observable } from '@firebase/util';
   template:`
     <ng-container *ngFor="let page of pages; let i=index">
     <div *ngIf="i < limit">
-    <mat-card class="mar-20 recent-card" >
-    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-    <mat-card-content>
+    <mat-card class="mar-30 recent-card" >
+    <a routerLink="/collections/c/{{collection.title | slugify}}/pages/{{page.title | slugify}}/{{page.$key}}"
+     [fragment]="page.collectionKey">
+    <img mat-card-image [src]="page.photoURL" [alt]="page.title">
       <h3 [innerHTML]="page.title"></h3>
-    </mat-card-content>
+    </a>
     </mat-card>
     </div>
     </ng-container>
@@ -25,15 +26,15 @@ export class RecentPages implements OnInit {
   @Input() limit: number;
   pages;
   sub: Subscription;
+  collection: Collection;
   constructor(
     private _collections: CollectionsService
   ){}
 
   ngOnInit () {
-  console.log(this.collectionKey)
    this.sub = this._collections.getCollection(this.collectionKey)
    .subscribe((collection: Collection) => {
-     console.log(collection)
+      this.collection = collection;
       this._collections.getCollectionPages(collection.$key, collection.title).subscribe((pages) => {
         this.pages = pages;
       });

@@ -92,21 +92,36 @@ export class PageComponent implements OnInit, OnDestroy {
   template: `
   <div  #pageRef></div>
   <div class="mar-30" *ngIf="pages && pages.length < 1">
-     <div class="display-5 text-center">
-        <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
-        <div>No Pages Yet! Be the First!</div>
-        <a routerLink="/collections/addpage"
-        [queryParams]="{allow:'1'}"
-        [fragment]="collectionKey">Create a page</a>
-     </div>
+    <div class="row">
+       <div class="col-md-8">
+        <div class="display-5 text-center">
+            <mat-card class="mar-20">
+              <h1>Welcome to {{collection.title}} collection</h1>
+              <div>{{collection.description}}.</div>
+              <p>In this collection, you can post blogs, forums, photos, videos on this topic.</p>
+            </mat-card>
+            <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+            <div>No Pages Yet! Be the First!</div>
+            <a routerLink="/collections/addpage"
+            [queryParams]="{allow:'1'}"
+            [fragment]="collectionKey">Create a page</a>
+          </div>
+       </div>
+       <div class="col-md-4">
+          <app-ads-right></app-ads-right>
+       </div>
+    </div>
   </div>
-  <div  [@myAnimation] *ngIf="pages">
+  <div  [@myAnimation] *ngIf="pages && pages.length > 1">
   <ng-masonry-grid
   [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
   [useAnimation]="true"
   [useImagesLoaded]="true"
   [scrollAnimationOptions]="{ animationEffect: 'effect-4', minDuration : 0.4, maxDuration : 0.7 }"
    >
+   <ng-masonry-grid-item>
+   <app-ads-right></app-ads-right>
+   </ng-masonry-grid-item>
    <ng-masonry-grid-item *ngFor="let page of pages" class="pages">
   <ng-container *ngIf="page.status !== 'Draft'">
   <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
@@ -137,6 +152,9 @@ export class PageComponent implements OnInit, OnDestroy {
          </mat-card-content>
        </mat-card>
        </ng-container>
+  </ng-masonry-grid-item>
+  <ng-masonry-grid-item>
+  <app-ads-right-2></app-ads-right-2>
   </ng-masonry-grid-item>
 </ng-masonry-grid>
 </div>
@@ -170,6 +188,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   pages;
   sub: Subscription;
   collectionKey: string;
+  collection: Collection;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
@@ -193,6 +212,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         this._collections.getCollection(fragment).subscribe((collection: Collection) => {
           this._collections.getCollectionPages(fragment, collection.title).subscribe(
             (pages) => {
+              this.collection = collection;
               this.collectionKey = fragment;
                this.pages = pages;
                this._title.setTitle(this._ucFirst.transform(collection.title) + ' Pages');

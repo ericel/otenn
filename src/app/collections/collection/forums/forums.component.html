@@ -18,7 +18,7 @@
            </div>
            <mat-card class="forums nopadding mar-20" >
               <mat-nav-list *ngIf="forums">
-                  <mat-list-item *ngFor="let forum of forums">
+                  <mat-list-item *ngFor="let forum of forums" routerLink="{{forum.title}}/{{forum.$key}}" [fragment]="collection.$key">
                      <h3 class="h4"> typescript angular2 template queryParams
                       </h3>
                      <p>If your question is about a , the following forums may be better equipped to answer your questions!</p>
@@ -39,7 +39,7 @@
       </div>
       <div class="col-md-4">
           <app-ads-content-match></app-ads-content-match>
-          <recent-pages-card *ngIf="collection" [collectionKey]="collectionKey" [limit]="2"></recent-pages-card>
+          <recent-pages-card *ngIf="collection" [collectionKey]="collectionKey" [limit]="3"></recent-pages-card>
       </div>
     </div>
 </main>

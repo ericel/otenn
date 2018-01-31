@@ -50,13 +50,13 @@ export class AdsRight2Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-   // setTimeout(()=>{
+   setTimeout(()=>{
      try{
        (window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
      }catch(e){
        console.error("error");
      }
-   //},2000);
+   },2000);
 }
 }
 
