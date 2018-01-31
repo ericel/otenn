@@ -5,13 +5,14 @@
           <app-ads-right-2 class="mar-20"></app-ads-right-2>
       </div>
       <div  class="col-lg-10">
+
           <div *ngIf="collections">
             <ng-masonry-grid
                 [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
                 [useAnimation]="true"
                 [useImagesLoaded]="true"
              >
-            <ng-masonry-grid-item *ngFor="let collection of collections">
+            <ng-masonry-grid-item *ngFor="let collection of collections | async">
               <a routerLink="{{collection.title | slugify }}" fragment="{{collection.$key}}">
                 <button mat-raised-button class="checkit"> Check it</button>
                   <mat-card class="collection-card" [style.background]="collection.color">

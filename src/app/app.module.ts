@@ -17,6 +17,11 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { environment } from '@environments/environment';
 
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { reducers } from './reducers';
+import { PizzaModule } from 'app/pizza/pizza.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +37,12 @@ import { environment } from '@environments/environment';
     AppRoutingModule,
     SharedModule,
     HomeModule,
-
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25
+    }),
+    EffectsModule.forRoot([]),
+    PizzaModule
   ],
   providers: [...SHARED_SERVICES],
   bootstrap: [AppComponent]

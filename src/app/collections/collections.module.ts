@@ -22,8 +22,10 @@ import { EditpageComponent } from './start/addpage/editpage/editpage.component';
 import { RecentPages } from '@collections/shared/recent-collection-pages';
 import { ForumComponent } from './collection/forums/forum/forum.component';
 
-
-
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { CollectionEffects } from '@collections/state/collections.effects';
+import { collectionReducer } from '@collections/state/collections.reducer';
 
 @NgModule({
   imports: [
@@ -32,7 +34,9 @@ import { ForumComponent } from './collection/forums/forum/forum.component';
     FormsModule,
     ReactiveFormsModule,
     CollectionsRoutingModule,
-    NgMasonryGridModule
+    NgMasonryGridModule,
+    StoreModule.forFeature('collection', collectionReducer),
+    EffectsModule.forFeature([CollectionEffects])
   ],
   declarations: [
     IndexComponent,

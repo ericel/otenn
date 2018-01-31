@@ -14,6 +14,7 @@ import { CollectionsService } from '@collections/state/collections.service';
 import { UcFirstPipe } from 'ngx-pipes';
 import { SessionService } from '@shared/services/session.service';
 import { Title, Meta } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-collection',
   templateUrl: './collection.component.html',
@@ -25,7 +26,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
   sub: Subscription;
   collection;
   verticalOffset;
-  isMini: boolean = false;
+  isMini = false;
   photo = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   constructor(
     private _route: ActivatedRoute,
