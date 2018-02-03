@@ -3,7 +3,7 @@ import { Router, Params, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SpinnerService } from '@shared/services/spinner.service';
-import { CollectionItems, Collection} from '@collections/state/collections.model';
+import { CollectionComponents, Collection} from '@collections/state/models/collection.model';
 import { UcFirstPipe } from 'ngx-pipes';
 import { NgForm } from '@angular/forms';
 import { NotifyService } from '@shared/services/notify.service';
@@ -16,6 +16,10 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { UploadService } from '@shared/services/upload/upload.service';
 import { SessionService } from '@shared/services/session.service';
 
+
+import { Store } from '@ngrx/store';
+import * as actions from '@collections/state/actions/collection.actions';
+import * as fromCollection from '@collections/state/reducers/collection.reducer';
 @Component({
   selector: 'app-editcollection',
   templateUrl: './editcollection.component.html',
@@ -44,19 +48,18 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   allow = false;
   changesSaved = false;
   sub: Subscription;
-  title: string;
-  description: string;
+  title: string; description: string;
   status = 'Public Private'.split(' ');
   statusmodel = { options: 'Public' };
-  itemsmodel: CollectionItems = {pages: true, videos: false, photos: false, forums: false};
+  itemsmodel = {pages: true, videos: false, photos: false, forums: false};
   collectionAdmins = ['494949393'];
   addspinner;
   collection;
-  color: string = '#fff';
+  color = '#fff';
   photoUrl: string;
-  changePhotoUrl: boolean = false;
-  hideCollectionForm: boolean = true;
-  notify_already: boolean = false;
+  changePhotoUrl = false;
+  hideCollectionForm = true;
+  notify_already = false;
   $key: string;
   collections;
   @ViewChild('file') file: ElementRef;
@@ -70,12 +73,12 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     private _spinner: SpinnerService,
     private _ucfirst: UcFirstPipe,
     private _notify: NotifyService,
-    private _collections: CollectionsService,
     private _title: Title,
     private _meta: Meta,
     public dialog: MatDialog,
     public _upload: UploadService,
-    private _session: SessionService
+    private _session: SessionService,
+    private store: Store<fromCollection.State>
   ) { }
 
   ngOnInit() {
@@ -92,42 +95,29 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
       }
     );
 
-    this._route.params
-    .subscribe(
-      (params: Params) => {
-        this.title = params['string'];
-      }
-    );
-
-    this._collections.getAllCollections().subscribe(
-      (collections) => {
-        this.collections = collections;
-      });
-
-
-    this._route.fragment.subscribe((fragment: string) => {
-      this.$key = this._ucfirst.transform(fragment);
-      this._collections.getCollection(this.$key).subscribe(
-      (collection: Collection) => {
-         this.collection = collection;
-         this.itemsmodel = this.collection.items;
-         this.statusmodel = {options: this.collection.status};
-         this.photoUrl = this.collection.photoURL;
-         this.color = this.collection.color;
-      });
-    });
-
+      this.sub = this._route.fragment.subscribe(
+        (collectionKey: string) => {
+         this.collections = this.store.select(fromCollection.selectAll);
+          this.store.dispatch(  new actions.Query() );
+          this.collections.subscribe(data => {
+            this.collection =  data.filter((item) => {
+               return item.id === collectionKey;
+             });
+            this.collection = this.collection[0];
+            if(this.collection) {
+              this.title = this.collection.title;
+              this.$key = collectionKey;
+              this.itemsmodel = this.collection.components;
+              this.statusmodel = {options: this.collection.status};
+              this.photoUrl = this.collection.photoURL;
+              this.color = this.collection.color;
+            }
+           });
+     });
   }
 
-  private filterCheck() {
-   return this.collections.filter(e =>  {
-       return (e.title).toLowerCase() === this.title.toLowerCase();
-   });
-  }
+
   onAddCollection() {
-    if (this.filterCheck().length < 0) {
-      return;
-    }
     this.description = this.descForm.value.description;
     this._spinner.show('addspinner');
     if(this.color === '#fff') {this.color = '#029ae4'}
@@ -136,26 +126,16 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
       this._notify.getCurrentTime(), this.collectionAdmins, this.color, 'uid');
     if (this.description !== undefined && this.description.length > 100) {
         this.changesSaved = true;
-        this._collections.editcollection(collection);
-        this.getCollectionPhoto();
+        this.store.dispatch( new actions.Update(this.$key, collection) );
         setTimeout(() => {
           this.hideCollectionForm = false;
           this.changePhotoUrl = true;
         }, 2000);
     } else {
-      this._notify.update("<strong>Description Needed!</strong> Atleast 100 Character long.", "error")
+      this._notify.update('<strong>Description Needed!</strong> Atleast 100 Character long.', 'error')
       this._spinner.hideAll();
     }
 
-  }
-
- private getCollectionPhoto() {
-    this._collections.getCollection(this.$key).subscribe(
-      (collection: Collection) => {
-         if (collection) {
-            this.photoUrl = collection.photoURL;
-         }
-     });
   }
 
   onColorSelect(color: string) {
@@ -172,7 +152,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
       const firestoreUrl = `o-t-collections/${this.$key}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
     } else {
-      this._notify.update("<strong>No file found!</strong> upload again.", 'error')
+      this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }
    }
 

@@ -3,7 +3,7 @@ import { Router, Params, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SpinnerService } from '@shared/services/spinner.service';
-import { CollectionItems, Collection} from '@collections/state/collections.model';
+import { CollectionComponents, Collection} from '@collections/state/models/collection.model';
 import { UcFirstPipe } from 'ngx-pipes';
 import { NgForm } from '@angular/forms';
 import { NotifyService } from '@shared/services/notify.service';
@@ -15,6 +15,9 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { UploadService } from '@shared/services/upload/upload.service';
 import { SessionService } from '@shared/services/session.service';
 
+import { Store } from '@ngrx/store';
+import * as actions from '@collections/state/actions/collection.actions';
+import * as fromCollection from '@collections/state/reducers/collection.reducer';
 @Component({
   selector: 'app-addcollection',
   templateUrl: './addcollection.component.html',
@@ -47,7 +50,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
   description: string;
   status = 'Public Private'.split(' ');
   statusmodel = { options: 'Public' };
-  itemsmodel: CollectionItems = {pages: true, videos: false, photos: false, forums: false};
+  itemsmodel: CollectionComponents = {pages: true, videos: false, photos: false, forums: false};
   collectionAdmins = ['494949393'];
   addspinner;
   color: string = '#fff';
@@ -72,7 +75,8 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     private _meta: Meta,
     public dialog: MatDialog,
     public _upload: UploadService,
-    private _session: SessionService
+    private _session: SessionService,
+    private store: Store<fromCollection.State>
   ) { }
 
   ngOnInit() {
@@ -121,14 +125,14 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
       this._notify.getCurrentTime(), this.collectionAdmins, this.color, 'uid');
     if (this.description !== undefined && this.description.length > 100) {
         this.changesSaved = true;
-        this._collections.addcollection(collection);
+        this.store.dispatch( new actions.Create(collection) )
         this.getCollectionPhoto();
         setTimeout(() => {
           this.hideCollectionForm = false;
           this.changePhotoUrl = true;
         }, 2000);
     } else {
-      this._notify.update("<strong>Description Needed!</strong> Atleast 100 Character long.", "error")
+      this._notify.update('<strong>Description Needed!</strong> Atleast 100 Character long.', 'error')
       this._spinner.hideAll();
     }
 
@@ -157,7 +161,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
       const firestoreUrl = `o-t-collections/${this.$key}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
     } else {
-      this._notify.update("<strong>No file found!</strong> upload again.", 'error')
+      this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }
    }
 

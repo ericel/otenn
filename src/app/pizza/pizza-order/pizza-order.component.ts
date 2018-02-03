@@ -12,12 +12,20 @@ import * as fromPizza from '../pizza.reducer';
 export class PizzaOrderComponent implements OnInit {
 
   pizzas: Observable<any>;
-
+  collect: Observable<any>
   constructor(private store: Store<fromPizza.State>) { }
 
   ngOnInit() {
     this.pizzas = this.store.select(fromPizza.selectAll)
     this.store.dispatch(  new actions.Query() )
+
+    this.pizzas.subscribe(data =>{
+     this.collect =  data.filter((item) => {
+        return item.id === '288';
+      });
+     this.collect = this.collect[0]
+    })
+
   }
 
 

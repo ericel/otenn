@@ -1,18 +1,22 @@
-import { Collection } from '@collections/state/collections.model';
-import * as actions from '@collections/state/collections.actions';
+import { Collection } from '@collections/state/models/collection.model';
+import * as actions from '@collections/state/actions/collection.actions';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store';
 
 export const collectionAdapter = createEntityAdapter<Collection>({
-  selectId: (collection: Collection) => collection.$key,
+  //selectId: (collection: Collection) => collection.id,
 });
+
+
+
+
 export interface State extends EntityState<Collection> { }
 
 const defaultCollection = {
   ids: ['83nryus'],
   entities: {
       '83nryus': {
-        $key: '83nryus',
+        id: '83nryus',
         title: 'Frequently Asked Questions',
         description: 'F.A.Q answered here for this service.',
         photoURL: 'https://www.w3schools.com/bootstrap4/paris.jpg',
@@ -38,8 +42,6 @@ export function collectionReducer(
 
         case actions.ADD_ALL:
             return collectionAdapter.addAll(action.collections, state);
-
-
         default:
             return state;
         }

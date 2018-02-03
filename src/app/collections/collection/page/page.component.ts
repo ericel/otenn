@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Inject } from '@angular/core';
 import { CollectionsService } from '@collections/state/collections.service';
 import {trigger, transition, style, animate, state} from '@angular/animations';
-import { Page } from '@collections/state/page.model';
+import { Page } from '@collections/state/models/page.model';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SessionService } from '@shared/services/session.service';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 import { Title, Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { UcFirstPipe } from 'ngx-pipes';

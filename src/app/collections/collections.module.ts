@@ -24,8 +24,11 @@ import { ForumComponent } from './collection/forums/forum/forum.component';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { CollectionEffects } from '@collections/state/collections.effects';
-import { collectionReducer } from '@collections/state/collections.reducer';
+import { CollectionEffects } from '@collections/state/effects/collection.effects';
+import { collectionReducer } from '@collections/state/reducers/collection.reducer';
+import { reducers } from '@collections/state';
+import { PageEffects } from '@collections/state/effects/page.effects';
+
 
 @NgModule({
   imports: [
@@ -35,8 +38,8 @@ import { collectionReducer } from '@collections/state/collections.reducer';
     ReactiveFormsModule,
     CollectionsRoutingModule,
     NgMasonryGridModule,
-    StoreModule.forFeature('collection', collectionReducer),
-    EffectsModule.forFeature([CollectionEffects])
+    StoreModule.forFeature('collections', reducers),
+    EffectsModule.forFeature([CollectionEffects, PageEffects])
   ],
   declarations: [
     IndexComponent,

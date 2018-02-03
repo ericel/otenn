@@ -6,6 +6,10 @@ import { FirebaseApp } from 'angularfire2';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import { NotifyService } from '@shared/services/notify.service';
+
+import { Store } from '@ngrx/store';
+import * as actions from '@collections/state/actions/collection.actions';
+import * as fromCollection from '@collections/state/reducers/collection.reducer';
 @Injectable()
 export class UploadService {
   basePath = 'o-users-uploads';
@@ -17,7 +21,8 @@ export class UploadService {
     private notify: NotifyService,
     private afs: AngularFirestore,
     private fb: FirebaseApp,
-    private _notify: NotifyService
+    private _notify: NotifyService,
+    private store: Store<fromCollection.State>
   ) {
     this.storageRef = this.fb.storage().ref();
   }

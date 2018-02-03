@@ -9,12 +9,17 @@ import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
 import { WINDOW } from '@shared/services/windows.service';
 import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 import { CollectionsService } from '@collections/state/collections.service';
 import { UcFirstPipe } from 'ngx-pipes';
 import { SessionService } from '@shared/services/session.service';
 import { Title, Meta } from '@angular/platform-browser';
 
+
+import { Store } from '@ngrx/store';
+import * as actions from '@collections/state/actions/collection.actions';
+import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-collection',
   templateUrl: './collection.component.html',
@@ -24,10 +29,10 @@ import { Title, Meta } from '@angular/platform-browser';
 export class CollectionComponent implements OnInit, OnDestroy {
   @ViewChild('router') route: ElementRef;
   sub: Subscription;
-  collection;
+  collection: Observable<any>;
+  collections: Observable<any>;
   verticalOffset;
   isMini = false;
-  photo = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -35,29 +40,24 @@ export class CollectionComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     @Inject( WINDOW) private window,
     private pageScrollService: PageScrollService,
-    private _collections: CollectionsService,
     private _ucfirst: UcFirstPipe,
     public _sessions: SessionService,
     private _title: Title,
     private _meta: Meta,
+    private store: Store<fromCollection.State>
   ) { }
 
   ngOnInit() {
   this.sub = this._route.fragment.subscribe(
     (collectionKey: string) => {
-      this._collections.getCollection(collectionKey).subscribe(
-        (collection: Collection) => {
-          this._router.navigate(['pages'], {relativeTo: this._route, fragment: collectionKey});
-          this.collection = collection;
-          this._title.setTitle(this._ucfirst.transform(collection.title) + ' Otenn Collection');
-          this._meta.addTags([
-            { name: 'keywords',
-            content: this._ucfirst.transform(collection.title) + ' Pages' + this._ucfirst.transform(collection.title) + 'Collection'},
-            { name: 'description',
-             content: this._ucfirst.transform(collection.title) + ' Otenn Collection.'
-             + this._ucfirst.transform(collection.title) + ' Pages, blogs, videos, forums, photos.' }
-          ]);
-      });
+     this.collections = this.store.select(fromCollection.selectAll);
+      this.store.dispatch(  new actions.Query() );
+      this.collections.subscribe(data => {
+        this.collection =  data.filter((item) => {
+           return item.id === collectionKey;
+         });
+        this.collection = this.collection[0];
+       })
     });
 
   this._sessions.hide();
@@ -70,6 +70,11 @@ export class CollectionComponent implements OnInit, OnDestroy {
     const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.route.nativeElement);
     this.pageScrollService.start(pageScrollInstance);
   }
+
+  onDelete(id) {
+    this.store.dispatch( new actions.Delete(id));
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
@@ -104,33 +109,34 @@ export class CollectionComponent implements OnInit, OnDestroy {
  <mat-menu #collectionmenu="matMenu" xPosition="before">
   <a mat-menu-item>Report</a>
   <a mat-menu-item routerLink="/collections/editcollection/{{collection.title | slugify}}"
-  [queryParams]="{ allow: 1}" [fragment]="collection.$key">Edit Collection</a>
+  [queryParams]="{ allow: 1}" [fragment]="collection.id">Edit Collection</a>
+  <a mat-menu-item (click)="onDelete(collection.id)">Delete Collection</a>
 </mat-menu>
   <div class="card-content afix" >
      <mat-list>
-          <h1 class="h4 text-center"><a class="title" routerLink="/collections/c/{{collection.title | slugify}}" fragment="{{collection.$key}}"
+          <h1 class="h4 text-center"><a class="title" routerLink="/collections/c/{{collection.title | slugify}}/pages" fragment="{{collection.id}}"
             pageScroll href="#home">
           <i class="fa fa-home" aria-hidden="true"></i>
               {{collection.title | uppercase | shorten: 20:''}}
           </a>
         </h1>
             <mat-divider></mat-divider>
-              <a routerLink="pages" mat-list-item routerLinkActive="active" class="text-center" fragment="{{collection.$key}}" (click)="onRoute($event)" >
+              <a routerLink="pages" mat-list-item routerLinkActive="active" class="text-center" fragment="{{collection.id}}" (click)="onRoute($event)" >
                  <mat-icon mat-list-icon>pages</mat-icon>
                    <h4 mat-line> Pages</h4>
                       <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-              <a routerLink="forums" mat-list-item routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+              <a routerLink="forums" mat-list-item routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                  <mat-icon mat-list-icon>forums</mat-icon>
                   <h4 mat-line> Forums</h4>
                     <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-              <a routerLink="videos" mat-list-item routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+              <a routerLink="videos" mat-list-item routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                    <mat-icon mat-list-icon>photo_library</mat-icon>
                    <h4 mat-line> Videos</h4>
                     <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-               <a routerLink="photos" mat-list-item routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+               <a routerLink="photos" mat-list-item routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                      <mat-icon mat-list-icon>video_library</mat-icon>
                       <h4 mat-line> Photos</h4>
                   <p mat-line> {{collection.createdAt | date}} </p>
@@ -153,6 +159,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
 export class CollectionMenu implements OnInit {
   @Input() collection: any;
   @Output() route = new EventEmitter<void>();
+  @Output() delete = new EventEmitter;
   photo = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   constructor (
 
@@ -164,6 +171,10 @@ export class CollectionMenu implements OnInit {
 
   onRoute(e) {
     this.route.emit(e);
+  }
+
+  onDelete(id) {
+    this.delete.emit(id);
   }
 }
 
@@ -286,28 +297,28 @@ export class CollectionUpdates implements OnInit {
 <!-- [ngStyle]="isMini && {'background-image': 'url(' + photo + ')'}"-->
       <div class="row " [ngClass]="[isMini ? 'header-mini animated finite slideInDown' : 'mar-20-minus']">
           <div class="col-md-3">
-            <a routerLink="blogs" routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+            <a routerLink="blogs" routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                 <mat-card  class="w-100 nopadding">
                     <span class="h5  justify-vertically"><mat-icon>pages</mat-icon> Pages</span>
                 </mat-card>
             </a>
           </div>
           <div class="col-md-3">
-              <a routerLink="forums" routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+              <a routerLink="forums" routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                   <mat-card  class="w-100 nopadding">
                       <span class="h5  justify-vertically"><mat-icon>forum</mat-icon> Forums</span>
                   </mat-card>
               </a>
            </div>
            <div class="col-md-3">
-              <a routerLink="photos" routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+              <a routerLink="photos" routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                   <mat-card  class="w-100 nopadding">
                       <span class="h5  justify-vertically"><mat-icon>photo_library</mat-icon> Photos</span>
                   </mat-card>
               </a>
            </div>
            <div class="col-md-3">
-              <a routerLink="videos" routerLinkActive="active" fragment="{{collection.$key}}" (click)="onRoute($event)">
+              <a routerLink="videos" routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                   <mat-card  class="w-100 nopadding">
                       <span class="h5  justify-vertically"><mat-icon>video_library</mat-icon> Videos</span>
                   </mat-card>

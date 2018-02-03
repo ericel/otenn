@@ -6,7 +6,7 @@ import { UcFirstPipe } from 'ngx-pipes';
 import { SpinnerService } from '@shared/services/spinner.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotifyService } from '@shared/services/notify.service';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 import { Title, Meta } from '@angular/platform-browser';
 
 type UserFields = 'collectionName';

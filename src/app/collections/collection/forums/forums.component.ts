@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject, ElementRef, ViewChild } from '@angular/core';
 import { CollectionsService } from '@collections/state/collections.service';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';

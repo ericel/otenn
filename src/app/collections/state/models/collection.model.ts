@@ -1,5 +1,5 @@
 
-export class CollectionItems {
+export class CollectionComponents {
   constructor(
   public pages: boolean,
   public videos: boolean,
@@ -11,12 +11,12 @@ export class CollectionItems {
 
 export class Collection {
   constructor(
-  public $key: string,
+  public id: string,
   public title: string,
   public description: string,
   public photoURL: string,
   public status: string,
-  public items: CollectionItems,
+  public components: CollectionComponents,
   public createdAt: any,
   public updatedAt: any,
   public admins: object,

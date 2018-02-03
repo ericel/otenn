@@ -73,7 +73,7 @@
           class="badge">
           45
         </span>
-        <a mat-button routerLink="/collections/c/{{collection.title | slugify}}" fragment="{{collection.$key}}"><strong>{{ collection.title | shorten:15 }}</strong></a>
+        <a mat-button routerLink="/collections/c/{{collection.title | slugify}}" fragment="{{collection.id}}"><strong>{{ collection.title | shorten:15 }}</strong></a>
       </li>
     </ul>
    </div>
@@ -88,7 +88,7 @@
                ngModel
                name="category"
                required>
-                <mat-option *ngFor="let option of collections" value="{{option.$key}}">{{option.title}}</mat-option>
+                <mat-option *ngFor="let option of collections" value="{{option.id}}">{{option.title}}</mat-option>
               </mat-select>
               <mat-hint align="end">Select category ^</mat-hint>
            </mat-form-field>

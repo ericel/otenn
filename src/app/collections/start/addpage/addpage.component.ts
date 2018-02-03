@@ -3,7 +3,6 @@ import { Router, Params, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SpinnerService } from '@shared/services/spinner.service';
-import { Page } from '@collections/state/page.model';
 import { UcFirstPipe } from 'ngx-pipes';
 import { NgForm, FormControl} from '@angular/forms';
 import { NotifyService } from '@shared/services/notify.service';
@@ -13,7 +12,13 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { Title, Meta } from '@angular/platform-browser';
 import { SessionService } from '@shared/services/session.service';
 import { UploadService } from '@shared/services/upload/upload.service';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
+
+import { Page } from '@collections/state/models/page.model';
+import { Store } from '@ngrx/store';
+import * as pageActions from '@collections/state/actions/page.actions';
+import * as fromPage from '@collections/state/reducers/page.reducer';
+
 @Component({
   selector: 'app-addpage',
   templateUrl: './addpage.component.html',
@@ -47,13 +52,13 @@ export class AddpageComponent implements OnInit, OnDestroy {
   description: string;
   title: string;
   collections;
-  submitted: boolean = false; addImg: boolean = false;
+  submitted = false; addImg = false;
   @ViewChild('file') file: ElementRef;
   selectedFiles: FileList | null;
   currentUpload: Upload;
-  photoUrl: string = 'https://www.w3schools.com/bootstrap4/paris.jpg';
+  photoUrl = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   $key: string;
-  component: string = 'pages';
+  component = 'pages';
   page = 'Please write your page here!';
   @ViewChild('pageForm') pageForm: NgForm;
   constructor(
@@ -66,7 +71,8 @@ export class AddpageComponent implements OnInit, OnDestroy {
     private _title: Title,
     private _meta: Meta,
     public _session: SessionService,
-    private _upload: UploadService
+    private _upload: UploadService,
+    private store: Store<fromPage.State>
   ) { }
 
   ngOnInit() {
@@ -90,7 +96,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
         this._collections.getCollection(fragment)
         .subscribe((collection: Collection) => {
           this.section = collection.title;
-          this.collectionKey = collection.$key;
+          this.collectionKey = collection.id;
           this.description = '';
         })
       }
@@ -139,7 +145,8 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'On queue waiting..collection admin', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
-      this._collections.addPage(newPage).then((status: string) => {
+        this.store.dispatch( new pageActions.Create(newPage) );
+        /*this._collections.addPage(newPage).then((status: string) => {
           if (status === 'error') {
             this.changesSaved = false;
             this.submitted = false;
@@ -151,7 +158,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
               this.addImg = true;
             }, 3000);
           }
-      });
+      });*/
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',

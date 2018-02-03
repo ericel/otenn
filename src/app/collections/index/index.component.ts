@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CollectionsService } from '@collections/state/collections.service';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 import { Observable } from 'rxjs/Observable';
 import { SessionService } from '@shared/services/session.service';
-import { Subscription } from 'rxjs/Subscription';
 import { Title, Meta } from '@angular/platform-browser';
 
 
 import { Store } from '@ngrx/store';
-import * as actions from '@collections/state/collections.actions';
-import * as fromCollection from '@collections/state/collections.reducer';
+import * as actions from '@collections/state/actions/collection.actions';
+import * as fromCollection from '@collections/state/reducers/collection.reducer';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -17,8 +15,7 @@ import * as fromCollection from '@collections/state/collections.reducer';
 })
 export class IndexComponent implements OnInit{
   collections: Observable<any>;
-  sub: Subscription;
-  constructor(private _collections: CollectionsService,
+  constructor(
   public _sessions: SessionService,
   private _title: Title,
   private _meta: Meta,
@@ -34,16 +31,9 @@ export class IndexComponent implements OnInit{
       { name: 'description', content: 'Otenn web collections' }
     ]);
 
-   this.collections = this.store.select(fromCollection.selectAll);
-   this.store.dispatch(  new actions.Query() );
+  this.collections = this.store.select(fromCollection.selectAll)
+  this.store.dispatch(  new actions.Query() );
    this._sessions.hide();
-   /*this.sub = this._collections.getAllCollections().subscribe(
-      (collections) => {
-        this.collections = collections;
-      });
-      */
-
-      console.log(this.collections);
   }
 
 }

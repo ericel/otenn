@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CollectionsService } from '@collections/state/collections.service';
 import { ActivatedRoute } from '@angular/router';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 import { Subscription } from 'rxjs/Subscription';
 import {trigger, transition, style, animate, state} from '@angular/animations';
 import { DOCUMENT } from '@angular/common';

@@ -3,7 +3,7 @@ import { Router, Params, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { SpinnerService } from '@shared/services/spinner.service';
-import { Page } from '@collections/state/page.model';
+import { Page } from '@collections/state/models/page.model';
 import { UcFirstPipe } from 'ngx-pipes';
 import { NgForm, FormControl} from '@angular/forms';
 import { NotifyService } from '@shared/services/notify.service';
@@ -13,7 +13,7 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { Title, Meta } from '@angular/platform-browser';
 import { SessionService } from '@shared/services/session.service';
 import { UploadService } from '@shared/services/upload/upload.service';
-import { Collection } from '@collections/state/collections.model';
+import { Collection } from '@collections/state/models/collection.model';
 @Component({
   selector: 'app-editpage',
   templateUrl: './editpage.component.html',

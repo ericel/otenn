@@ -22,7 +22,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './reducers';
 import { PizzaModule } from 'app/pizza/pizza.module';
-
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 @NgModule({
   declarations: [
     AppComponent
@@ -38,11 +38,10 @@ import { PizzaModule } from 'app/pizza/pizza.module';
     SharedModule,
     HomeModule,
     StoreModule.forRoot(reducers),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25
-    }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([]),
-    PizzaModule
+    PizzaModule,
+    //StoreRouterConnectingModule,
   ],
   providers: [...SHARED_SERVICES],
   bootstrap: [AppComponent]

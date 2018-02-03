@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { NotifyService } from "@shared/services/notify.service";
-import { SpinnerService } from "@shared/services/spinner.service";
+import { Injectable } from '@angular/core';
+import { NotifyService } from '@shared/services/notify.service';
+import { SpinnerService } from '@shared/services/spinner.service';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
-import { Collection } from "@collections/state/collections.model";
-import { Observable } from "rxjs/Observable";
-import { Page } from "@collections/state/page.model";
+import { Collection } from '@collections/state/models/collection.model';
+import { Observable } from 'rxjs/Observable';
+import { Page } from '@collections/state/models/page.model';
 @Injectable()
 export class CollectionsService {
   collections = [
@@ -88,7 +88,7 @@ export class CollectionsService {
 
 
   addcollection(collection) {
-    const ref = this._afs.collection<any>('o-t-collections').doc(collection.$key);
+    const ref = this._afs.collection<any>('o-t-collections').doc(collection.id);
     ref.set(Object.assign({}, collection))
     .then(() => {
       this._notify.update('<strong>Collection Added!</strong> Collection Successfully Added. You will be redirected!', 'info');
@@ -102,7 +102,7 @@ export class CollectionsService {
 
 
   addPage(page: Page) {
-   const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
+   const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.id}`);
    return ref.set(Object.assign({}, page))
      .then(() => {
       return this._notify
@@ -119,7 +119,7 @@ export class CollectionsService {
   }
 
   addDraft(page: Page) {
-    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.$key}`);
+    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.id}`);
     return ref.set(Object.assign({}, page))
       .then(() => {
        return this._notify
@@ -147,7 +147,7 @@ export class CollectionsService {
   }
 
   editcollection(collection) {
-    const ref = this._afs.collection<any>('o-t-collections').doc(collection.$key);
+    const ref = this._afs.collection<any>('o-t-collections').doc(collection.id);
     ref.update(Object.assign({}, collection))
     .then(() => {
       this._notify.update('<strong>Collection Updated!</strong> Collection Successfully Updated. You will be redirected!', 'info');
@@ -161,7 +161,7 @@ export class CollectionsService {
   }
 
   updateDraft(page: Page) {
-    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`)
+    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.id}`)
     return item.update(Object.assign({}, page))
       .then(() => {
        return this._notify
@@ -178,7 +178,7 @@ export class CollectionsService {
   }
 
   updatePage(page: Page){
-    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`)
+    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.id}`)
    return item.update(Object.assign({}, page))
    .then(() => {
     return this._notify
@@ -196,7 +196,7 @@ export class CollectionsService {
 
   onDeletePage(page: Page) {
     console.log(page)
-    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.$key}`);
+    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.id}`);
     item.delete().then(() => {
       this._notify
     .update('<strong>Page Deleted!</strong> Your Page Was Deleted!', 'info');

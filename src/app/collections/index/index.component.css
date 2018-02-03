@@ -1,9 +1,12 @@
 
 
 
-
+.collection-card img {
+  height: 200px;
+}
 .collection-card {
   color: #fff;
+  height: 350px;
 }
 .checkit {
   position: absolute;
