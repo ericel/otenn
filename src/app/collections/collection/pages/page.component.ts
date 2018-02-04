@@ -93,28 +93,6 @@ export class PageComponent implements OnInit, OnDestroy {
         });
          });
       });
-
-   /*this.sub = this._route.params.subscribe((section: Params) => {
-      this._route.fragment.subscribe( (Collectionkey: string) => {
-        this._collections.getCollection(Collectionkey).subscribe((collection: Collection) => {
-          this._collections.getCollectionPages(Collectionkey, collection.title).subscribe(
-            (pages) => {
-              this.pages = pages;
-            });
-          this._collections.getPage(collection.title, 'pages',  section['key']).subscribe (
-            (page: Page) => {
-               this.page = page;
-               this._title.setTitle(this._ucFirst.transform(page.title));
-                this._meta.addTags([
-                  { name: 'keywords',
-                  content: this._ucFirst.transform(page.title) + ',' + this._ucFirst.transform(collection.title) + 'page'},
-                  { name: 'description',
-                  content: this._ucFirst.transform(page.description) }
-                ]);
-            });
-        });
-        });
-    });*/
   }
 
   ngOnDestroy () {
@@ -147,17 +125,12 @@ export class PageComponent implements OnInit, OnDestroy {
      </div>
   </div>
 </div>
-  <div  [@myAnimation] *ngIf="pages">
-  <ng-masonry-grid
-  [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
-  [useAnimation]="true"
-  [useImagesLoaded]="true"
-  [scrollAnimationOptions]="{ animationEffect: 'effect-4', minDuration : 0.4, maxDuration : 0.7 }"
-   >
-   <ng-masonry-grid-item>
-   <app-ads-right></app-ads-right>
-   </ng-masonry-grid-item>
-   <ng-masonry-grid-item *ngFor="let page of pages" class="pages">
+  <div  [@myAnimation] *ngIf="pages" class="row">
+
+
+   <app-ads-right class="col-md-4"></app-ads-right>
+
+   <div *ngFor="let page of pages" class="pages col-md-4 mar-20 ">
   <ng-container *ngIf="page.status !== 'Draft'">
   <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
   <mat-icon>more_vert</mat-icon>
@@ -187,13 +160,28 @@ export class PageComponent implements OnInit, OnDestroy {
          </mat-card-content>
        </mat-card>
        </ng-container>
-  </ng-masonry-grid-item>
-  <ng-masonry-grid-item>
+  </div>
+
+</div>
+  `,
+  /*
+    <ng-masonry-grid
+  [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
+  [useAnimation]="true"
+  [useImagesLoaded]="true"
+  [scrollAnimationOptions]="{ animationEffect: 'effect-4', minDuration : 0.4, maxDuration : 0.7 }"
+   >
+    <ng-masonry-grid
+  [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
+  [useAnimation]="true"
+  [useImagesLoaded]="true"
+  [scrollAnimationOptions]="{ animationEffect: 'effect-4', minDuration : 0.4, maxDuration : 0.7 }"
+   >
+     <ng-masonry-grid-item>
   <app-ads-right-2></app-ads-right-2>
   </ng-masonry-grid-item>
 </ng-masonry-grid>
-</div>
-  `,
+   */
   styleUrls: ['./page.component.css'],
   animations: [
     trigger(

@@ -7,14 +7,14 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollections from '@collections/state';
+import * as fromCollections from '@collections/state/reducers/collection.reducer';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit{
-  cols: Observable<any>;
+  collections: Observable<any>;
   constructor(
   public _sessions: SessionService,
   private _title: Title,
@@ -31,10 +31,9 @@ export class IndexComponent implements OnInit{
       { name: 'description', content: 'Otenn web collections' }
     ]);
 
-  this.cols = this.store.pipe(select(fromCollections.selectAll))
+  this.collections = this.store.pipe(select(fromCollections.selectAll))
   this.store.dispatch(  new actions.Query() );
    this._sessions.hide();
-   console.log(this.cols)
   }
 
 }

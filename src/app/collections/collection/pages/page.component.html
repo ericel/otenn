@@ -22,7 +22,10 @@
                     </mat-card-subtitle>
                 </mat-card-header>
                 <app-share class="mar-30"></app-share>
-              <div  [innerHTML]="page.page"></div>
+              <div  [innerHTML]="page.page" class="mar-20"></div>
+
+              <mat-divider></mat-divider>
+              <page-comment [page]="page"></page-comment>
             </div>
             <div class="col-lg-4 content-right">
                 <app-ads-content-match></app-ads-content-match>

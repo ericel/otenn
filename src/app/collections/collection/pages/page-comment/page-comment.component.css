@@ -1,0 +1,21 @@
+.mat-form-field {
+  width: 100% !important;
+  height: 60px !important;
+}
+.float-left {
+ width: 10%;
+}
+.float-right {
+  width: 90%;
+}
+.img-thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+}
+@media screen and (max-width: 500px) {
+  .img-thumbnail {
+    width: 30px;
+    height: 30px;
+}
+}

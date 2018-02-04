@@ -13,7 +13,7 @@ import { CanDeactivateGuard } from '@collections/start/can-deactivate-guard.serv
 import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { NotifyService } from '@shared/services/notify.service';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
-import { PageComponent, PagesComponent } from './collection/page/page.component';
+import { PageComponent, PagesComponent } from './collection/pages/page.component';
 import { NgMasonryGridModule, NgMasonryGridService } from 'ng-masonry-grid';
 import { ForumsComponent } from './collection/forums/forums.component';
 import { PhotosComponent } from './collection/photos/photos.component';
@@ -29,6 +29,7 @@ import { collectionReducer } from '@collections/state/reducers/collection.reduce
 import { reducers } from '@collections/state';
 import { PageEffects } from '@collections/state/effects/page.effects';
 import { pageReducer } from '@collections/state/reducers/page.reducer';
+import { PageCommentComponent } from './collection/pages/page-comment/page-comment.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { pageReducer } from '@collections/state/reducers/page.reducer';
     ReactiveFormsModule,
     CollectionsRoutingModule,
     NgMasonryGridModule,
-    StoreModule.forFeature('collections', reducers),
+    StoreModule.forFeature('collection', collectionReducer),
+    StoreModule.forFeature('page', pageReducer),
     EffectsModule.forFeature([CollectionEffects, PageEffects])
   ],
   declarations: [
@@ -57,7 +59,8 @@ import { pageReducer } from '@collections/state/reducers/page.reducer';
     VideosComponent,
     EditpageComponent,
     RecentPages,
-    ForumComponent
+    ForumComponent,
+    PageCommentComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

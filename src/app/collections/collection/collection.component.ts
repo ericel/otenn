@@ -17,7 +17,7 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { Store } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollections from '@collections/state/';
+import * as fromCollections from '@collections/state/reducers/collection.reducer';
 import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-collection',
@@ -75,7 +75,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.sub.unsubscribe();
+    this.sub.unsubscribe();
   }
 
   @HostListener("window:scroll", []) onWindowScroll() {

@@ -8,7 +8,7 @@ import { AddcollectionComponent } from '@collections/start/addcollection/addcoll
 import { CanDeactivateGuard } from '@collections/start/can-deactivate-guard.service';
 import { AddpageComponent } from '@collections/start/addpage/addpage.component';
 import { EditcollectionComponent } from '@collections/start/addcollection/editcollection/editcollection.component';
-import { PageComponent, PagesComponent } from '@collections/collection/page/page.component';
+import { PageComponent, PagesComponent } from '@collections/collection/pages/page.component';
 import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.component';
 import { ForumsComponent } from '@collections/collection/forums/forums.component';
 import { ForumComponent } from '@collections/collection/forums/forum/forum.component';

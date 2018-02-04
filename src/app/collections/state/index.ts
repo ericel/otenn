@@ -5,8 +5,6 @@ import * as fromPages from '@collections/state/reducers/page.reducer';
 import * as fromRoot from './../../reducers/index';
 import { adapter } from '@collections/state/reducers/page.reducer';
 
-
-
 export interface CollectionsState {
   collections: fromCollections.State;
   pages: fromPages.State;
