@@ -18,7 +18,7 @@ export class PizzaOrderComponent implements OnInit {
   ngOnInit() {
     this.pizzas = this.store.select(fromPizza.selectAll)
     this.store.dispatch(  new actions.Query() )
-
+    console.log(this.pizzas);
     this.pizzas.subscribe(data =>{
      this.collect =  data.filter((item) => {
         return item.id === '288';

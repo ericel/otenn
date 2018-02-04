@@ -62,7 +62,7 @@ export class CollectionEffects {
         })
         .map(() => {
             this._notify.update('<strong>Collection Added!</strong> Collection Successfully Added. You will be redirected!', 'info');
-            return new actions.Success('hhhh')
+            return new actions.Success()
         })
 
     // Listen for the 'UPDATE' action
@@ -74,7 +74,7 @@ export class CollectionEffects {
         })
         .map(() => {
            this._notify.update('<strong>Collection Updated!</strong> Collection Successfully Updated. You will be redirected!', 'info');
-            return new actions.Success('hhh')
+            return new actions.Success()
         })
 
     // Listen for the 'DELETE' action
@@ -94,7 +94,7 @@ export class CollectionEffects {
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
     return of(this.afs.doc<Collection>(`o-t-collections/${id}`).delete())
-      .map(() =>  new actions.Success('yyy'))
+      .map(() =>  new actions.Success())
       .catch(err => Observable.of(new actions.Fail(err.message)));
   });
 

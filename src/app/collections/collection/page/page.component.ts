@@ -1,17 +1,23 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Inject } from '@angular/core';
 import { CollectionsService } from '@collections/state/collections.service';
 import {trigger, transition, style, animate, state} from '@angular/animations';
-import { Page } from '@collections/state/models/page.model';
+
 import { ActivatedRoute, Params } from '@angular/router';
 import { SessionService } from '@shared/services/session.service';
 import { Collection } from '@collections/state/models/collection.model';
 import { Title, Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { UcFirstPipe } from 'ngx-pipes';
-import { Observable } from '@firebase/util';
+
 import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
 import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { NgMasonryGridService } from 'ng-masonry-grid';
+
+import { Page } from '@collections/state/models/page.model';
+import { Store } from '@ngrx/store';
+import * as pageActions from '@collections/state/actions/page.actions';
+import * as fromPage from '@collections/state/reducers/page.reducer';
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -38,9 +44,11 @@ import { NgMasonryGridService } from 'ng-masonry-grid';
 })
 export class PageComponent implements OnInit, OnDestroy {
   collections;
-  page: Page;
-  pages;
+  page: Observable<any>;
+  pages: Observable<any>;
   sub: Subscription;
+  collectionKey: string;
+  collectionTitle: string;
   @ViewChild('pageRef') pageRef: ElementRef;
   constructor(
     private _collections: CollectionsService,
@@ -50,14 +58,43 @@ export class PageComponent implements OnInit, OnDestroy {
     private _meta: Meta,
     private _ucFirst: UcFirstPipe,
     @Inject(DOCUMENT) private document: Document,
-    private pageScrollService: PageScrollService
+    private pageScrollService: PageScrollService,
+    private store: Store<fromPage.State>
   ) { }
 
   ngOnInit() {
     const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);
     this.pageScrollService.start(pageScrollInstance);
+    this.sub = this._route.fragment.subscribe(
+      (collectionkey: string) => {
+      this.collectionKey = collectionkey;
+       this.collections = this.store.select(fromPage.selectAll);
+        this.store.dispatch(  new pageActions.Query() );
+        this.collections.subscribe(data => {
+          this.pages =  data.filter((item) => {
+             return item.collectionKey === collectionkey;
+           });
+          this._route.params.subscribe((section: Params) => {
+            const pageData =  data.filter((item) => {
+              return item.id === section['key'];
+            });
+            this.page = pageData[0];
+           const page = pageData[0];
+            if (page) {
+                this.collectionTitle = page.title;
+            }
+          this._title.setTitle(this._ucFirst.transform(this.collectionTitle));
+          this._meta.addTags([
+            { name: 'keywords',
+            content: this._ucFirst.transform(this.collectionTitle)  + this._ucFirst.transform(this.collectionTitle) + 'Blogs'},
+            { name: 'description',
+             content: this._ucFirst.transform(this.collectionTitle) + ' Pages and blogs contributed by collection subscribers.' }
+          ]);
+        });
+         });
+      });
 
-   this.sub = this._route.params.subscribe((section: Params) => {
+   /*this.sub = this._route.params.subscribe((section: Params) => {
       this._route.fragment.subscribe( (Collectionkey: string) => {
         this._collections.getCollection(Collectionkey).subscribe((collection: Collection) => {
           this._collections.getCollectionPages(Collectionkey, collection.title).subscribe(
@@ -77,7 +114,7 @@ export class PageComponent implements OnInit, OnDestroy {
             });
         });
         });
-    });
+    });*/
   }
 
   ngOnDestroy () {
@@ -91,28 +128,26 @@ export class PageComponent implements OnInit, OnDestroy {
   providers: [UcFirstPipe],
   template: `
   <div  #pageRef></div>
-  <div class="mar-30" *ngIf="pages && pages.length < 1">
-    <div class="row">
-       <div class="col-md-8">
-        <div class="display-5 text-center">
-            <mat-card class="mar-20">
-              <h1>Welcome to {{collection.title}} collection</h1>
-              <div>{{collection.description}}.</div>
-              <p>In this collection, you can post blogs, forums, photos, videos on this topic.</p>
-            </mat-card>
-            <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
-            <div>No Pages Yet! Be the First!</div>
-            <a routerLink="/collections/addpage"
-            [queryParams]="{allow:'1'}"
-            [fragment]="collectionKey">Create a page</a>
-          </div>
-       </div>
-       <div class="col-md-4">
-          <app-ads-right></app-ads-right>
-       </div>
-    </div>
+  <div class="mar-30" *ngIf="pages && pages.length==0">
+  <div class="row">
+     <div class="col-md-8">
+      <div class="display-5 text-center">
+          <mat-card class="mar-20">
+            <h1>In this collection, you can post blogs, forums, photos, videos on this topic.</h1>
+          </mat-card>
+          <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+          <div>No Pages Yet! Be the First!</div>
+          <a routerLink="/collections/addpage"
+          [queryParams]="{allow:'1'}"
+          [fragment]="collectionKey">Create a page</a>
+        </div>
+     </div>
+     <div class="col-md-4">
+        <app-ads-right></app-ads-right>
+     </div>
   </div>
-  <div  [@myAnimation] *ngIf="pages && pages.length > 1">
+</div>
+  <div  [@myAnimation] *ngIf="pages">
   <ng-masonry-grid
   [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
   [useAnimation]="true"
@@ -130,17 +165,17 @@ export class PageComponent implements OnInit, OnDestroy {
   <mat-menu #pageMenu="matMenu" xPosition="before">
   <a mat-menu-item>Report</a>
   <a mat-menu-item routerLink="/collections/editpage/{{page.title | slugify}}"
-  [queryParams]="{ key: page.$key}" [fragment]="page.collectionKey">Edit Page</a>
+  [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
   <a mat-menu-item  (click)="onDelete(page)">Delete</a>
   </mat-menu>
-  <a routerLink="{{page.title | slugify }}/{{page.$key}}"
+  <a routerLink="{{page.title | slugify }}/{{page.id}}"
   [fragment]="page.collectionKey" [fragment]="page.collectionKey" mat-raised-button class="checkit"> Check it</a>
      <mat-card class="collection-card">
          <img mat-card-image mat-elevation-z2 [src]="page.photoURL" [alt]="page.title">
          <div class="collection-img">
              <img [src]="page.photoURL" class="img-thumbnail" [alt]="">
          </div>
-         <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.$key}}"
+         <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.id}}"
          [fragment]="page.collectionKey">{{page.title | shorten: 100:'..'}}</a></mat-card-title>
          <mat-card-subtitle>
              {{page.uid}}
@@ -158,9 +193,6 @@ export class PageComponent implements OnInit, OnDestroy {
   </ng-masonry-grid-item>
 </ng-masonry-grid>
 </div>
-
-
-
   `,
   styleUrls: ['./page.component.css'],
   animations: [
@@ -188,7 +220,8 @@ export class PagesComponent implements OnInit, OnDestroy {
   pages;
   sub: Subscription;
   collectionKey: string;
-  collection: Collection;
+  collectionTitle: string;
+  collection: Observable<any>;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
@@ -198,14 +231,38 @@ export class PagesComponent implements OnInit, OnDestroy {
     private _ucFirst: UcFirstPipe,
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
-    private _masonry: NgMasonryGridService
+    private _masonry: NgMasonryGridService,
+    private store: Store<fromPage.State>
   ) { }
 
   ngOnInit() {
   const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);
   this.pageScrollService.start(pageScrollInstance);
+  this.sub = this._route.fragment.subscribe(
+    (collectionkey: string) => {
+      this.collectionKey = collectionkey;
+     this.collections = this.store.select(fromPage.selectAll);
+      this.store.dispatch(  new pageActions.Query() );
+      this.collections.subscribe(data => {
+        this.pages =  data.filter((item) => {
+           return item.collectionKey === collectionkey;
+         });
+        const page = this.pages[0];
+        if (page) {
+             this.collectionTitle = page.collection;
+        }
+        this._title.setTitle(this._ucFirst.transform(this.collectionTitle) + ' Pages');
+        this._meta.addTags([
+          { name: 'keywords',
+          content: this._ucFirst.transform(this.collectionTitle) + ' Pages' + this._ucFirst.transform(this.collectionTitle) + 'Blogs'},
+          { name: 'description',
+           content: this._ucFirst.transform(this.collectionTitle) + ' Pages and blogs contributed by collection subscribers.' }
+        ]);
+       });
+    });
 
-  this.collections = this._collections.collections;
+
+  /*this.collections = this._collections.collections;
    this.sub = this._route.fragment
     .subscribe(
       (fragment: string) => {
@@ -224,7 +281,7 @@ export class PagesComponent implements OnInit, OnDestroy {
                ]);
             });
         });
-      });
+      });*/
   }
 
   onDelete (page: Page) {

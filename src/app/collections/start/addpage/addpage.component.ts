@@ -15,7 +15,7 @@ import { UploadService } from '@shared/services/upload/upload.service';
 import { Collection } from '@collections/state/models/collection.model';
 
 import { Page } from '@collections/state/models/page.model';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromPage from '@collections/state/reducers/page.reducer';
 
@@ -60,6 +60,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
   $key: string;
   component = 'pages';
   page = 'Please write your page here!';
+  private created$: Observable<boolean>;
   @ViewChild('pageForm') pageForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -73,7 +74,9 @@ export class AddpageComponent implements OnInit, OnDestroy {
     public _session: SessionService,
     private _upload: UploadService,
     private store: Store<fromPage.State>
-  ) { }
+  ) {
+    this.created$ = this.store.pipe(select(fromPage.getSuccessCreate));
+   }
 
   ngOnInit() {
   this._title.setTitle('Write a page');
@@ -114,7 +117,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'Draft', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
-     this._collections.addDraft(newPage).then((status: string) => {
+        this._collections.addDraft(newPage).then((status: string) => {
         if (status === 'error') {
           this.changesSaved = false;
           this.submitted = false;
@@ -146,6 +149,19 @@ export class AddpageComponent implements OnInit, OnDestroy {
       'On queue waiting..collection admin', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
         this.store.dispatch( new pageActions.Create(newPage) );
+        this.created$.subscribe((created) => {
+          if(created) {
+            this.changesSaved = false;
+            this.submitted = false;
+            this.addImg = false;
+          } else {
+            this.changesSaved = true;
+            setTimeout(() => {
+              this.submitted = true;
+              this.addImg = true;
+            }, 3000);
+          }
+        } );
         /*this._collections.addPage(newPage).then((status: string) => {
           if (status === 'error') {
             this.changesSaved = false;
@@ -208,7 +224,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    //this.sub.unsubscribe();
   }
 
 }

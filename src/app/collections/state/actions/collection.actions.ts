@@ -31,8 +31,7 @@ export class AddAll implements Action {
 
 export class Success implements Action {
   readonly type = SUCCESS;
-  constructor(public payload: any) {
-   }
+  constructor() {}
 }
 
 
@@ -70,5 +69,6 @@ export type CollectionActions
 = Create
 | Update
 | Delete
+| Success
 | Query
 | AddAll;

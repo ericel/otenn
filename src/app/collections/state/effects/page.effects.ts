@@ -44,10 +44,42 @@ export class PageEffects {
        return Observable.fromPromise( ref.set(Object.assign({}, page)))
    })
    .map(() => {
-    this._notify
-    .update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
+       this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
        return new actions.Success()
    })
+
+   // Listen for the 'UPDATE' action
+   @Effect() update$: Observable<Action> = this.actions$.ofType(actions.UPDATE)
+   .map((action: actions.Update) => action)
+   .switchMap(data => {
+       const ref = this.afs.doc<Page>(`o-t-pages/${data.id}`)
+       return Observable.fromPromise( ref.update(Object.assign({}, data.changes)) )
+   })
+   .map(() => {
+      this._notify.update('<strong>Page Updated!</strong> Page Successfully Updated. You will be redirected!', 'info');
+       return new actions.Success()
+   })
+
+// Listen for the 'DELETE' action
+
+/*   @Effect() delete$: Observable<Action> = this.actions$.ofType(actions.DELETE)
+   .map((action: actions.Delete) => action.id )
+   .switchMap(id => {
+       const ref = this.afs.doc<Collection>(`o-t-collections/${id}`)
+       return Observable.fromPromise( ref.delete() )
+   })
+   .map(() => {
+       return new actions.Success()
+   })
+*/
+  @Effect() delete$: Observable<Action> = this.actions$
+  .ofType(actions.DELETE)
+  .map((action: actions.Delete) => action.id)
+  .mergeMap(id => {
+  return of(this.afs.doc<Page>(`o-t-pages/${id}`).delete())
+  .map(() =>  new actions.Success())
+  .catch(err => Observable.of(new actions.Fail(err.message)));
+  });
 
   constructor(
       private actions$: Actions,

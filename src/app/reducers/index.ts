@@ -1,10 +1,20 @@
-import { ActionReducerMap } from '@ngrx/store';
-import { collectionReducer } from '@collections/state/reducers/collection.reducer';
-import { pageReducer } from '@collections/state/reducers/page.reducer';
-import { pizzaReducer } from 'app/pizza/pizza.reducer';
+import { ActionReducer, combineReducers, ActionReducerMap } from '@ngrx/store';
 import * as fromPizza from 'app/pizza/pizza.reducer'
-export const reducers: ActionReducerMap<any> = {
-  collection: collectionReducer,
-  page: pageReducer,
-  pizza: pizzaReducer
+import { pizzaReducer } from 'app/pizza/pizza.reducer';
+
+/**
+ * As mentioned, we treat each reducer like a table in a database. This means
+ * our top level state interface is just a map of keys to inner state types.
+ */
+export interface State {
+  pizza: fromPizza.State;
+}
+
+/**
+ * Our state is composed of a map of action reducer functions.
+ * These reducer functions are called with each dispatched action
+ * and the current or initial state and return a new immutable state.
+ */
+export const reducers: ActionReducerMap<State> = {
+  pizza: fromPizza.pizzaReducer
 };

@@ -28,6 +28,7 @@ import { CollectionEffects } from '@collections/state/effects/collection.effects
 import { collectionReducer } from '@collections/state/reducers/collection.reducer';
 import { reducers } from '@collections/state';
 import { PageEffects } from '@collections/state/effects/page.effects';
+import { pageReducer } from '@collections/state/reducers/page.reducer';
 
 
 @NgModule({

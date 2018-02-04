@@ -10,7 +10,6 @@ import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
 import { WINDOW } from '@shared/services/windows.service';
 import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { Collection } from '@collections/state/models/collection.model';
-import { CollectionsService } from '@collections/state/collections.service';
 import { UcFirstPipe } from 'ngx-pipes';
 import { SessionService } from '@shared/services/session.service';
 import { Title, Meta } from '@angular/platform-browser';
@@ -18,7 +17,7 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { Store } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import * as fromCollections from '@collections/state/';
 import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-collection',
@@ -44,13 +43,13 @@ export class CollectionComponent implements OnInit, OnDestroy {
     public _sessions: SessionService,
     private _title: Title,
     private _meta: Meta,
-    private store: Store<fromCollection.State>
+    private store: Store<fromCollections.State>
   ) { }
 
   ngOnInit() {
   this.sub = this._route.fragment.subscribe(
     (collectionKey: string) => {
-     this.collections = this.store.select(fromCollection.selectAll);
+     this.collections = this.store.select(fromCollections.selectAll);
       this.store.dispatch(  new actions.Query() );
       this.collections.subscribe(data => {
         this.collection =  data.filter((item) => {
@@ -76,7 +75,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    //this.sub.unsubscribe();
   }
 
   @HostListener("window:scroll", []) onWindowScroll() {
@@ -276,7 +275,7 @@ export class CollectionUpdates implements OnInit {
   @Input() collection: any;
   photo = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   constructor(
-    private _collection: CollectionsService
+
   ){}
 
   ngOnInit() {
@@ -335,7 +334,7 @@ export class CollectionHeader implements OnInit {
   @Output() route = new EventEmitter<void>();
   photo = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   constructor(
-    private _collection: CollectionsService
+
   ){}
 
   ngOnInit () {

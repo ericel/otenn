@@ -6,8 +6,8 @@
       </div>
       <div  class="col-lg-10">
 
-          <div *ngIf="collections" class="row">
-              <a class="col-md-4 mar-20" *ngFor="let collection of collections | async" routerLink="{{collection.title | slugify }}" fragment="{{collection.id}}">
+          <div  class="row">
+              <a class="col-md-4 mar-20" *ngFor="let collection of cols | async" routerLink="{{collection.title | slugify }}" fragment="{{collection.id}}">
                   <button mat-raised-button class="checkit"> Check it</button>
                     <mat-card class="collection-card" [style.background]="collection.color">
                         <img mat-card-image mat-elevation-z2 [src]="collection.photoURL" alt="{{collection.title}}">
@@ -29,7 +29,7 @@
                 [useAnimation]="true"
                 [useImagesLoaded]="true"
              >
-            <ng-masonry-grid-item *ngFor="let collection of collections | async">
+            <ng-masonry-grid-item *ngFor="let collection of cols | async">
               <a routerLink="{{collection.title | slugify }}" fragment="{{collection.id}}">
                 <button mat-raised-button class="checkit"> Check it</button>
                   <mat-card class="collection-card" [style.background]="collection.color">

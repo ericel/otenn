@@ -6,6 +6,8 @@ export const QUERY      = '[Pages] Query';
 
 export const ADD_ALL    = '[Pages] Add All';
 export const CREATE = '[Page] Create';
+export const UPDATE     = '[Page] Update';
+export const DELETE     = '[Page] Delete';
 export const SUCCESS    = '[Page] Successful firestore write';
 export const ERROR = '[Page] Fail';
 
@@ -28,9 +30,7 @@ export class AddAll implements Action {
 
 export class Success implements Action {
   readonly type = SUCCESS;
-  constructor() {
-    console.log('true');
-   }
+  constructor() {}
 }
 
 
@@ -47,7 +47,18 @@ export class Create implements Action {
   constructor(public page: Page) {}
 }
 
+export class Update implements Action {
+  readonly type = UPDATE;
+  constructor(
+      public id: string,
+      public changes: Partial<Page>,
+    ) {}
+}
 
+export class Delete implements Action {
+  readonly type = DELETE;
+  constructor(public id: string) { }
+}
 
 /**
  * Export a type alias of all actions in this action group
@@ -56,4 +67,5 @@ export class Create implements Action {
 
 export type PageActions
 = Create
+| Success
 | AddAll;

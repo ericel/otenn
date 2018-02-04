@@ -5,21 +5,21 @@ import { SessionService } from '@shared/services/session.service';
 import { Title, Meta } from '@angular/platform-browser';
 
 
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import * as fromCollections from '@collections/state';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit{
-  collections: Observable<any>;
+  cols: Observable<any>;
   constructor(
   public _sessions: SessionService,
   private _title: Title,
   private _meta: Meta,
-  private store: Store<fromCollection.State>
+  private store: Store<fromCollections.State>
   ) {
 
   }
@@ -31,9 +31,10 @@ export class IndexComponent implements OnInit{
       { name: 'description', content: 'Otenn web collections' }
     ]);
 
-  this.collections = this.store.select(fromCollection.selectAll)
+  this.cols = this.store.pipe(select(fromCollections.selectAll))
   this.store.dispatch(  new actions.Query() );
    this._sessions.hide();
+   console.log(this.cols)
   }
 
 }
