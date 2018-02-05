@@ -68,14 +68,12 @@ export class CollectionEffects {
     // Listen for the 'UPDATE' action
     @Effect() update$: Observable<Action> = this.actions$.ofType(actions.UPDATE)
         .map((action: actions.Update) => action)
-        .switchMap(data => {
+        .mergeMap(data => {
             const ref = this.afs.doc<Collection>(`o-t-collections/${data.id}`)
             return Observable.fromPromise( ref.update(Object.assign({}, data.changes)) )
-        })
-        .map(() => {
-           this._notify.update('<strong>Collection Updated!</strong> Collection Successfully Updated. You will be redirected!', 'info');
-            return new actions.Success()
-        })
+            .map(() =>   new actions.Success() )
+            .catch(err =>  Observable.of(new actions.Fail(err.message)) );
+        });
 
     // Listen for the 'DELETE' action
 

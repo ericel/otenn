@@ -127,9 +127,6 @@ export class PageComponent implements OnInit, OnDestroy {
 </div>
   <div  [@myAnimation] *ngIf="pages" class="row">
 
-
-   <app-ads-right class="col-md-4"></app-ads-right>
-
    <div *ngFor="let page of pages" class="pages col-md-4 mar-20 ">
   <ng-container *ngIf="page.status !== 'Draft'">
   <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
@@ -161,6 +158,7 @@ export class PageComponent implements OnInit, OnDestroy {
        </mat-card>
        </ng-container>
   </div>
+  <app-ads-right class="col-md-4"></app-ads-right>
 
 </div>
   `,

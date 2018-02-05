@@ -11,7 +11,7 @@ import { SpinnerService } from '@shared/services/spinner.service';
 })
 
 export class WysiwygComponent implements OnInit, AfterViewInit{
-  @Input() page: string;
+  @Input() page: any;
   @ViewChild('richtextarea') richtextarea: ElementRef;
   @Output() publish = new EventEmitter<string>();
   @Output() draft = new EventEmitter<string>();
@@ -19,8 +19,8 @@ export class WysiwygComponent implements OnInit, AfterViewInit{
   disabled = false;
   draftspinner; publishspinner;
   notifyTXT: string;
-  publishAbled: boolean = true;
-  draftAbled: boolean = true;
+  publishAbled = true;
+  draftAbled = true;
   constructor(
     public dialog: MatDialog,
     public _spinner: SpinnerService

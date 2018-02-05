@@ -40,8 +40,8 @@ export class PageEffects {
   @Effect() create$: Observable<Action> = this.actions$.ofType(actions.CREATE)
    .map((action: actions.Create) => action.page )
    .switchMap(page => {
-       const ref = this.afs.doc<Page>(`o-t-pages/${page.id}`)
-       return Observable.fromPromise( ref.set(Object.assign({}, page)))
+       const ref = this.afs.doc<Page>(`o-t-pages/${page.id}`);
+       return Observable.fromPromise( ref.set(Object.assign({}, page)));
    })
    .map(() => {
        this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
@@ -51,15 +51,12 @@ export class PageEffects {
    // Listen for the 'UPDATE' action
    @Effect() update$: Observable<Action> = this.actions$.ofType(actions.UPDATE)
    .map((action: actions.Update) => action)
-   .switchMap(data => {
+   .mergeMap(data => {
        const ref = this.afs.doc<Page>(`o-t-pages/${data.id}`)
        return Observable.fromPromise( ref.update(Object.assign({}, data.changes)) )
+       .map(() =>  new actions.Success())
+       .catch(err => Observable.of(new actions.Fail(err.message)));
    })
-   .map(() => {
-      this._notify.update('<strong>Page Updated!</strong> Page Successfully Updated. You will be redirected!', 'info');
-       return new actions.Success()
-   })
-
 // Listen for the 'DELETE' action
 
 /*   @Effect() delete$: Observable<Action> = this.actions$.ofType(actions.DELETE)

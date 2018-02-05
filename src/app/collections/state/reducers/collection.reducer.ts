@@ -23,9 +23,9 @@ export function collectionReducer(
   switch (action.type) {
       case actions.ADD_ALL:
           return adapter.addAll(action.collections, state);
-      case actions.SUCCESS: {
+     /* case actions.SUCCESS: {
           return {success_create: true}
-      };
+      };*/
       default:
           return state;
       }

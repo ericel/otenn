@@ -60,6 +60,7 @@ export class UploadService {
         if (uploadTask.snapshot.downloadURL && uploadTask.snapshot.state==='success') {
           upload.url = uploadTask.snapshot.downloadURL;
           upload.name = upload.file.name;
+          this.downLURL  = upload.url;
            this.updateFirestore(uid, upload, firestoreUrl);
           return upload.url;
         } else {
@@ -67,6 +68,7 @@ export class UploadService {
         }
       },
     );
+    return this.downLURL;
   }
 
 private updateFirestore(uid, upload, firestoreUrl) {

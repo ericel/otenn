@@ -24,9 +24,6 @@ export function pageReducer(
     switch (action.type) {
         case actions.ADD_ALL:
             return adapter.addAll(action.pages, state);
-        case actions.SUCCESS: {
-            return {success_create: true}
-        };
         default:
             return state;
         }

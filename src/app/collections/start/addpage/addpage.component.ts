@@ -58,6 +58,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
   currentUpload: Upload;
   photoUrl = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   $key: string;
+  pages: Observable<any>;
   component = 'pages';
   page = 'Please write your page here!';
   private created$: Observable<boolean>;
@@ -162,19 +163,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
             }, 3000);
           }
         } );
-        /*this._collections.addPage(newPage).then((status: string) => {
-          if (status === 'error') {
-            this.changesSaved = false;
-            this.submitted = false;
-            this.addImg = false;
-          } else {
-            this.changesSaved = true;
-            setTimeout(() => {
-              this.submitted = true;
-              this.addImg = true;
-            }, 3000);
-          }
-      });*/
+
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',
@@ -197,15 +186,11 @@ export class AddpageComponent implements OnInit, OnDestroy {
       this.currentUpload = new Upload(file.item(0));
       const name = this.$key;
       const path = `${this.section}/${this.component}/${name}`;
-      const firestoreUrl = `${this.section}/${this.component}/${this.component}/${name}`;
+      const firestoreUrl = `o-t-pages/${this.$key}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
-    this._collections.getPage(this.section, this.component, this.$key)
-      .subscribe( (page) => {
-        if(page){
-          this.photoUrl = page.photoURL;
-        }
-
-      });
+      setTimeout (() => {
+        this.getPage();
+      }, 2000);
     } else {
       this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }
@@ -222,9 +207,21 @@ export class AddpageComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getPage() {
+    this.pages = this.store.pipe(select(fromPage.selectAll));
+    this.store.dispatch(  new pageActions.Query() );
+    this.sub = this.pages.subscribe(data => {
+            const pageData =  data.filter((item) => {
+                 return item.id === this.$key;
+               });
+         if(pageData[0]) {
+            this.photoUrl = pageData[0].photoURL;
+         }
+    });
+  }
 
   ngOnDestroy() {
-    //this.sub.unsubscribe();
+    this.sub.unsubscribe();
   }
 
 }

@@ -30,7 +30,9 @@ export class AddAll implements Action {
 
 export class Success implements Action {
   readonly type = SUCCESS;
-  constructor() {}
+  success_create = true;
+  constructor() {
+  }
 }
 
 
@@ -38,6 +40,7 @@ export class Fail implements Action {
   readonly type = ERROR;
 
   constructor(public payload: any) {
+    console.log(payload)
  }
 }
 
@@ -68,4 +71,7 @@ export class Delete implements Action {
 export type PageActions
 = Create
 | Success
+| Update
+| Delete
+| Fail
 | AddAll;

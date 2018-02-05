@@ -13,7 +13,10 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { Title, Meta } from '@angular/platform-browser';
 import { SessionService } from '@shared/services/session.service';
 import { UploadService } from '@shared/services/upload/upload.service';
-import { Collection } from '@collections/state/models/collection.model';
+import { Store, select } from '@ngrx/store';
+import * as pageActions from '@collections/state/actions/page.actions';
+import * as fromPage from '@collections/state/reducers/page.reducer';
+
 @Component({
   selector: 'app-editpage',
   templateUrl: './editpage.component.html',
@@ -52,9 +55,13 @@ export class EditpageComponent implements OnInit, OnDestroy {
   currentUpload: Upload;
   photoUrl: string = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   $key: string;
-  component: string = 'pages'; status;
-  page; createdAt; collectionkey;
+  component;
+ status;
+  pageData;
+  page: Observable<Page>; createdAt; collectionkey;
   colkey;
+  pages;
+  private created$: Observable<boolean>;
   @ViewChild('pageForm') pageForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -66,8 +73,11 @@ export class EditpageComponent implements OnInit, OnDestroy {
     private _title: Title,
     private _meta: Meta,
     public _session: SessionService,
-    private _upload: UploadService
-  ) { }
+    private _upload: UploadService,
+    private store: Store<fromPage.State>
+  ) {
+    this.created$ = this.store.pipe(select(fromPage.getSuccessCreate));
+   }
 
   ngOnInit() {
   this._title.setTitle('Edit page');
@@ -75,32 +85,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
     { name: 'keywords', content: 'Edit an Otenn page'},
     { name: 'description', content: 'Edit an Otenn page' }
   ]);
-
-   this.sub = this._route.queryParams
-    .subscribe(
-      (queryParams: Params) => {
-        this.$key = queryParams['key'];
-        this._route.fragment
-        .subscribe(
-          (fragment: string) => {
-            this._collections.getCollection(fragment).subscribe(
-            (collection: Collection) => {
-              this._collections.getPage(collection.title, this.component, this.$key).subscribe(
-                (page: Page) => {
-                  this.colkey = fragment;
-                  this.title = page.title;
-                  this.section = collection.title;
-                  this.description = page.description;
-                  this.page = page.page;
-                  this.createdAt = page.createdAt;
-                  this.photoUrl = page.photoURL;
-                  this.collectionkey = page.collectionKey;
-                  this.status = page.status;
-                });
-            });
-          });
-      } );
-
+  this.getPage();
   }
   get collectValue () { return this.pageForm.form.get('collection')}
   get descriptionValue () { return this.pageForm.form.get('description')}
@@ -111,19 +96,20 @@ export class EditpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl, 'Draft',
          this.collectValue.value, this.component,
         this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
-    this._collections.updateDraft(newPage).then((status: string) => {
-        if (status === 'error') {
-          this.changesSaved = false;
-          this.submitted = false;
-          this.addImg = false;
-        } else {
-          this.changesSaved = true;
+        this.store.dispatch( new pageActions.Update(this.$key, newPage) );
+        this.created$.subscribe((created) => {
+          if(created) {
+            this.changesSaved = false;
+            this.submitted = false;
+            this.addImg = false;
+          } else {
+            this.changesSaved = true;
           setTimeout(() => {
             this.submitted = true;
             this.addImg = true;
           }, 3000);
-        }
-    });
+          }
+        } );
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',
@@ -138,7 +124,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
     this.description = this.descriptionValue.value;
     this.title = this.titleValue.value;
     if (this.pageForm.form.status === 'VALID') {
-      if(this.status === 'Approved'){
+      if(this.status === 'Approved') {
          this.status = this.status;
       } else {
         this.status = 'On queue waiting..collection admin';
@@ -146,19 +132,21 @@ export class EditpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       this.status, this.collectValue.value, this.component,
         this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
-        this._collections.updatePage(newPage).then((status: string) => {
-        if (status === 'error') {
-          this.changesSaved = false;
-          this.submitted = false;
-          this.addImg = false;
-        } else {
-          this.changesSaved = true;
-          setTimeout(() => {
-            this.submitted = true;
-            this.addImg = true;
-          }, 3000);
-        }
-    });
+        this.store.dispatch( new pageActions.Update(this.$key, newPage) );
+        this.created$.subscribe((created) => {
+          console.log(created);
+          if(created) {
+            this.changesSaved = false;
+            this.submitted = false;
+            this.addImg = false;
+          } else {
+            this.changesSaved = true;
+            setTimeout(() => {
+              this.submitted = true;
+              this.addImg = true;
+            }, 3000);
+          }
+        } );
     } else {
       if ((this.collectValue.value).length < 5) {this._notify.update(
         '<strong>Page Collection Error:</strong> Please select a collection',
@@ -180,12 +168,8 @@ export class EditpageComponent implements OnInit, OnDestroy {
     if (file && file.length === 1) {
       this.currentUpload = new Upload(file.item(0));
       const path = `${this.section}/${this.component}/${this.$key}`;
-      const firestoreUrl = `${this.section}/${this.component}/${this.component}/${this.$key}`;
-      this._upload.pushUpload('uid', this.currentUpload, this.$key, path, firestoreUrl);
-      this._collections.getPage(this.section, this.component, this.$key)
-      .subscribe( (page) => {
-         this.photoUrl = page.photoURL;
-      });
+      const firestoreUrl = `o-t-pages/${this.$key}`;
+     this._upload.pushUpload('uid', this.currentUpload, this.$key, path, firestoreUrl);
     } else {
       this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }
@@ -201,7 +185,33 @@ export class EditpageComponent implements OnInit, OnDestroy {
       return true;
     }
   }
+  private getPage() {
+    this.pages = this.store.pipe(select(fromPage.selectAll));
+    this.store.dispatch(  new pageActions.Query() );
+    this.sub = this.pages.subscribe(data => {
+      this._route.queryParams
+      .subscribe(
+        (queryParams: Params) => {
+          this.$key = queryParams['key'];
+              this.page =  data.filter((item) => {
+                 return item.id === '87k523Jr';
+               });
+         if(this.page[0]) {
+            this.colkey = this.page[0].collectionKey;
+            this.title = this.page[0].title;
+            this.section = this.page[0].collection;
+            this.description = this.page[0].description;
+            this.pageData = this.page[0].page;
+            this.createdAt = this.page[0].createdAt;
+            this.photoUrl = this.page[0].photoURL;
+            this.collectionkey = this.page[0].collectionKey;
+            this.status = this.page[0].status;
+            this.component = this.page[0].component;
+         }
 
+        });
+    });
+  }
 
   ngOnDestroy() {
     this.sub.unsubscribe();

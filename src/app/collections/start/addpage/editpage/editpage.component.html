@@ -45,7 +45,8 @@
                 </div>
                 <div class="alert alert-warning" *ngIf="!pageForm.valid && pageForm.touched"><strong>Invalid Content!</strong> Please Select a collection and enter a valid title!</div>
             </div>
-            <app-wysiwyg  (publish)="onPublish($event)"  (draft)="onDraft($event)" [page]="page"></app-wysiwyg>
+
+            <app-wysiwyg *ngIf="pageData" (publish)="onPublish($event)"  (draft)="onDraft($event)" [page]="pageData"></app-wysiwyg>
         </div>
       </mat-card>
   </div>
