@@ -76,7 +76,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
     private _upload: UploadService,
     private store: Store<fromPage.State>
   ) {
-    this.created$ = this.store.pipe(select(fromPage.getSuccessCreate));
+    this.created$ = this.store.pipe(select(fromPage.getSuccessPage));
    }
 
   ngOnInit() {
@@ -134,7 +134,6 @@ export class EditpageComponent implements OnInit, OnDestroy {
         this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
         this.store.dispatch( new pageActions.Update(this.$key, newPage) );
         this.created$.subscribe((created) => {
-          console.log(created);
           if(created) {
             this.changesSaved = false;
             this.submitted = false;
@@ -194,7 +193,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
         (queryParams: Params) => {
           this.$key = queryParams['key'];
               this.page =  data.filter((item) => {
-                 return item.id === '87k523Jr';
+                 return item.id === this.$key;
                });
          if(this.page[0]) {
             this.colkey = this.page[0].collectionKey;

@@ -6,7 +6,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "dist",
+      "outDir": "dist/browser",
       "assets": [
         "assets",
         "favicon.ico"
@@ -31,7 +31,35 @@
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
-    }
+    },
+      {
+        "platform": "server",
+        "root": "src",
+        "outDir": "dist/server",
+        "assets": [
+          "assets",
+          "favicon.ico"
+        ],
+        "index": "index.html",
+        "main": "main.server.ts",
+        "test": "test.ts",
+        "tsconfig": "tsconfig.server.json",
+        "testTsconfig": "tsconfig.spec.json",
+        "prefix": "app",
+        "styles": [
+          "../node_modules/animate.css/animate.css",
+          "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+          "../node_modules/font-awesome/css/font-awesome.min.css",
+          "theme.scss",
+          "styles.css"
+        ],
+        "scripts": [],
+        "environmentSource": "environments/environment.ts",
+        "environments": {
+          "dev": "environments/environment.ts",
+          "prod": "environments/environment.prod.ts"
+        }
+      }
   ],
   "e2e": {
     "protractor": {
@@ -59,6 +87,28 @@
   },
   "defaults": {
     "styleExt": "css",
-    "component": {}
+    "component": {
+      "spec": false,
+      "inlineStyle": true,
+      "inlineTemplate": true
+    },
+    "directive": {
+      "spec": false
+    },
+    "class": {
+      "spec": false
+    },
+    "guard": {
+      "spec": false
+    },
+    "module": {
+      "spec": false
+    },
+    "pipe": {
+      "spec": false
+    },
+    "service": {
+      "spec": false
+    }
   }
 }

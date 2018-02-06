@@ -5,6 +5,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface State extends EntityState<Collection> {
   success_create: boolean;
+  loading: boolean;
 }
 
 export const adapter: EntityAdapter<Collection> = createEntityAdapter<Collection>({
@@ -14,6 +15,7 @@ export const adapter: EntityAdapter<Collection> = createEntityAdapter<Collection
 
 export const initialState: State = adapter.getInitialState({
   success_create: false,
+  loading: false
 });
 // Reducer
 export function collectionReducer(
@@ -22,10 +24,11 @@ export function collectionReducer(
 
   switch (action.type) {
       case actions.ADD_ALL:
-          return adapter.addAll(action.collections, state);
-     /* case actions.SUCCESS: {
-          return {success_create: true}
-      };*/
+         { return adapter.addAll(action.collections, state)};
+      case actions.SUCCESS:
+        { return {...state, loading: true}; };
+      case actions.CREATE_SUCCESS:
+        { return {...state, success_create: true}; }
       default:
           return state;
       }
@@ -42,7 +45,11 @@ export const {
   selectTotal,
 } = adapter.getSelectors(getCollectionState);
 
-export const getSuccessCreate = createSelector(
+export const getSuccessCollection = createSelector(
   getCollectionState,
   (state: State) => state.success_create
+);
+export const getLoading = createSelector(
+  getCollectionState,
+  (state: State) => state.loading
 );

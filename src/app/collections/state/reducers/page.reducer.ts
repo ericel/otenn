@@ -5,6 +5,7 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 
 export interface State extends EntityState<Page> {
   success_create: boolean;
+  loading: boolean;
 }
 
 export const adapter: EntityAdapter<Page> = createEntityAdapter<Page>({
@@ -14,6 +15,7 @@ export const adapter: EntityAdapter<Page> = createEntityAdapter<Page>({
 
 export const initialState: State = adapter.getInitialState({
   success_create: false,
+  loading: false
 });
 
 // Reducer
@@ -24,6 +26,12 @@ export function pageReducer(
     switch (action.type) {
         case actions.ADD_ALL:
             return adapter.addAll(action.pages, state);
+        case actions.SUCCESS:
+        { return {...state, loading: true, success_create: true}};
+        case actions.CREATE_SUCCESS:
+        { return {...state, loading: false, success_create: false}};
+        case actions.ERROR:
+        { return {...state, loading: true, success_create: true}};
         default:
             return state;
         }
@@ -39,8 +47,12 @@ export const {
     selectAll,
     selectTotal,
   } = adapter.getSelectors(getPageState);
-
-export const getSuccessCreate = createSelector(
+  export const getLoading = createSelector(
+    getPageState,
+    (state: State) => state.loading
+);
+export const getSuccessPage = createSelector(
     getPageState,
     (state: State) => state.success_create
   );
+

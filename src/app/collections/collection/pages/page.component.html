@@ -1,5 +1,6 @@
 <div  #pageRef></div>
-<main *ngIf="page" >
+<loading [load]="(loading$ | async)"></loading>
+<main *ngIf="page && (loading$ | async)" >
   <div class="page">
     <mat-card>
         <mat-card-content>
@@ -11,7 +12,8 @@
                     <mat-menu #pageMenu="matMenu" xPosition="before">
                     <a mat-menu-item>Report</a>
                     <a mat-menu-item routerLink="/collections/editpage/{{page.title | slugify}}"
-                    [queryParams]="{ key: page.$key}" [fragment]="page.collectionKey">Edit Page</a>
+                    [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
+                    <a mat-menu-item (click)="onDelete(page.id)">Delete</a>
                     </mat-menu>
                 <mat-card-header>
                     <mat-card-title class="h1" [innerHTML]="page.title"></mat-card-title><span class="text-muted"><em>{{page.status}}</em></span>
@@ -22,9 +24,10 @@
                     </mat-card-subtitle>
                 </mat-card-header>
                 <app-share class="mar-30"></app-share>
-              <div  [innerHTML]="page.page" class="mar-20"></div>
+              <div  [innerHTML]="page.page" class="mar-20 main-content"></div>
 
               <mat-divider></mat-divider>
+              <div class="mar-20"></div>
               <page-comment [page]="page"></page-comment>
             </div>
             <div class="col-lg-4 content-right">
@@ -32,14 +35,16 @@
 
                 <mat-nav-list>
                     <div class="display-5">Related Pages:</div>
-                    <a  routerLink="/collections/c/mark-_-eye-sjss/pages/{{pageOf.title | slugify }}/{{pageOf.$key}}"
-                    [fragment]="pageOf.collectionKey" mat-list-item *ngFor="let pageOf of pages; let i = index">
-                      <ng-container *ngIf="i < 5">
+                    <ng-container *ngFor="let pageOf of pages; let i = index">
+                    <ng-container *ngIf="i < 5 && pageOf.id !== page.id">
+                    <a  routerLink="/collections/c/mark-_-eye-sjss/pages/{{pageOf.title | slugify }}/{{pageOf.id}}"
+                    [fragment]="pageOf.collectionKey" mat-list-item >
                          {{pageOf.title}}
-                      </ng-container>
                     </a>
+                    </ng-container>
+                  </ng-container>
                   </mat-nav-list>
-
+                  <app-ads-right></app-ads-right>
             </div>
           </div>
         </mat-card-content>

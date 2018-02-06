@@ -30,6 +30,8 @@ import { reducers } from '@collections/state';
 import { PageEffects } from '@collections/state/effects/page.effects';
 import { pageReducer } from '@collections/state/reducers/page.reducer';
 import { PageCommentComponent } from './collection/pages/page-comment/page-comment.component';
+import { CommentEffects } from '@collections/state/effects/comment.effects';
+import { commentReducer } from '@collections/state/reducers/comment.reducer';
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import { PageCommentComponent } from './collection/pages/page-comment/page-comme
     NgMasonryGridModule,
     StoreModule.forFeature('collection', collectionReducer),
     StoreModule.forFeature('page', pageReducer),
-    EffectsModule.forFeature([CollectionEffects, PageEffects])
+    StoreModule.forFeature('comment', commentReducer),
+    EffectsModule.forFeature([CollectionEffects, PageEffects, CommentEffects])
   ],
   declarations: [
     IndexComponent,

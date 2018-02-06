@@ -7,6 +7,10 @@
 .collection-card {
   color: #fff;
   height: 350px;
+  overflow: hidden;
+}
+.collection-card .mat-card-title {
+  margin-top: -25px;
 }
 .checkit {
   position: absolute;
@@ -19,5 +23,17 @@
   top: 150px;
 }
 .text-muted {
+  margin-top: 10px !important;
   color: rgba(255,255,255,0.54) !important;
+}
+.collection-img {
+  position: absolute;
+  top: 150px;
+  margin-bottom: 10px;
+}
+
+.collection-img img {
+  width:70px !important;
+  height: 70px;
+  border-radius: 100%;
 }

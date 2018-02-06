@@ -6,6 +6,7 @@ import { WysiwygComponent, DialogImg, DialogFont, DialogColor, DialogLink } from
 import { ADS_COMPONENTS } from '@shared/components/ads-right/ads-right.component';
 import { ShareComponent } from '@shared/components/social-share/social-share.component';
 import { ColorCard } from '@shared/components/wysiwyg/colorcard';
+import { LOADERS_COM } from '@shared/components/loading.component';
 
 export const SHARED_COMPONENTS = [
     HeaderComponent,
@@ -21,7 +22,9 @@ export const SHARED_COMPONENTS = [
     DialogLink,
     ADS_COMPONENTS,
     ShareComponent,
-    ColorCard
+    ColorCard,
+    LOADERS_COM
+
 ]
 
 

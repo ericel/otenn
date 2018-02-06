@@ -32,11 +32,13 @@ export class CollectionEffects {
                 return { id: doc.payload.doc.id, ...data } as Collection;
             })
         })
+
     })
-    .map(arr => {
-        console.log(arr)
-        return new actions.AddAll(arr)
-    })
+    .mergeMap(arr => [
+       new actions.AddAll(arr),
+       new actions.Success()
+    ])
+    .catch(err =>  Observable.of(new actions.Fail(err.message)) );
 
 @Effect()
     queryCollection$: Observable<Action> = this.actions$
@@ -48,8 +50,6 @@ export class CollectionEffects {
         return  ref.valueChanges();
     })
     .map(collection => {
-      console.log(collection)
-     // return new actions.Success(collection)
      return new actions.GetCollection(collection)
     });
 
@@ -62,7 +62,7 @@ export class CollectionEffects {
         })
         .map(() => {
             this._notify.update('<strong>Collection Added!</strong> Collection Successfully Added. You will be redirected!', 'info');
-            return new actions.Success()
+            return new actions.CreateSuccess()
         })
 
     // Listen for the 'UPDATE' action
@@ -71,7 +71,7 @@ export class CollectionEffects {
         .mergeMap(data => {
             const ref = this.afs.doc<Collection>(`o-t-collections/${data.id}`)
             return Observable.fromPromise( ref.update(Object.assign({}, data.changes)) )
-            .map(() =>   new actions.Success() )
+            .map(() =>   new actions.CreateSuccess() )
             .catch(err =>  Observable.of(new actions.Fail(err.message)) );
         });
 

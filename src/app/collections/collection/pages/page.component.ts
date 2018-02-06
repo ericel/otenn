@@ -14,7 +14,7 @@ import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-pa
 import { NgMasonryGridService } from 'ng-masonry-grid';
 
 import { Page } from '@collections/state/models/page.model';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromPage from '@collections/state/reducers/page.reducer';
 import { Observable } from 'rxjs/Observable';
@@ -49,6 +49,7 @@ export class PageComponent implements OnInit, OnDestroy {
   sub: Subscription;
   collectionKey: string;
   collectionTitle: string;
+  loading$: Observable<boolean>;
   @ViewChild('pageRef') pageRef: ElementRef;
   constructor(
     private _collections: CollectionsService,
@@ -60,7 +61,9 @@ export class PageComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
     private store: Store<fromPage.State>
-  ) { }
+  ) {
+    this.loading$ = this.store.pipe(select(fromPage.getLoading));
+   }
 
   ngOnInit() {
     const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);
@@ -99,6 +102,10 @@ export class PageComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  onDelete(id) {
+    this.store.dispatch(  new pageActions.Delete(id));
+    //TODO: DELETE COMMENTS OF PAGE TOO BY SERVICE
+  }
 }
 
 @Component({
@@ -106,28 +113,10 @@ export class PageComponent implements OnInit, OnDestroy {
   providers: [UcFirstPipe],
   template: `
   <div  #pageRef></div>
-  <div class="mar-30" *ngIf="pages && pages.length==0">
-  <div class="row">
-     <div class="col-md-8">
-      <div class="display-5 text-center">
-          <mat-card class="mar-20">
-            <h1>In this collection, you can post blogs, forums, photos, videos on this topic.</h1>
-          </mat-card>
-          <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
-          <div>No Pages Yet! Be the First!</div>
-          <a routerLink="/collections/addpage"
-          [queryParams]="{allow:'1'}"
-          [fragment]="collectionKey">Create a page</a>
-        </div>
-     </div>
-     <div class="col-md-4">
-        <app-ads-right></app-ads-right>
-     </div>
-  </div>
-</div>
-  <div  [@myAnimation] *ngIf="pages" class="row">
+  <loading [load]="(loading$ | async)"></loading>
 
-   <div *ngFor="let page of pages" class="pages col-md-4 mar-20 ">
+  <div  [@myAnimation] *ngIf="pages && (pages.length > 0) && (loading$ | async)" class="row">
+   <div *ngFor="let page of pages" class="col-md-4 mar-20">
   <ng-container *ngIf="page.status !== 'Draft'">
   <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
   <mat-icon>more_vert</mat-icon>
@@ -140,7 +129,7 @@ export class PageComponent implements OnInit, OnDestroy {
   </mat-menu>
   <a routerLink="{{page.title | slugify }}/{{page.id}}"
   [fragment]="page.collectionKey" [fragment]="page.collectionKey" mat-raised-button class="checkit"> Check it</a>
-     <mat-card class="collection-card">
+     <mat-card class="collection-card  page-cart">
          <img mat-card-image mat-elevation-z2 [src]="page.photoURL" [alt]="page.title">
          <div class="collection-img">
              <img [src]="page.photoURL" class="img-thumbnail" [alt]="">
@@ -152,14 +141,36 @@ export class PageComponent implements OnInit, OnDestroy {
          </mat-card-subtitle>
          <mat-card-content>
            <p>
-               {{page.description | shorten: 150:'..'}}
+               {{page.description | shorten: 100:'..'}}
            </p>
          </mat-card-content>
        </mat-card>
        </ng-container>
   </div>
-  <app-ads-right class="col-md-4"></app-ads-right>
-
+  <div class="row text-center">
+  <div class="col-md-12">
+  <app-ads-content-match></app-ads-content-match>
+  </div>
+</div>
+<ng-container class="mar-30" *ngIf="pages.length < 1">
+<div class="row">
+   <div class="col-md-8">
+    <div class="display-5 text-center">
+        <mat-card class="mar-20">
+          <h1>In this collection, you can post blogs, forums, photos, videos on this topic.</h1>
+        </mat-card>
+        <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+        <div>No Pages Yet! Be the First!</div>
+        <a routerLink="/collections/addpage"
+        [queryParams]="{allow:'1'}"
+        [fragment]="collectionKey">Create a page</a>
+      </div>
+   </div>
+   <div class="col-md-4">
+      <app-ads-right></app-ads-right>
+   </div>
+</div>
+</ng-container>
 </div>
   `,
   /*
@@ -208,6 +219,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   collectionKey: string;
   collectionTitle: string;
   collection: Observable<any>;
+  public loading$: Observable<boolean>;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
@@ -219,7 +231,9 @@ export class PagesComponent implements OnInit, OnDestroy {
     private pageScrollService: PageScrollService,
     private _masonry: NgMasonryGridService,
     private store: Store<fromPage.State>
-  ) { }
+  ) {
+    this.loading$ = this.store.pipe(select(fromPage.getLoading));
+   }
 
   ngOnInit() {
   const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);

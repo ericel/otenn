@@ -7,7 +7,6 @@ import { CollectionComponents, Collection} from '@collections/state/models/colle
 import { UcFirstPipe } from 'ngx-pipes';
 import { NgForm } from '@angular/forms';
 import { NotifyService } from '@shared/services/notify.service';
-import { CollectionsService } from '@collections/state/collections.service';
 import { Title, Meta } from '@angular/platform-browser';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {trigger, transition, style, animate, state} from '@angular/animations';
@@ -15,7 +14,7 @@ import { Upload } from '@shared/services/upload/upload.model';
 import { UploadService } from '@shared/services/upload/upload.service';
 import { SessionService } from '@shared/services/session.service';
 
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
 import * as fromCollection from '@collections/state/reducers/collection.reducer';
 @Component({
@@ -53,31 +52,33 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
   itemsmodel: CollectionComponents = {pages: true, videos: false, photos: false, forums: false};
   collectionAdmins = ['494949393'];
   addspinner;
-  color: string = '#fff';
-  photoUrl: string = './assets/assets/favinco.png';
-  changePhotoUrl: boolean = false;
-  hideCollectionForm: boolean = true;
-  notify_already: boolean = false;
+  color = '#fff';
+  photoUrl= './assets/assets/favinco.png';
+  changePhotoUrl = false;
+  hideCollectionForm = true;
+  notify_already = false;
   $key: string;
   collections;
   @ViewChild('file') file: ElementRef;
   selectedFiles: FileList | null;
   currentUpload: Upload;
   @ViewChild('descForm') descForm: NgForm;
+  created$: Observable<boolean>
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _spinner: SpinnerService,
     private _ucfirst: UcFirstPipe,
     private _notify: NotifyService,
-    private _collections: CollectionsService,
     private _title: Title,
     private _meta: Meta,
     public dialog: MatDialog,
     public _upload: UploadService,
     private _session: SessionService,
     private store: Store<fromCollection.State>
-  ) { }
+  ) {
+    this.created$ = this.store.pipe(select(fromCollection.getSuccessCollection));
+  }
 
   ngOnInit() {
   this._title.setTitle('Create A Collection');
@@ -92,10 +93,11 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
         this.allow = queryParams['allow'] === '1' ? true : false;
       }
     );
-    this._collections.getAllCollections().subscribe(
-      (collections) => {
-        this.collections = collections;
-      });
+    this.collections = this.store.pipe(select(fromCollection.selectAll))
+    this.store.dispatch(  new actions.Query() );
+    this.collections = this.collections.subscribe((collections) => {
+      this.collections = collections;
+    });
 
     this._route.fragment.subscribe((fragment: string) => {
       this.title = this._ucfirst.transform(fragment);
@@ -124,13 +126,20 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
      this.statusmodel.options, this.itemsmodel, this._notify.getCurrentTime(),
       this._notify.getCurrentTime(), this.collectionAdmins, this.color, 'uid');
     if (this.description !== undefined && this.description.length > 100) {
-        this.changesSaved = true;
         this.store.dispatch( new actions.Create(collection) )
-        this.getCollectionPhoto();
+        this.created$.subscribe((created) => {
+        if(created) {
         setTimeout(() => {
+          this.changesSaved = true;
           this.hideCollectionForm = false;
           this.changePhotoUrl = true;
         }, 2000);
+       } else {
+        this.changesSaved = false;
+        this.hideCollectionForm = true;
+        this.changePhotoUrl = false;
+       }
+      });
     } else {
       this._notify.update('<strong>Description Needed!</strong> Atleast 100 Character long.', 'error')
       this._spinner.hideAll();
@@ -142,14 +151,6 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     this.color = color;
   }
 
- private getCollectionPhoto() {
-    this._collections.getCollection(this.$key).subscribe(
-      (collection: Collection) => {
-         if (collection) {
-            this.photoUrl = collection.photoURL;
-         }
-     });
-  }
 
   detectFiles($event: Event) {
     this.selectedFiles = ($event.target as HTMLInputElement).files;
@@ -165,7 +166,6 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     }
    }
 
-  //get debug() { return JSON.stringify(this.statusmodel); }
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (!this.allow) {
       return true;

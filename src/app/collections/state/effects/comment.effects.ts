@@ -10,74 +10,54 @@ import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 
-import * as actions from '@collections/state/actions/page.actions';
-import * as fromPage from '@collections/state/reducers/page.reducer';
+import * as actions from '@collections/state/actions/comment.actions';
+import * as fromComment from '@collections/state/reducers/comment.reducer';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Page } from '@collections/state/models/page.model';
+import { Comment } from '@collections/state/models/comment.model';
 import { NotifyService } from '@shared/services/notify.service';
 
+
 @Injectable()
-export class PageEffects {
+export class CommentEffects {
 
   // Listen for the 'QUERY' action, must be the first effect you trigger
   @Effect() query$: Observable<Action> = this.actions$.ofType(actions.QUERY)
     .switchMap(action => {
-      const item: AngularFirestoreCollection<Page> = this.afs.collection(`o-t-pages`,
-      (ref) => ref.orderBy('updatedAt', 'desc'));
+      const item: AngularFirestoreCollection<Comment> = this.afs.collection(`o-t-pages-comments`,
+      (ref) => ref.orderBy('createdAt', 'desc'));
         return item.snapshotChanges().map(arr => {
             return arr.map( doc => {
                 const data = doc.payload.doc.data()
-                return { id: doc.payload.doc.id, ...data } as Page;
+                return { id: doc.payload.doc.id, ...data } as Comment;
             })
         })
     })
+    .delay(1000)
     .mergeMap(arr => [
       new actions.AddAll(arr),
       new actions.Success()
    ])
    .catch(err =>  Observable.of(new actions.Fail(err.message)) );
-
    // Listen for the 'CREATE' action
   @Effect() create$: Observable<Action> = this.actions$.ofType(actions.CREATE)
-   .map((action: actions.Create) => action.page )
-   .switchMap(page => {
-       const ref = this.afs.doc<Page>(`o-t-pages/${page.id}`);
-       return Observable.fromPromise( ref.set(Object.assign({}, page)));
-   })
-   .map(() => {
-       this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
-       return new actions.CreateSuccess()
-   })
-
-   // Listen for the 'UPDATE' action
-   @Effect() update$: Observable<Action> = this.actions$.ofType(actions.UPDATE)
-   .map((action: actions.Update) => action)
-   .mergeMap(data => {
-       const ref = this.afs.doc<Page>(`o-t-pages/${data.id}`)
-       return Observable.fromPromise( ref.update(Object.assign({}, data.changes)) )
+   .map((action: actions.Create) => action.comment )
+   .mergeMap(comment => {
+       const ref = this.afs.doc<Comment>(`o-t-pages-comments/${comment.id}`);
+       return Observable.fromPromise( ref.set(Object.assign({}, comment)))
        .map(() =>  new actions.CreateSuccess())
        .catch(err => {
          this._notify.update(err.message, 'error');
          return Observable.of(new actions.Fail(err.message))
         });
    })
-// Listen for the 'DELETE' action
 
-/*   @Effect() delete$: Observable<Action> = this.actions$.ofType(actions.DELETE)
-   .map((action: actions.Delete) => action.id )
-   .switchMap(id => {
-       const ref = this.afs.doc<Collection>(`o-t-collections/${id}`)
-       return Observable.fromPromise( ref.delete() )
-   })
-   .map(() => {
-       return new actions.Success()
-   })
-*/
+
+
   @Effect() delete$: Observable<Action> = this.actions$
   .ofType(actions.DELETE)
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
-  return of(this.afs.doc<Page>(`o-t-pages/${id}`).delete())
+  return of(this.afs.doc<Comment>(`o-t-pages-comments/${id}`).delete())
   .map(() =>  new actions.Success())
   .catch(err => Observable.of(new actions.Fail(err.message)));
   });

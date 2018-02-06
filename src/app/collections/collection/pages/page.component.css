@@ -91,8 +91,22 @@
   z-index: 9;
 }
 
+.page-cart {
+  height: 450px !important;
+  word-break: break-all;
+  clear: both;
+  overflow: hidden;
+}
+.page-cart .mat-card-title {
+  margin-top: 10px !important;
+}
 
-
+.main-content {
+    word-wrap: break-word;
+    line-height: 30px;
+    font-size: 18px;
+    font-family: Georgia,Times New Roman,serif;
+}
 /* END PAGES CSS */
 @media screen and (max-width: 992px){
   .h1, h1 {
@@ -101,4 +115,7 @@
   .mat-card-title.h1 {
     font-size: 1.2rem;
    }
+   .page-cart {
+    height: auto !important;
+  }
 }

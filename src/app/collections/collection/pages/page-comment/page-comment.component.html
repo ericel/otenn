@@ -1,71 +1,62 @@
-<div class="mar-20">
-  <form>
+<div class="comment-box clearfix">
     <div class="clearfix">
       <div class="float-left">
         <img src='./assets/img/avatar.png' class="img-thumbnail">
       </div>
       <div class="float-right">
+       <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
           <mat-form-field>
-              <textarea matInput placeholder="Textarea" name="comment" id="comment"  #comment></textarea>
-              <mat-hint align="end">{{comment.value?.length || 0}}/10</mat-hint>
+              <textarea matInput placeholder="Enter your comment here!"
+                formControlName="comment"
+                #comment
+                 minlength="3"
+                 maxlength="1500"
+                 required></textarea>
+              <mat-hint align="end">{{comment.value?.length || 0}}/1500</mat-hint>
           </mat-form-field>
-          <div class="text-right">
-            <button mat-raised-button color="primary">Comment</button>
+          <div class="text-right" *ngIf="commentForm.get('comment').valid">
+            <span
+              *ngIf="!commentForm.get('comment').valid && commentForm.get('comment').touched"
+              class="help-block">
+              <span *ngIf="commentForm.get('comment').errors['nameIsForbidden']">Curse words Not Allowed</span>
+              <span *ngIf="commentForm.get('comment').errors['required']">Comment is required</span>
+            </span>
+            <button mat-raised-button color="primary" [disabled]="!commentForm.valid" type="submit">
+                <app-spinner name="showSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
+              Comment
+            </button>
           </div>
+        </form>
       </div>
     </div>
-  </form>
 </div>
-<div class="clearfix mar-20">
+<loading-comments [load]="(loading$ | async)"></loading-comments>
+<ng-container *ngIf="comments && (loading$ | async)">
+  <div class="clearfix mar-20" *ngFor="let comment of comments">
     <div class="float-left">
       <img src='./assets/img/avatar.png' class="img-thumbnail">
     </div>
     <div class="float-right">
-        Please write your page here!Use this editor to write and publish
-         your page fast and in time. You have the option to save your work and continue some other time.
+       <p [innerHTML]="comment.comment">
+       <div class="row">
+         <div class="col-sm-6">
+            <div class="vote-top">
+                <button mat-icon-button><mat-icon  class="upvote">thumb_up</mat-icon><span class="count">2226</span></button>
+                <button mat-icon-button><mat-icon  class="downvote">thumb_down</mat-icon><span class="count">-2226</span></button>
+            </div>
+         </div>
+         <div class="col-sm-6 text-right">
+             <button class="delete_btn" mat-icon-button (click)="onDelete(comment.id)"><mat-icon>delete</mat-icon></button>
+          </div>
+       </div>
     </div>
   </div>
-  <div class="clearfix mar-20">
-      <div class="float-left">
-        <img src='./assets/img/avatar.png' class="img-thumbnail">
-      </div>
-      <div class="float-right">
-          Please write your page here!Use this editor to write and publish
-           your page fast and in time. You have the option to save your work and continue some other time.
-           Please write your page here!Use this editor to write and publish
-           your page fast and in time. You have the option to save your work and continue some other time.
-      </div>
-    </div>
-    <div class="clearfix mar-20">
-        <div class="float-left">
-          <img src='./assets/img/avatar.png' class="img-thumbnail">
-        </div>
-        <div class="float-right">
-            Please write your page here!Use this editor to write and publish
-             your page fast and in time. You have the option to save your work and continue some other time.
-             Please write your page here!Use this editor to write and publish
-             your page fast and in time. You have the option to save your work and continue some other time.
-        </div>
-      </div>
-      <div class="clearfix mar-20">
-          <div class="float-left">
-            <img src='./assets/img/avatar.png' class="img-thumbnail">
+  <ng-container class="mar-30" *ngIf="comments.length < 1">
+        <div class="display-5 text-center">
+            <mat-card class="mar-20">
+              <h1>No Comments yet! Be the first.</h1>
+            </mat-card>
           </div>
-          <div class="float-right">
-              Please write your page here!Use this editor to write and publish
-               your page fast and in time. You have the option to save your work and continue some other time.
-               Please write your page here!Use this editor to write and publish
-               your page fast and in time. You have the option to save your work and continue some other time.
-          </div>
-        </div>
-        <div class="clearfix mar-20">
-            <div class="float-left">
-              <img src='./assets/img/avatar.png' class="img-thumbnail">
-            </div>
-            <div class="float-right">
-                Please write your page here!Use this editor to write and publish
-                 your page fast and in time. You have the option to save your work and continue some other time.
-                 Please write your page here!Use this editor to write and publish
-                 your page fast and in time. You have the option to save your work and continue some other time.
-            </div>
-          </div>
+          <app-ads-right></app-ads-right>
+    </ng-container>
+</ng-container>

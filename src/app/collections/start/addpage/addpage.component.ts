@@ -61,7 +61,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
   pages: Observable<any>;
   component = 'pages';
   page = 'Please write your page here!';
-  private created$: Observable<boolean>;
+  created$: Observable<boolean>;
   @ViewChild('pageForm') pageForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -76,7 +76,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
     private _upload: UploadService,
     private store: Store<fromPage.State>
   ) {
-    this.created$ = this.store.pipe(select(fromPage.getSuccessCreate));
+    this.created$ = this.store.pipe(select(fromPage.getSuccessPage));
    }
 
   ngOnInit() {
@@ -118,17 +118,17 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'Draft', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
-        this._collections.addDraft(newPage).then((status: string) => {
-        if (status === 'error') {
+        this.created$.subscribe((created) => {
+          if(created) {
+            this.changesSaved = true;
+            setTimeout(() => {
+              this.submitted = true;
+              this.addImg = true;
+            }, 3000);
+        } else {
           this.changesSaved = false;
           this.submitted = false;
           this.addImg = false;
-        } else {
-          this.changesSaved = true;
-          setTimeout(() => {
-            this.submitted = true;
-            this.addImg = true;
-          }, 3000);
         }
     });
     } else {

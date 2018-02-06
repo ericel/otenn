@@ -42,6 +42,9 @@ object,
 video {
     max-width: 100%;
 }
+.clearfix {
+  clear: both;
+}
 .main {
     /*align-items: center;
     justify-content: center;*/
@@ -72,6 +75,7 @@ video {
     display: flex;
     justify-content: center; /* align horizontal */
     align-items: center; /* align vertical */
+
 }
 
 .title_h {
@@ -530,3 +534,9 @@ video {
 
 
 /* End Mansonry CSS */
+/*PAGE CSS DESIGNING*/
+pre {
+  padding: 10px;
+  background: #ccd;
+  border: 1px dashed #006064;
+}

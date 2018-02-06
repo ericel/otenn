@@ -3,7 +3,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 @Component({
   selector: 'app-ads-right',
   template:`
-  <div class="card ads">
+  <div class="ads">
   <ins class="adsbygoogle"
   style="display:block"
   data-ad-client="ca-pub-2243338195594977"
@@ -20,20 +20,20 @@ export class AdsRightComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-   setTimeout(()=>{
+  // setTimeout(()=>{
      try{
        (window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
      }catch(e){
        console.error("error");
      }
-   },2000);
+  // },2000);
 }
 }
 
 @Component({
   selector: 'app-ads-right-2',
   template:`
-  <div class="card ads">
+  <div class="ads">
   <ins class="adsbygoogle"
   style="display:block"
   data-ad-client="ca-pub-2243338195594977"
@@ -50,20 +50,20 @@ export class AdsRight2Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-   setTimeout(()=>{
+   //setTimeout(()=>{
      try{
        (window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
      }catch(e){
        console.error("error");
      }
-   },2000);
+  // },2000);
 }
 }
 
 @Component({
   selector: 'app-ads-content-match',
   template:`
-  <div class="card ads">
+  <div class="ads">
   <ins class="adsbygoogle"
   style="display:block"
   data-ad-client="ca-pub-2243338195594977"
