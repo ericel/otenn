@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import {trigger, transition, style, animate, state} from '@angular/animations';
 import { CollectionsService } from '@collections/state/collections.service';
 import { FormControl, FormGroup, Validators, FormBuilder, NgForm} from '@angular/forms';
@@ -9,6 +9,11 @@ import { NotifyService } from '@shared/services/notify.service';
 import { Collection } from '@collections/state/models/collection.model';
 import { Title, Meta } from '@angular/platform-browser';
 
+import { Store, select } from '@ngrx/store';
+import * as actions from '@collections/state/actions/collection.actions';
+import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 type UserFields = 'collectionName';
 type FormErrors = { [u in UserFields]: string };
 @Component({
@@ -35,7 +40,7 @@ type FormErrors = { [u in UserFields]: string };
     )
   ]
 })
-export class StartComponent implements OnInit {
+export class StartComponent implements OnInit, OnDestroy {
 indicator: boolean = false;
 startIntro: boolean = true;
 startCollect: boolean = false;
@@ -44,11 +49,13 @@ startPage: boolean = false;
 startCollectF: FormGroup;
 @ViewChild('pageForm') pageForm: NgForm;
 
-collections;
+collections: Observable<any>;
+isCollections;
 collectionName: string = '';
 formErrors: FormErrors = {
   'collectionName': ''
 };
+sub: Subscription;
 validationMessages = {
   'collectionName': {
     'required': 'Collection Name is required.',
@@ -58,6 +65,7 @@ validationMessages = {
     'whitespace': 'No Whitespace for name!'
   }
 };
+
   constructor(
     public _fb: FormBuilder,
     private _collections: CollectionsService,
@@ -67,7 +75,8 @@ validationMessages = {
     private _router: Router,
     private _notify: NotifyService,
     private _title: Title,
-    private _meta: Meta
+    private _meta: Meta,
+    private store: Store<fromCollection.State>
   ) { }
 
   ngOnInit() {
@@ -77,11 +86,13 @@ validationMessages = {
       { name: 'description', content: 'Start your own collection. It could be a blog, forum or community page!' }
     ]);
 
-    this._collections.getAllCollections().subscribe(
-      (collections) => {
-        this.collections = collections;
-      });
+    this.collections = this.store.pipe(select(fromCollection.selectAll))
+    this.store.dispatch(  new actions.Query() );
     this.buildstartCollectFForm();
+
+   this.sub = this.collections.subscribe((collections) => {
+      this.isCollections = collections;
+    });
   }
 
 
@@ -122,13 +133,13 @@ validationMessages = {
   forbiddenNames(control: FormControl): {[s: string]: boolean} {
     if (control.value) {
       const value = (control.value).toLowerCase();
-    if (this.collections) {
-      if (this.collections.filter(e => (e.title).toLowerCase() ===
-        value)
-        .length > 0) {
-        return {'nameIsForbidden': true};
-      }
-    }
+        if (this.isCollections) {
+          if (this.isCollections.filter(e => (e.title).toLowerCase() ===
+            value)
+            .length > 0) {
+            return {'nameIsForbidden': true};
+          }
+        }
   }
     return null;
   }
@@ -170,19 +181,21 @@ validationMessages = {
   }
   onSubmit() {
      this._spinner.show('showSpinner');
-     this._collections.getCollection(this.startCollectF.value.collectionName).subscribe(
-      (collection: Collection) => {
-         if (collection) {
-            if (this.startCollectF.value.collectionName === collection.title){
-              this._notify.update('<strong>This Collection Already Exist</strong>', 'error');
-              this._router.navigate(['/collections/start']);
-            }
-         }
-     });
+     /* if (this.isCollections) {
+          if (this.isCollections.filter(e => (e.title).toLowerCase() === this.startCollectF.value.collectionName)){
+            this._notify.update('<strong>This Collection Already Exist</strong>', 'error');
+            this._router.navigate(['/collections/start']);
+          }
+        }
+    */
      setTimeout(() => {
         this._spinner.hideAll();
         this._router.navigate(['/collections/addcollection'], { queryParams: { allow: 1 },
          fragment: this.startCollectF.value.collectionName });
      }, 2000);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

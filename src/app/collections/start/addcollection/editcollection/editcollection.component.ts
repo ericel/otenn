@@ -52,6 +52,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   status = 'Public Private'.split(' ');
   statusmodel = { options: 'Public' };
   itemsmodel = {pages: true, videos: false, photos: false, forums: false};
+  components = ['pages', 'forums', 'videos', 'photos']
   collectionAdmins = ['494949393'];
   addspinner;
   collection;
@@ -65,7 +66,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   @ViewChild('file') file: ElementRef;
   selectedFiles: FileList | null;
   currentUpload: Upload;
-
+  homepage;
   @ViewChild('descForm') descForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -111,6 +112,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
               this.statusmodel = {options: this.collection.status};
               this.photoUrl = this.collection.photoURL;
               this.color = this.collection.color;
+              this.homepage = this.collection.homepage || 'pages';
             }
            });
      });
@@ -121,9 +123,15 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     this.description = this.descForm.value.description;
     this._spinner.show('addspinner');
     if(this.color === '#fff') {this.color = '#029ae4'}
+
+    if (this.itemsmodel[this.homepage]) {
+      this.homepage = this.homepage;
+    } else {
+      this.homepage = 'pages';
+    }
     const collection: Collection = new Collection(this.$key, this.title, this.description, this.photoUrl,
      this.statusmodel.options, this.itemsmodel, this._notify.getCurrentTime(),
-      this._notify.getCurrentTime(), this.collectionAdmins, this.color, 'uid');
+      this._notify.getCurrentTime(), this.homepage, this.collectionAdmins, this.color, 'uid');
     if (this.description !== undefined && this.description.length > 100) {
         this.changesSaved = true;
         this.store.dispatch( new actions.Update(this.$key, collection) );
@@ -148,7 +156,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     if (file && file.length === 1) {
       this.currentUpload = new Upload(file.item(0));
       const name = this.title;
-      const path = 'collections';
+      const path = `collections/${this.$key}`;
       const firestoreUrl = `o-t-collections/${this.$key}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
     } else {
@@ -156,7 +164,6 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     }
    }
 
-  //get debug() { return JSON.stringify(this.statusmodel); }
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (!this.allow) {
       return true;

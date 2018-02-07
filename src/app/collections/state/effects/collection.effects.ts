@@ -92,8 +92,11 @@ export class CollectionEffects {
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
     return of(this.afs.doc<Collection>(`o-t-collections/${id}`).delete())
-      .map(() =>  new actions.Success())
-      .catch(err => Observable.of(new actions.Fail(err.message)));
+    .map(() =>  {
+      this._router.navigate(['./collections/c']);
+      return new actions.Success();
+    })
+    .catch(err => Observable.of(new actions.Fail(err.message)));
   });
 
 

@@ -259,6 +259,20 @@ video {
 .text-primary {
   color: #006064 !important;
 }
+.mat-card-title, .mat-card-subtitle, .mat-card-content, .mat-card {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  /* Adds a hyphen where the word breaks */
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-nav-list .mat-list-item {
+  word-break: break-all;
+}
 @media screen and (max-width: 991px){
     .drop-1 {
         right: -70px;
@@ -273,6 +287,9 @@ video {
     .hidden-md-down{
         display: none;
     }
+    .main {
+      padding-top: 55px;
+  }
 }
 @media screen and (min-width: 992px){
     .container-fluid {
@@ -288,7 +305,33 @@ video {
     }
 }
 
-
+@media screen and (max-width: 992px) {
+  .main-collect.container-fluid, .main-collect.row , .main-collect.col-lg-3, .main-collect.col-md-4 {
+    padding: 0px !important;
+  }
+  .main-collect.row {
+    margin: 0px 0;
+  }
+  .mobile-container {
+    padding:0 2px;
+    margin: 0 -2px;
+  }
+}@media screen and (max-width: 992px) {
+  .main-collect.container-fluid, .main-collect.row , .main-collect.col-lg-3, .main-collect.col-md-4, .main-collect.col {
+    padding: 0px !important;
+  }
+  .main-collect.row {
+    margin: 0px 0;
+  }
+  .mobile-container {
+    padding: 0 4px !important;
+    margin: 0 4px !important;
+  }
+  .menu-button {
+    right: 15px;
+    z-index: 999;
+  }
+}
 /* Mansonry Css */
 .masonry-item {
 	display: inline-block;

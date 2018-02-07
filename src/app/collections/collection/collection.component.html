@@ -1,26 +1,17 @@
 
 <main class="main" id="home" *ngIf="collection">
-    <div class="container-fluid">
-        <div class="row">
+    <div class="main-collect container-fluid">
+        <div class="main-collect row">
             <div #router></div>
-          <div class="left col-lg-3"  >
-              <mat-card class="collections w-100 afix" [style.background]="collection.color">
+          <div class="left main-collect col-lg-3"  >
+              <mat-card class="collections  w-100 afix" [style.background]="collection.color">
                   <collection-menu (route)='onRoute($event)' [collection]="collection" (delete)="onDelete($event)"></collection-menu>
               </mat-card>
           </div>
-
-          <div  class="col offset-lg-3">
+          <div  class="main-collect col offset-lg-3">
                <!-- <collection-header [collection]="collection" (route)='onRoute($event)'></collection-header>-->
-
-             <router-outlet></router-outlet>
-             <div class="gutter-2 row" id="awesomePart">
-               <div class="col-lg-8">
-                <div *ngIf="col | async as collect">{{collect.photoURL}} {{collect.description}}</div>
-
-                  <!--<collection-updates [collection]="collection"></collection-updates>-->
-            </div>
-               <div class="col-lg-4">
-               </div>
+            <div class="mobile-container">
+               <router-outlet></router-outlet>
              </div>
           </div>
         </div>

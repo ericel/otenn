@@ -23,6 +23,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './reducers';
 import { PizzaModule } from 'app/pizza/pizza.module';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { AuthModule } from 'app/auth/auth.module';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -41,6 +43,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     PizzaModule,
+    AuthModule
     //StoreRouterConnectingModule,
   ],
   providers: [...SHARED_SERVICES],

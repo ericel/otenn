@@ -1,5 +1,7 @@
 <!--<app-spinner *ngIf="!Onload" name="appSpinner" [(show)]="appSpinner" class="text-muted"><i class="fa fa-spinner fa-spin fa-4x"></i></app-spinner>-->
+
 <mat-spinner *ngIf="!Onload"  color="primary"></mat-spinner>
+<!--<ng-container *ngIf="user$ | async as user">-->
 <mat-card class="signup nopadding mat-elevation-z6" *ngIf="Onload">
     <div  class="card-header">
        <div class="pull-left font-went-bold h3">
@@ -11,10 +13,10 @@
     <div class="container signupbuttons">
         <div class="row">
           <div class="col-md-12">
-            <button mat-raised-button class="facebook font-weight-bold"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Continue with facebook</button>
+            <button mat-raised-button class="facebook font-weight-bold" (click)="facebookLogin()" ><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Continue with facebook</button>
           </div>
           <div class="col-md-12">
-              <button mat-raised-button class="google font-weight-bold"><i class="fa fa-google fa-2x" aria-hidden="true"></i> Continue with Google</button>
+              <button mat-raised-button class="google font-weight-bold" (click)="googleLogin()"><i class="fa fa-google fa-2x" aria-hidden="true"></i> Continue with Google</button>
           </div>
         </div>
       </div>
@@ -22,27 +24,27 @@
    <div class="container">
     <mat-tab-group>
         <mat-tab label="Log In ">
-      
+
           <form>
             <div class="signup-account">
                 <mat-form-field class="w-100">
                    <mat-icon matPrefix class="text-muted">mail</mat-icon>
                    <input matInput placeholder="E-mail">
                 </mat-form-field>
-            </div>   
+            </div>
             <div class="">
                 <mat-form-field class="w-100">
                     <mat-icon matPrefix class="text-muted">fingerprint</mat-icon>
                     <input matInput placeholder="Password">
                 </mat-form-field>
-            </div>  
-           
+            </div>
+
         <div class="signupbuttons">
             <button mat-raised-button color="primary" class="w-100">Log In</button>
             <div class="text-muted text-center">
                 or <a routerLink="">Forgot Password</a>
             </div>
-        </div> 
+        </div>
         </form>
         </mat-tab>
         <mat-tab label="Sign Up">
@@ -56,25 +58,28 @@
                            <mat-icon matPrefix class="text-muted">mail</mat-icon>
                            <input matInput placeholder="E-mail">
                      </mat-form-field>
-                   
+
                         <mat-form-field class="w-100">
                             <mat-icon matPrefix class="text-muted">fingerprint</mat-icon>
                             <input matInput placeholder="Password">
                         </mat-form-field>
-                    </div>  
-                   
+                    </div>
+
                 <div class="signupbuttons">
                     <button mat-raised-button color="primary" class="w-100">Sign Up</button>
                     <div class="text-muted text-center">
                         or <a routerLink="">Sign In</a>
                     </div>
-                </div> 
+                </div>
             </form>
         </mat-tab>
     </mat-tab-group>
     <div class="mar-10">
         <small class="text-muted">By signing up, you agree to our Terms of Use and Privacy Policy.</small>
     </div>
-   
+
    </div>
 </mat-card>
+<!--</ng-container>-->
+
+

@@ -67,7 +67,7 @@
     <ul class="list-group" *ngIf="collectionName.length > 3">
       <li
         class="list-group-item"
-        *ngFor="let collection of collections | filterBy: ['title']: collectionName "
+        *ngFor="let collection of collections | async | filterBy: ['title']: collectionName "
         >
         <span
           class="badge">
@@ -88,7 +88,7 @@
                ngModel
                name="category"
                required>
-                <mat-option *ngFor="let option of collections" value="{{option.id}}">{{option.title}}</mat-option>
+                <mat-option *ngFor="let option of collections | async" value="{{option.id}}">{{option.title}}</mat-option>
               </mat-select>
               <mat-hint align="end">Select category ^</mat-hint>
            </mat-form-field>

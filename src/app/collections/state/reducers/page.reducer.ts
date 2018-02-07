@@ -27,11 +27,11 @@ export function pageReducer(
         case actions.ADD_ALL:
             return adapter.addAll(action.pages, state);
         case actions.SUCCESS:
-        { return {...state, loading: true, success_create: true}};
+        { return {...state, loading: true, success_create: false}};
         case actions.CREATE_SUCCESS:
-        { return {...state, loading: false, success_create: false}};
+        { return {...state, loading: false, success_create: true}};
         case actions.ERROR:
-        { return {...state, loading: true, success_create: true}};
+        { return {...state, loading: true, success_create: false}};
         default:
             return state;
         }

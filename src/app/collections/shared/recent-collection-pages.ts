@@ -2,8 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CollectionsService } from '@collections/state/collections.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Collection } from '@collections/state/models/collection.model';
-import { Observable } from '@firebase/util';
 
+import { Page } from '@collections/state/models/page.model';
+import { Store, select } from '@ngrx/store';
+import * as pageActions from '@collections/state/actions/page.actions';
+import * as fromPage from '@collections/state/reducers/page.reducer';
+import { Observable } from 'rxjs/Observable';
 @Component ({
   selector: 'recent-pages-card',
   template:`
@@ -28,16 +32,16 @@ export class RecentPages implements OnInit {
   sub: Subscription;
   collection: Collection;
   constructor(
-    private _collections: CollectionsService
+    private store: Store<fromPage.State>
   ){}
 
   ngOnInit () {
-   this.sub = this._collections.getCollection(this.collectionKey)
-   .subscribe((collection: Collection) => {
-      this.collection = collection;
-      this._collections.getCollectionPages(collection.id, collection.title).subscribe((pages) => {
-        this.pages = pages;
-      });
+     const collections = this.store.select(fromPage.selectAll);
+        this.store.dispatch(  new pageActions.Query() );
+         collections.subscribe(data => {
+          this.pages =  data.filter((item) => {
+             return item.collectionKey === this.collection.id;
+       });
    });
   }
 }

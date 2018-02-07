@@ -63,7 +63,7 @@ import { commentReducer } from '@collections/state/reducers/comment.reducer';
     EditpageComponent,
     RecentPages,
     ForumComponent,
-    PageCommentComponent
+    PageCommentComponent,
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

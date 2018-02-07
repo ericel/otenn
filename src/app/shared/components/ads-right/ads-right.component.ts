@@ -1,9 +1,10 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-
+import { Component, OnInit, AfterViewInit, Inject, PLATFORM_ID} from '@angular/core';
+import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
+import { WINDOW } from '@shared/services/windows.service';
 @Component({
   selector: 'app-ads-right',
   template:`
-  <div class="ads">
+  <div class="ads card">
   <ins class="adsbygoogle"
   style="display:block"
   data-ad-client="ca-pub-2243338195594977"
@@ -14,18 +15,24 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 })
 export class AdsRightComponent implements OnInit, AfterViewInit {
 
-  constructor() { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document,
+    @Inject( WINDOW) private window
+  ) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
   // setTimeout(()=>{
-     try{
-       (window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
-     }catch(e){
-       console.error("error");
+  if (isPlatformBrowser(this.platformId)) {
+     try {
+       (this.window['adsbygoogle'] = this.window['adsbygoogle'] || []).push({});
+     } catch(e) {
+       //console.error("error");
      }
+   }
   // },2000);
 }
 }
@@ -33,7 +40,7 @@ export class AdsRightComponent implements OnInit, AfterViewInit {
 @Component({
   selector: 'app-ads-right-2',
   template:`
-  <div class="ads">
+  <div class="ads card">
   <ins class="adsbygoogle"
   style="display:block"
   data-ad-client="ca-pub-2243338195594977"
@@ -44,18 +51,24 @@ export class AdsRightComponent implements OnInit, AfterViewInit {
 })
 export class AdsRight2Component implements OnInit, AfterViewInit {
 
-  constructor() { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document,
+    @Inject( WINDOW) private window,
+  ) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
    //setTimeout(()=>{
-     try{
-       (window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
-     }catch(e){
-       console.error("error");
-     }
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        (this.window['adsbygoogle'] = this.window['adsbygoogle'] || []).push({});
+      } catch(e) {
+        //console.error("error");
+      }
+    }
   // },2000);
 }
 }
@@ -63,7 +76,7 @@ export class AdsRight2Component implements OnInit, AfterViewInit {
 @Component({
   selector: 'app-ads-content-match',
   template:`
-  <div class="ads">
+  <div class="ads card">
   <ins class="adsbygoogle"
   style="display:block"
   data-ad-client="ca-pub-2243338195594977"
@@ -74,18 +87,24 @@ export class AdsRight2Component implements OnInit, AfterViewInit {
 })
 export class AdsContentMatchComponent implements OnInit, AfterViewInit {
 
-  constructor() { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document,
+    @Inject( WINDOW) private window,
+  ) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
    // setTimeout(()=>{
-     try{
-       (window['adsbygoogle'] = window['adsbygoogle'] || []).push({});
-     }catch(e){
-       console.error("error");
-     }
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        (this.window['adsbygoogle'] = this.window['adsbygoogle'] || []).push({});
+      } catch(e) {
+        //console.error("error");
+      }
+    }
    //},2000);
 }
 }

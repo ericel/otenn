@@ -18,6 +18,9 @@ import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromPage from '@collections/state/reducers/page.reducer';
 import { Observable } from 'rxjs/Observable';
+
+import * as commentActions from '@collections/state/actions/comment.actions';
+import * as fromComment from '@collections/state/reducers/comment.reducer';
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -50,6 +53,7 @@ export class PageComponent implements OnInit, OnDestroy {
   collectionKey: string;
   collectionTitle: string;
   loading$: Observable<boolean>;
+
   @ViewChild('pageRef') pageRef: ElementRef;
   constructor(
     private _collections: CollectionsService,
@@ -60,7 +64,8 @@ export class PageComponent implements OnInit, OnDestroy {
     private _ucFirst: UcFirstPipe,
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
-    private store: Store<fromPage.State>
+    private store: Store<fromPage.State>,
+    private _storeDel: Store<fromComment.State>
   ) {
     this.loading$ = this.store.pipe(select(fromPage.getLoading));
    }
@@ -103,8 +108,24 @@ export class PageComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id) {
-    this.store.dispatch(  new pageActions.Delete(id));
-    //TODO: DELETE COMMENTS OF PAGE TOO BY SERVICE
+    if (confirm('Are you sure you want to delete this page and properties?')){
+      this._collections.getCommentCount(id).subscribe((comments) => {
+        const commentCount =  comments.length;
+        if(commentCount > 1){
+          this._collections.deleteCollection('o-t-pages-comments', commentCount, id).subscribe((status) => {
+            this.deletePage(id);
+          });
+        } else {
+          this.deletePage(id);
+        }
+      });
+    }
+  }
+
+  private deletePage(id) {
+    setTimeout(() => {
+      this.store.dispatch( new pageActions.Delete(id));
+    }, 2000)
   }
 }
 
@@ -113,47 +134,42 @@ export class PageComponent implements OnInit, OnDestroy {
   providers: [UcFirstPipe],
   template: `
   <div  #pageRef></div>
-  <loading [load]="(loading$ | async)"></loading>
-
-  <div  [@myAnimation] *ngIf="pages && (pages.length > 0) && (loading$ | async)" class="row">
-   <div *ngFor="let page of pages" class="col-md-4 mar-20">
-  <ng-container *ngIf="page.status !== 'Draft'">
-  <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
-  <mat-icon>more_vert</mat-icon>
-  </button>
-  <mat-menu #pageMenu="matMenu" xPosition="before">
-  <a mat-menu-item>Report</a>
-  <a mat-menu-item routerLink="/collections/editpage/{{page.title | slugify}}"
-  [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
-  <a mat-menu-item  (click)="onDelete(page)">Delete</a>
-  </mat-menu>
+  <section  *ngIf="pages && (pages.length > 0) && (loading$ | async)">
+  <div  class="main-collect row" >
+  <div  class="main-collect col-md-4 mar-20" *ngFor="let page of pages">
   <a routerLink="{{page.title | slugify }}/{{page.id}}"
   [fragment]="page.collectionKey" [fragment]="page.collectionKey" mat-raised-button class="checkit"> Check it</a>
-     <mat-card class="collection-card  page-cart">
-         <img mat-card-image mat-elevation-z2 [src]="page.photoURL" [alt]="page.title">
-         <div class="collection-img">
-             <img [src]="page.photoURL" class="img-thumbnail" [alt]="">
-         </div>
-         <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.id}}"
-         [fragment]="page.collectionKey">{{page.title | shorten: 100:'..'}}</a></mat-card-title>
-         <mat-card-subtitle>
-             {{page.uid}}
-         </mat-card-subtitle>
-         <mat-card-content>
-           <p>
-               {{page.description | shorten: 100:'..'}}
-           </p>
-         </mat-card-content>
-       </mat-card>
-       </ng-container>
-  </div>
-  <div class="row text-center">
-  <div class="col-md-12">
-  <app-ads-content-match></app-ads-content-match>
-  </div>
+    <loading [load]="deleting" class="card-loader"></loading>
+        <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #pageMenu="matMenu" xPosition="before">
+        <a mat-menu-item>Report</a>
+        <a mat-menu-item routerLink="/collections/editpage/{{page.title | slugify}}"
+        [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
+        <a mat-menu-item  (click)="onDelete(page.id)">Delete</a>
+      </mat-menu>
+      <mat-card class="collection-card">
+          <img mat-card-image mat-elevation-z2 [src]="page.photoURL" alt="{{page.title}}">
+          <div class="collection-img">
+            <img [src]="page.photoURL" class="img-thumbnail" [alt]="">
+        </div>
+          <mat-card-title class="collection-name">
+              {{page.collection}}
+          </mat-card-title>
+          <mat-card-subtitle class="text-muted">
+              collection.creator
+          </mat-card-subtitle>
+          <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.id}}"
+          [fragment]="page.collectionKey">{{page.title | shorten: 100:'..'}}</a></mat-card-title>
+        </mat-card>
 </div>
-<ng-container class="mar-30" *ngIf="pages.length < 1">
-<div class="row">
+       </div>
+</section>
+
+
+<loading [load]="(loading$ | async)"></loading>
+<div class="row mar-30" *ngIf="pages && pages.length==0">
    <div class="col-md-8">
     <div class="display-5 text-center">
         <mat-card class="mar-20">
@@ -170,27 +186,7 @@ export class PageComponent implements OnInit, OnDestroy {
       <app-ads-right></app-ads-right>
    </div>
 </div>
-</ng-container>
-</div>
   `,
-  /*
-    <ng-masonry-grid
-  [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
-  [useAnimation]="true"
-  [useImagesLoaded]="true"
-  [scrollAnimationOptions]="{ animationEffect: 'effect-4', minDuration : 0.4, maxDuration : 0.7 }"
-   >
-    <ng-masonry-grid
-  [masonryOptions]="{ transitionDuration: '0.4s', gutter: 15 }"
-  [useAnimation]="true"
-  [useImagesLoaded]="true"
-  [scrollAnimationOptions]="{ animationEffect: 'effect-4', minDuration : 0.4, maxDuration : 0.7 }"
-   >
-     <ng-masonry-grid-item>
-  <app-ads-right-2></app-ads-right-2>
-  </ng-masonry-grid-item>
-</ng-masonry-grid>
-   */
   styleUrls: ['./page.component.css'],
   animations: [
     trigger(
@@ -217,9 +213,10 @@ export class PagesComponent implements OnInit, OnDestroy {
   pages;
   sub: Subscription;
   collectionKey: string;
-  collectionTitle: string;
+  collectionTitle =  'Collection';
   collection: Observable<any>;
   public loading$: Observable<boolean>;
+  deleting =  true;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
@@ -245,7 +242,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       this.store.dispatch(  new pageActions.Query() );
       this.collections.subscribe(data => {
         this.pages =  data.filter((item) => {
-           return item.collectionKey === collectionkey;
+           return (item.collectionKey === collectionkey) && (item.status !== 'Draft');
          });
         const page = this.pages[0];
         if (page) {
@@ -260,35 +257,34 @@ export class PagesComponent implements OnInit, OnDestroy {
         ]);
        });
     });
-
-
-  /*this.collections = this._collections.collections;
-   this.sub = this._route.fragment
-    .subscribe(
-      (fragment: string) => {
-        this._collections.getCollection(fragment).subscribe((collection: Collection) => {
-          this._collections.getCollectionPages(fragment, collection.title).subscribe(
-            (pages) => {
-              this.collection = collection;
-              this.collectionKey = fragment;
-               this.pages = pages;
-               this._title.setTitle(this._ucFirst.transform(collection.title) + ' Pages');
-               this._meta.addTags([
-                 { name: 'keywords',
-                 content: this._ucFirst.transform(collection.title) + ' Pages' + this._ucFirst.transform(collection.title) + 'Blogs'},
-                 { name: 'description',
-                  content: this._ucFirst.transform(collection.title) + ' Pages and blogs contributed by collection subscribers.' }
-               ]);
-            });
-        });
-      });*/
   }
 
-  onDelete (page: Page) {
-    this._collections.onDeletePage(page);
-    this.removeGridItem(page);
+  onDelete (id: string) {
+    if (confirm('Are you sure you want to delete this page and properties?')){
+      this.deleting = false;
+
+      this._collections.getCommentCount(id).subscribe((comments) => {
+        const commentCount =  comments.length;
+        if(commentCount > 1){
+          this._collections.deleteCollection('o-t-pages-comments', commentCount, id).subscribe((status) => {
+            this.deletePage(id);
+          });
+        } else {
+          this.deletePage(id);
+        }
+      });
+    }
   }
 
+  private deletePage(id) {
+    setTimeout(() => {
+      this.deleting = true;
+      this.store.dispatch( new pageActions.Delete(id));
+    }, 2000)
+  }
+  /*trackByFn(item, index){
+    console.log(index)
+  }*/
   private removeGridItem($event){}
   ngOnDestroy () {
     this.sub.unsubscribe();

@@ -86,7 +86,6 @@ export class AddpageComponent implements OnInit, OnDestroy {
     { name: 'description', content: 'Create an Otenn page' }
   ]);
 
-  this.collections = this._collections.collections;
    this.sub = this._route.queryParams
     .subscribe(
       (queryParams: Params) => {
@@ -102,6 +101,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
           this.section = collection.title;
           this.collectionKey = collection.id;
           this.description = '';
+          this.photoUrl = collection.photoURL;
         })
       }
     );
@@ -118,17 +118,18 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'Draft', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
+        this.store.dispatch( new pageActions.Create(newPage) );
         this.created$.subscribe((created) => {
           if(created) {
+            this.changesSaved = false;
+            this.submitted = false;
+            this.addImg = false;
+        } else {
+          setTimeout(() => {
             this.changesSaved = true;
-            setTimeout(() => {
               this.submitted = true;
               this.addImg = true;
-            }, 3000);
-        } else {
-          this.changesSaved = false;
-          this.submitted = false;
-          this.addImg = false;
+          }, 3000);
         }
     });
     } else {
@@ -156,8 +157,8 @@ export class AddpageComponent implements OnInit, OnDestroy {
             this.submitted = false;
             this.addImg = false;
           } else {
-            this.changesSaved = true;
             setTimeout(() => {
+              this.changesSaved = true;
               this.submitted = true;
               this.addImg = true;
             }, 3000);
@@ -185,7 +186,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
     if (file && file.length === 1) {
       this.currentUpload = new Upload(file.item(0));
       const name = this.$key;
-      const path = `${this.section}/${this.component}/${name}`;
+      const path = `${this.section}/${this.component}/${this.$key}`;
       const firestoreUrl = `o-t-pages/${this.$key}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
       setTimeout (() => {
@@ -218,6 +219,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
             this.photoUrl = pageData[0].photoURL;
          }
     });
+
   }
 
   ngOnDestroy() {

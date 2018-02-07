@@ -1,4 +1,4 @@
-import { Component, 
+import { Component,
   OnInit,
    OnDestroy,
     ChangeDetectorRef,
@@ -14,6 +14,10 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import { MatMenuTrigger, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { SpinnerService } from '@shared/services/spinner.service';
 
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { User } from './../../../auth/state/auth.model';
+import * as userActions from './../../../auth/state/auth.actions';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -39,9 +43,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       private renderer: Renderer2
       ) {
     }
-    
+
     ngOnInit() {
-     
+
     }
 
     ngOnDestroy() {
@@ -52,7 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.trigger.openMenu();
       return false;
     }
-  
+
     /*@HostListener('mouseenter') mouseenter(data: Event) {
       this.trigger_collections.openMenu();
     }*/
@@ -71,10 +75,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     onSearch() {
       this.searchOpen = !this.searchOpen;
     }
-  
+
     onCloseSearch() {
       this.searchOpen = !this.searchOpen;
-    } 
+    }
 
     onToggle() {
       this.toggleDrawer.emit();
@@ -93,17 +97,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'signup-dailog',
   template: `<login-card (closeDailog)="onClose()"></login-card>`
-  
+
 })
 export class SignupDialog implements OnInit {
-  
+
   Onload: boolean = false;
   constructor(public dialogRef: MatDialogRef<SignupDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
-  public _spinner: SpinnerService 
+  public _spinner: SpinnerService
   ) {
-    
+
   }
- 
+
   ngOnInit() {
    setTimeout(() => {
      this.Onload = !this.Onload;
@@ -119,28 +123,37 @@ export class SignupDialog implements OnInit {
   }
 }
 
-
 @Component({
   selector: 'login-card',
   templateUrl: './signup.component.html',
   styleUrls: ['./header.component.css']
-  
 })
 export class LoginCard implements OnInit {
   @Output() closeDailog = new EventEmitter<void>();
   Onload: boolean = false;
+  user$: Observable<User>;
   constructor(
-  public _spinner: SpinnerService 
+  public _spinner: SpinnerService
   ) {
-    
+
   }
- 
+
   ngOnInit() {
    setTimeout(() => {
      this.Onload = !this.Onload;
    }, 2000);
   }
 
+  googleLogin() {
+    console.log('google')
+  }
+
+  facebookLogin() {
+    console.log('facebook')
+  }
+  logout() {
+   //
+  }
 
   OnSpinner() {
     this._spinner.show('appSpinner');

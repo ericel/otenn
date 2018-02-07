@@ -107,6 +107,23 @@
     font-size: 18px;
     font-family: Georgia,Times New Roman,serif;
 }
+.card-loader {
+  position: absolute;
+  top: 0px;
+  z-index: 999;
+}
+.collection-name {
+  position: absolute;
+  top: 120px;
+  color: aliceblue;
+}
+.text-muted {
+  margin-top: 10px !important;
+  color: rgba(87, 74, 74, 0.54) !important;
+}
+.mat-card-title {
+  line-height: 1.2;
+}
 /* END PAGES CSS */
 @media screen and (max-width: 992px){
   .h1, h1 {

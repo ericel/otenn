@@ -31,6 +31,16 @@
 
           <mat-card class="mar-30">
               <h2>Collection Settings</h2>
+              <div class="h5 text-muted">Set Homepage</div>
+              <mat-form-field class="w-100">
+
+                  <mat-select [(value)]="homepage" [ngModel]="homepage">
+                    <ng-container  *ngFor="let component of  components">
+                    <mat-option  [value]="component">{{component | uppercase}}</mat-option>
+                  </ng-container>
+                  </mat-select>
+                </mat-form-field>
+                <div class="h5 text-muted">Set status</div>
               <mat-list role="list">
                   <mat-list-item role="listitem" *ngFor="let st of status"><mat-radio-button name="st" (click)="statusmodel.options = st"
                     [checked]="st === statusmodel.options">{{st}}</mat-radio-button></mat-list-item>

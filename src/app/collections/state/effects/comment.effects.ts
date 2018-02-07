@@ -15,6 +15,7 @@ import * as fromComment from '@collections/state/reducers/comment.reducer';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Comment } from '@collections/state/models/comment.model';
 import { NotifyService } from '@shared/services/notify.service';
+import { Router } from '@angular/router';
 
 
 @Injectable()
@@ -65,6 +66,7 @@ export class CommentEffects {
   constructor(
       private actions$: Actions,
       private afs: AngularFirestore,
-      private _notify: NotifyService
+      private _notify: NotifyService,
+      private _router: Router
      ) { }
 }

@@ -7,6 +7,7 @@ import { ADS_COMPONENTS } from '@shared/components/ads-right/ads-right.component
 import { ShareComponent } from '@shared/components/social-share/social-share.component';
 import { ColorCard } from '@shared/components/wysiwyg/colorcard';
 import { LOADERS_COM } from '@shared/components/loading.component';
+import { NotFoundComponent } from '@shared/components/404/404.component';
 
 export const SHARED_COMPONENTS = [
     HeaderComponent,
@@ -23,7 +24,8 @@ export const SHARED_COMPONENTS = [
     ADS_COMPONENTS,
     ShareComponent,
     ColorCard,
-    LOADERS_COM
+    LOADERS_COM,
+    NotFoundComponent
 
 ]
 

@@ -124,7 +124,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     if(this.color === '#fff') {this.color = '#029ae4'}
     const collection: Collection = new Collection(this.$key, this.title, this.description, this.photoUrl,
      this.statusmodel.options, this.itemsmodel, this._notify.getCurrentTime(),
-      this._notify.getCurrentTime(), this.collectionAdmins, this.color, 'uid');
+      this._notify.getCurrentTime(), 'pages', this.collectionAdmins, this.color, 'uid');
     if (this.description !== undefined && this.description.length > 100) {
         this.store.dispatch( new actions.Create(collection) )
         this.created$.subscribe((created) => {
@@ -158,7 +158,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     if (file && file.length === 1) {
       this.currentUpload = new Upload(file.item(0));
       const name = this.title;
-      const path = 'collections';
+      const path = `collections/${this.$key}`;
       const firestoreUrl = `o-t-collections/${this.$key}`;
       this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
     } else {

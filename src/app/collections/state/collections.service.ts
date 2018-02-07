@@ -7,6 +7,9 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { Collection } from '@collections/state/models/collection.model';
 import { Observable } from 'rxjs/Observable';
 import { Page } from '@collections/state/models/page.model';
+
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import { expand, takeWhile, mergeMap, take } from 'rxjs/operators';
 @Injectable()
 export class CollectionsService {
   collections = [
@@ -75,133 +78,54 @@ export class CollectionsService {
   ) {}
 
 
-  getAllCollections (): Observable<Collection[]> {
-    const item: AngularFirestoreCollection<Collection> = this._afs.collection(`o-t-collections`,
-    (ref) => ref.orderBy('updatedAt', 'desc'));
-    return item.valueChanges();
-  }
 
   getCollection(key): Observable<Collection | null> {
     const item = this._afs.doc(`o-t-collections/${key}`).valueChanges() as Observable<Collection | null>;
     return item;
   }
 
-
-  addcollection(collection) {
-    const ref = this._afs.collection<any>('o-t-collections').doc(collection.id);
-    ref.set(Object.assign({}, collection))
-    .then(() => {
-      this._notify.update('<strong>Collection Added!</strong> Collection Successfully Added. You will be redirected!', 'info');
-    }).catch((error) => {
-      this._notify.update(error.message, 'error');
-    });
-    setTimeout(() => {
-      this._spinner.hideAll();
-    }, 2000);
-  }
-
-
-  addPage(page: Page) {
-   const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.id}`);
-   return ref.set(Object.assign({}, page))
-     .then(() => {
-      return this._notify
-       .update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
-     }).then(() => {
-        setTimeout(() => {
-          this._spinner.hideAll();
-        }, 2000);
-     }).catch((error) => {
-      this._notify.update(error.message, 'error');
-      this._spinner.hideAll();
-      return 'error';
-     });
-  }
-
-  addDraft(page: Page) {
-    const ref = this._afs.collection<any>(page.collection).doc(`${page.component}/${page.component}/${page.id}`);
-    return ref.set(Object.assign({}, page))
-      .then(() => {
-       return this._notify
-       .update('<strong>DRAFT!</strong> Your Draft Has Been Saved!', 'info');
-      }).then(() => {
-         setTimeout(() => {
-           this._spinner.hideAll();
-         }, 2000);
-      }).catch((error) => {
-       this._notify.update(error.message, 'error');
-       this._spinner.hideAll();
-       return 'error';
-      });
-  }
-
-  getPage(collection, component, key): Observable<Page | null> {
-    const item = this._afs.doc(`${collection}/${component}/${component}/${key}`).valueChanges() as Observable<Page | null>;
+  getPage(key): Observable<Collection | null> {
+    const item = this._afs.doc(`o-t-pages/${key}`).valueChanges() as Observable<Collection | null>;
     return item;
   }
 
-  getCollectionPages ($key, collection): Observable<{}[]> {
-    const item = this._afs.collection(`${collection}/pages/pages`,
-    (ref) => ref.where('collectionKey', '==', $key).orderBy('updatedAt', 'desc'));
-    return item.valueChanges();
+
+  getCommentCount(id) {
+    return this._afs.collection('o-t-pages-comments', ref => ref.where('pageId', '==', id) )
+    .valueChanges();
   }
 
-  editcollection(collection) {
-    const ref = this._afs.collection<any>('o-t-collections').doc(collection.id);
-    ref.update(Object.assign({}, collection))
-    .then(() => {
-      this._notify.update('<strong>Collection Updated!</strong> Collection Successfully Updated. You will be redirected!', 'info');
-    }).catch((error) => {
-      this._notify.update(error.message, 'error');
-    });
-    setTimeout(() => {
-      this._spinner.hideAll();
-    }, 2000);
+
+  deleteCollection(path: string, batchSize: number, id): Observable<any> {
+
+    const source = this.deleteBatch(path, batchSize, id)
+
+    // expand will call deleteBatch recursively until the collection is deleted
+    return source.pipe(
+      expand(val => this.deleteBatch(path, batchSize, id)),
+      takeWhile(val => val > 0)
+   )
 
   }
 
-  updateDraft(page: Page) {
-    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.id}`)
-    return item.update(Object.assign({}, page))
-      .then(() => {
-       return this._notify
-       .update('<strong>DRAFT!</strong> Your Draft Has Been Updated!', 'info');
-      }).then(() => {
-         setTimeout(() => {
-           this._spinner.hideAll();
-         }, 2000);
-      }).catch((error) => {
-       this._notify.update(error.message, 'error');
-       this._spinner.hideAll();
-       return 'error';
-      });
-  }
 
-  updatePage(page: Page){
-    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.id}`)
-   return item.update(Object.assign({}, page))
-   .then(() => {
-    return this._notify
-    .update('<strong>Update Added!</strong> Page Successfully Updated. It May Require Review! You will be redirected!', 'info');
-   }).then(() => {
-      setTimeout(() => {
-        this._spinner.hideAll();
-      }, 2000);
-   }).catch((error) => {
-    this._notify.update(error.message, 'error');
-    this._spinner.hideAll();
-    return 'error';
-   });
-  }
+  // Detetes documents as batched transaction
+  private deleteBatch(path: string, batchSize: number, id): Observable<any> {
+    const colRef = this._afs.collection(path, ref => ref.where('pageId', '==', id).limit(batchSize) )
 
-  onDeletePage(page: Page) {
-    console.log(page)
-    const item = this._afs.doc(`${page.collection}/${page.component}/${page.component}/${page.id}`);
-    item.delete().then(() => {
-      this._notify
-    .update('<strong>Page Deleted!</strong> Your Page Was Deleted!', 'info');
-    }).catch((error) => {
-      this._notify.update(error.message, 'error');
-    });
-  }
+    return colRef.snapshotChanges().pipe(
+      take(1),
+      mergeMap(snapshot => {
+
+        // Delete documents in a batch
+        const batch = this._afs.firestore.batch();
+        snapshot.forEach(doc => {
+            batch.delete(doc.payload.doc.ref);
+        });
+
+        return fromPromise( batch.commit() ).map(() => snapshot.length)
+
+      })
+    )
+}
 }

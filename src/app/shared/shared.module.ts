@@ -16,7 +16,7 @@ import { NgMasonryGridModule } from 'ng-masonry-grid';
 import * as firebase from 'firebase';
 import { environment } from '@environments/environment';
 firebase.initializeApp(environment.firebase);
-import 'hammerjs';
+
 @NgModule({
   imports: [
     CommonModule,

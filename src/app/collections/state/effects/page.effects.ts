@@ -15,6 +15,8 @@ import * as fromPage from '@collections/state/reducers/page.reducer';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Page } from '@collections/state/models/page.model';
 import { NotifyService } from '@shared/services/notify.service';
+import { Router, ActivatedRoute } from '@angular/router';
+
 
 @Injectable()
 export class PageEffects {
@@ -62,29 +64,23 @@ export class PageEffects {
         });
    })
 // Listen for the 'DELETE' action
-
-/*   @Effect() delete$: Observable<Action> = this.actions$.ofType(actions.DELETE)
-   .map((action: actions.Delete) => action.id )
-   .switchMap(id => {
-       const ref = this.afs.doc<Collection>(`o-t-collections/${id}`)
-       return Observable.fromPromise( ref.delete() )
-   })
-   .map(() => {
-       return new actions.Success()
-   })
-*/
   @Effect() delete$: Observable<Action> = this.actions$
   .ofType(actions.DELETE)
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
   return of(this.afs.doc<Page>(`o-t-pages/${id}`).delete())
-  .map(() =>  new actions.Success())
+  .map(() =>  {
+    //this._router.navigate(['../collections/c'], {relativeTo: this._route});
+    return new actions.Success();
+  })
   .catch(err => Observable.of(new actions.Fail(err.message)));
   });
 
   constructor(
       private actions$: Actions,
       private afs: AngularFirestore,
-      private _notify: NotifyService
-     ) { }
+      private _notify: NotifyService,
+      private _router: Router,
+      private _route: ActivatedRoute
+  ) { }
 }

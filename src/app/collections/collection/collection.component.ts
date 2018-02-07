@@ -28,7 +28,7 @@ import { Observable } from 'rxjs/Observable';
 export class CollectionComponent implements OnInit, OnDestroy {
   @ViewChild('router') route: ElementRef;
   sub: Subscription;
-  collection: Observable<any>;
+  collection;
   collections: Observable<any>;
   verticalOffset;
   isMini = false;
@@ -56,6 +56,9 @@ export class CollectionComponent implements OnInit, OnDestroy {
            return item.id === collectionKey;
          });
         this.collection = this.collection[0];
+        if(this.collection){
+          this._router.navigate([this.collection.homepage], {relativeTo: this._route, fragment: this.collection.id})
+        }
        })
     });
 
@@ -71,7 +74,9 @@ export class CollectionComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id) {
-    this.store.dispatch( new actions.Delete(id));
+    if (confirm('Are you sure you want to delete this collection and properties?')){
+      this.store.dispatch( new actions.Delete(id));
+    }
   }
 
   ngOnDestroy() {
@@ -89,6 +94,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
      }
     }
    }
+
 }
 
 
@@ -96,14 +102,14 @@ export class CollectionComponent implements OnInit, OnDestroy {
   selector: 'collection-menu',
   template: `
   <ng-container *ngIf="collection">
-
+  <div class="collection-menu">
   <img mat-card-image [src]="collection.photoURL" [alt]="collection.title">
   <div class="creator">
     <img [src]="photo" class="img-thumbnail ">
    <div class="font-weight-bold">Oj Obasi</div>
  </div>
  <button class="menu-button" mat-icon-button [matMenuTriggerFor]="collectionmenu">
-  <mat-icon>more_vert</mat-icon>
+  <mat-icon color="primary">more_vert</mat-icon>
  </button>
  <mat-menu #collectionmenu="matMenu" xPosition="before">
   <a mat-menu-item>Report</a>
@@ -150,7 +156,9 @@ export class CollectionComponent implements OnInit, OnDestroy {
               </div>
           </div>
         </div>
+        </div>
   </ng-container>
+
   `,
   styleUrls: ['./collection.component.css']
 })

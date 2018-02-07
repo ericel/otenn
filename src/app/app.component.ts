@@ -11,13 +11,14 @@ import { MatDrawer } from '@angular/material';
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild(MatDrawer) trigger: MatDrawer;
   mobileQuery: MediaQueryList;
-
   fillerNav = Array(10).fill(0).map((_, i) => `Nav Item ${i + 1}`);
 
 
   private _mobileQueryListener: () => void;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher) {
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+     private media: MediaMatcher
+    ) {
 
   }
 
@@ -26,7 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mobileQuery = this.media.matchMedia('(max-width: 922px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-  }
+   }
+
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);

@@ -19,6 +19,7 @@ export class Collection {
   public components: CollectionComponents,
   public createdAt: any,
   public updatedAt: any,
+  public homepage: string,
   public admins: object,
   public color: string,
   public uid: string ) {}
