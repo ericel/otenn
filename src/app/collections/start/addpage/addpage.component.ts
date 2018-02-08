@@ -17,7 +17,7 @@ import { Collection } from '@collections/state/models/collection.model';
 import { Page } from '@collections/state/models/page.model';
 import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
-import * as fromPage from '@collections/state/reducers/page.reducer';
+import * as fromStore from '@collections/state';
 
 @Component({
   selector: 'app-addpage',
@@ -74,9 +74,9 @@ export class AddpageComponent implements OnInit, OnDestroy {
     private _meta: Meta,
     public _session: SessionService,
     private _upload: UploadService,
-    private store: Store<fromPage.State>
+    private store: Store<fromStore.State>
   ) {
-    this.created$ = this.store.pipe(select(fromPage.getSuccessPage));
+    this.created$ = this.store.pipe(select(fromStore.getSuccessPage));
    }
 
   ngOnInit() {
@@ -209,7 +209,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
   }
 
   private getPage() {
-    this.pages = this.store.pipe(select(fromPage.selectAll));
+    this.pages = this.store.pipe(select(fromStore.getAllPages));
     this.store.dispatch(  new pageActions.Query() );
     this.sub = this.pages.subscribe(data => {
             const pageData =  data.filter((item) => {

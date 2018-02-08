@@ -19,7 +19,7 @@ import { SessionService } from '@shared/services/session.service';
 
 import { Store } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import * as fromStore from '@collections/state';
 @Component({
   selector: 'app-editcollection',
   templateUrl: './editcollection.component.html',
@@ -79,7 +79,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public _upload: UploadService,
     private _session: SessionService,
-    private store: Store<fromCollection.State>
+    private store: Store<fromStore.State>
   ) { }
 
   ngOnInit() {
@@ -98,7 +98,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
 
       this.sub = this._route.fragment.subscribe(
         (collectionKey: string) => {
-         this.collections = this.store.select(fromCollection.selectAll);
+         this.collections = this.store.select(fromStore.getAllCollections);
           this.store.dispatch(  new actions.Query() );
           this.collections.subscribe(data => {
             this.collection =  data.filter((item) => {

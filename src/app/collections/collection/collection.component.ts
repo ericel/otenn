@@ -17,7 +17,7 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { Store } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollections from '@collections/state/reducers/collection.reducer';
+import * as fromStore from '@collections/state/';
 import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-collection',
@@ -43,13 +43,13 @@ export class CollectionComponent implements OnInit, OnDestroy {
     public _sessions: SessionService,
     private _title: Title,
     private _meta: Meta,
-    private store: Store<fromCollections.State>
+    private store: Store<fromStore.State>
   ) { }
 
   ngOnInit() {
   this.sub = this._route.fragment.subscribe(
     (collectionKey: string) => {
-     this.collections = this.store.select(fromCollections.selectAll);
+     this.collections = this.store.select(fromStore.getAllCollections);
       this.store.dispatch(  new actions.Query() );
       this.collections.subscribe(data => {
         this.collection =  data.filter((item) => {

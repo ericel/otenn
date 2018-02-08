@@ -42,9 +42,7 @@ import { commentReducer } from '@collections/state/reducers/comment.reducer';
     ReactiveFormsModule,
     CollectionsRoutingModule,
     NgMasonryGridModule,
-    StoreModule.forFeature('collection', collectionReducer),
-    StoreModule.forFeature('page', pageReducer),
-    StoreModule.forFeature('comment', commentReducer),
+    StoreModule.forFeature('collections', reducers),
     EffectsModule.forFeature([CollectionEffects, PageEffects, CommentEffects])
   ],
   declarations: [

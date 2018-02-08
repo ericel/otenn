@@ -40,18 +40,6 @@ export class CollectionEffects {
     ])
     .catch(err =>  Observable.of(new actions.Fail(err.message)) );
 
-@Effect()
-    queryCollection$: Observable<Action> = this.actions$
-      .ofType(actions.QUERY_COLLECTION)
-      .map((action: actions.QueryCollection) => action.id )
-     // .delay(2000) // delay to show spinner
-      .mergeMap(id => {
-        const ref = this.afs.doc<Collection>(`o-t-collections/${id}`)
-        return  ref.valueChanges();
-    })
-    .map(collection => {
-     return new actions.GetCollection(collection)
-    });
 
     // Listen for the 'CREATE' action
     @Effect() create$: Observable<Action> = this.actions$.ofType(actions.CREATE)

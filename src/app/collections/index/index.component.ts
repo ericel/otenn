@@ -7,7 +7,7 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import * as fromStore from '@collections/state/';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -20,9 +20,9 @@ export class IndexComponent implements OnInit{
   public _sessions: SessionService,
   private _title: Title,
   private _meta: Meta,
-  private store: Store<fromCollection.State>
+  private store: Store<fromStore.State>
   ) {
-    this.loading$ = this.store.pipe(select(fromCollection.getLoading));
+    this.loading$ = this.store.pipe(select(fromStore.getLoading));
   }
 
   ngOnInit() {
@@ -31,7 +31,7 @@ export class IndexComponent implements OnInit{
       { name: 'keywords', content: 'Blogs, forums, videos, photos, collections, otenn collections, afro collections'},
       { name: 'description', content: 'Otenn web collections' }
     ]);
-  this.collections = this.store.pipe(select(fromCollection.selectAll))
+  this.collections = this.store.pipe(select(fromStore.getAllCollections));
   this.store.dispatch(  new actions.Query() );
    this._sessions.hide();
   }

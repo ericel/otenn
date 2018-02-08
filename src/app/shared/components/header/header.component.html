@@ -35,7 +35,8 @@
     <!-- User NOT logged in -->
     <ng-template #guest>
         <div class="navbar-text">
-            <div class="name-text"><span  *ngIf="!mobilequery">Howdy, GUEST</span>
+            <div class="name-text"><span  *ngIf="!mobilequery">Howdy, GUEST
+            </span>
                 <button mat-icon-button #userMenu="matMenuTrigger" [matMenuTriggerFor]="menuGuest" class="c menu-lang"  xPosition="before"><img class="img-thumbnail user-image"
                     src="./assets/img/avatar.png" alt="Username" (contextmenu)="showmenu()">
                 </button>
@@ -45,10 +46,18 @@
     <mat-menu class="drop-1" #menuGuest="matMenu">
         <h3>Howdy, GUEST</h3>
         <p>Login to get started...</p>
+        <a mat-menu-item *ngIf="user$ | async as user">
+
+
+          <h1>Howdy, {{ user.displayName }}</h1>
+          <h4>{{ user.uid }}</h4>
+        </a>
         <a mat-menu-item routerLink="collections/start/">Start a Collection</a>
         <a (click)="onLogin()" mat-raised-button color="primary">
             Login now
         </a>
+
+
       </mat-menu>
     <!-- User logged in -->
     <ng-template #authenticated>

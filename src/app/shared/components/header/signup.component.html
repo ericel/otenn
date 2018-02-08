@@ -25,22 +25,27 @@
     <mat-tab-group>
         <mat-tab label="Log In ">
 
-          <form>
+          <form (ngSubmit)="onLogin(f1)" #f1="ngForm">
             <div class="signup-account">
                 <mat-form-field class="w-100">
                    <mat-icon matPrefix class="text-muted">mail</mat-icon>
-                   <input matInput placeholder="E-mail">
+                   <input matInput placeholder="E-mail" type="email" id="email" name="email" ngModel>
                 </mat-form-field>
             </div>
             <div class="">
                 <mat-form-field class="w-100">
                     <mat-icon matPrefix class="text-muted">fingerprint</mat-icon>
-                    <input matInput placeholder="Password">
+                    <input matInput placeholder="Password"
+                    type="password"
+                    id="password"
+                    name="password"
+                    ngModel
+                    >
                 </mat-form-field>
             </div>
 
         <div class="signupbuttons">
-            <button mat-raised-button color="primary" class="w-100">Log In</button>
+            <button mat-raised-button color="primary" class="w-100" [disabled]="!f1.valid">Log In</button>
             <div class="text-muted text-center">
                 or <a routerLink="">Forgot Password</a>
             </div>
@@ -48,25 +53,28 @@
         </form>
         </mat-tab>
         <mat-tab label="Sign Up">
-              <form>
+              <form (ngSubmit)="onSignup(f)" #f="ngForm">
                   <div class="signup-account">
-                    <mat-form-field class="w-100">
+                   <!-- <mat-form-field class="w-100">
                          <mat-icon matPrefix class="text-muted">account_circle</mat-icon>
                           <input matInput placeholder="User-Name">
-                     </mat-form-field>
+                     </mat-form-field>-->
                     <mat-form-field class="w-100">
                            <mat-icon matPrefix class="text-muted">mail</mat-icon>
-                           <input matInput placeholder="E-mail">
+                           <input matInput placeholder="E-mail" type="email" id="email" name="email" ngModel>
                      </mat-form-field>
 
                         <mat-form-field class="w-100">
                             <mat-icon matPrefix class="text-muted">fingerprint</mat-icon>
-                            <input matInput placeholder="Password">
+                            <input matInput placeholder="Password" type="password"
+                            id="password"
+                            name="password"
+                            ngModel>
                         </mat-form-field>
                     </div>
 
                 <div class="signupbuttons">
-                    <button mat-raised-button color="primary" class="w-100">Sign Up</button>
+                    <button mat-raised-button color="primary" class="w-100" type="submit" [disabled]="!f.valid">Sign Up</button>
                     <div class="text-muted text-center">
                         or <a routerLink="">Sign In</a>
                     </div>

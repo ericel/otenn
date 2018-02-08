@@ -8,7 +8,7 @@ export const ERROR = '[Collection] Remove Collection Fail';
 
 export const QUERY      = '[Collections] Query';
 
-export const GET_COLLECTION  = '[Collections] Get Collection';
+
 export const ADD_ALL    = '[Collections] Add All';
 export const SUCCESS    = '[Collections] Successful firestore write';
 export const QUERY_COLLECTION = '[Collection] Get A Single Collection';
@@ -20,9 +20,10 @@ export class Query implements Action {
   constructor() { }
 }
 
-export class QueryCollection implements Action {
-  readonly type = QUERY_COLLECTION;
-  constructor(public id: string) { }
+export class Select implements Action {
+  readonly type = SELECT;
+
+  constructor(public payload: string) {}
 }
 
 export class AddAll implements Action {
@@ -68,10 +69,7 @@ export class Delete implements Action {
   constructor(public id: string) { }
 }
 
-export class GetCollection implements Action {
-  readonly type = GET_COLLECTION;
-  constructor(public collection: Collection) { }
-}
+
 
 export type CollectionActions
 = Create
@@ -80,4 +78,5 @@ export type CollectionActions
 | Success
 | CreateSuccess
 | Query
+| Select
 | AddAll;

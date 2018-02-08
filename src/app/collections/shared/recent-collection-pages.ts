@@ -6,7 +6,7 @@ import { Collection } from '@collections/state/models/collection.model';
 import { Page } from '@collections/state/models/page.model';
 import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
-import * as fromPage from '@collections/state/reducers/page.reducer';
+import * as fromPage from '@collections/state';
 import { Observable } from 'rxjs/Observable';
 @Component ({
   selector: 'recent-pages-card',
@@ -36,7 +36,7 @@ export class RecentPages implements OnInit {
   ){}
 
   ngOnInit () {
-     const collections = this.store.select(fromPage.selectAll);
+     const collections = this.store.select(fromPage.getAllPages);
         this.store.dispatch(  new pageActions.Query() );
          collections.subscribe(data => {
           this.pages =  data.filter((item) => {

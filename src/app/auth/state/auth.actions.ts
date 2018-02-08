@@ -1,40 +1,58 @@
 import { Action } from '@ngrx/store';
-
-export const TRY_SIGNUP = 'TRY_SIGNUP';
-export const SIGNUP = 'SIGNUP';
-export const TRY_SIGNIN = 'TRY_SIGNIN';
-export const SIGNIN = 'SIGNIN';
-export const LOGOUT = 'LOGOUT';
-export const SET_TOKEN = 'SET_TOKEN';
-
-export class TrySignup implements Action {
-  readonly type = TRY_SIGNUP;
-
-  constructor(public payload: {username: string, password: string}) {}
+import { User } from './auth.model';
+export const GET_USER               = '[Auth] Get user';
+export const AUTHENTICATED          = '[Auth] Authenticated';
+export const NOT_AUTHENTICATED      = '[Auth] Not Authenticated';
+export const GOOGLE_LOGIN           = '[Auth] Google login attempt';
+export const LOGOUT                 = '[Auth] Logout';
+export const AUTH_ERROR             = '[Auth] Error';
+export const SUCCESS    = '[Auth] Successful firestore write';
+export const ERROR = '[Auth] Fail';
+/// Get User AuthState
+export class GetUser implements Action {
+    readonly type = GET_USER;
+    constructor(public payload?: any) {}
 }
-
-export class TrySignin implements Action {
-  readonly type = TRY_SIGNIN;
-
-  constructor(public payload: {username: string, password: string}) {}
+export class Authenticated implements Action {
+    readonly type = AUTHENTICATED;
+    constructor(public payload?: any) {}
 }
-
-export class Signup implements Action {
-  readonly type = SIGNUP;
+export class NotAuthenticated implements Action {
+    readonly type = NOT_AUTHENTICATED;
+    constructor(public payload?: any) {}
 }
-
-export class Signin implements Action {
-  readonly type = SIGNIN;
+export class AuthError implements Action {
+    readonly type = AUTH_ERROR;
+    constructor(public payload?: any) {}
 }
-
+/// Google Login Actions
+export class GoogleLogin implements Action {
+    readonly type = GOOGLE_LOGIN;
+    constructor(public payload?: any) {}
+}
+/// Logout Actions
 export class Logout implements Action {
-  readonly type = LOGOUT;
+    readonly type = LOGOUT;
+    constructor(public payload?: any) {}
+}
+export class Success implements Action {
+  readonly type = SUCCESS;
+  constructor() {
+  }
 }
 
-export class SetToken implements Action {
-  readonly type = SET_TOKEN;
-
-  constructor(public payload: string) {}
+export class Fail implements Action {
+  readonly type = ERROR;
+  success_create = false;
+  constructor(public payload: any) {
+ }
 }
-
-export type AuthActions = Signup | Signin | Logout | SetToken | TrySignup | TrySignin;
+export type All
+= GetUser
+| Authenticated
+| NotAuthenticated
+| GoogleLogin
+| AuthError
+| Success
+| Fail
+| Logout;

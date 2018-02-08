@@ -3,6 +3,7 @@ import { Action } from '@ngrx/store';
 import { Page } from '@collections/state/models/page.model';
 
 export const QUERY      = '[Pages] Query';
+export const SELECT = '[Collection] Get A Single Collection';
 
 export const ADD_ALL    = '[Pages] Add All';
 export const CREATE = '[Page] Create';
@@ -21,6 +22,11 @@ export const CREATE_SUCCESS = '[Comment] Successful firestore write';
 export class Query implements Action {
   readonly type = QUERY;
   constructor() { }
+}
+export class Select implements Action {
+  readonly type = SELECT;
+
+  constructor(public payload: string) {}
 }
 
 export class AddAll implements Action {
@@ -42,7 +48,7 @@ export class CreateSuccess implements Action {
 
 export class Fail implements Action {
   readonly type = ERROR;
-  success_create = false;
+  //success_create = false;
   constructor(public payload: any) {
  }
 }
@@ -79,4 +85,5 @@ export type PageActions
 | Update
 | Delete
 | Fail
+| Select
 | AddAll;

@@ -16,11 +16,8 @@ import { NgMasonryGridService } from 'ng-masonry-grid';
 import { Page } from '@collections/state/models/page.model';
 import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
-import * as fromPage from '@collections/state/reducers/page.reducer';
+import * as fromStore from '@collections/state';
 import { Observable } from 'rxjs/Observable';
-
-import * as commentActions from '@collections/state/actions/comment.actions';
-import * as fromComment from '@collections/state/reducers/comment.reducer';
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -64,10 +61,9 @@ export class PageComponent implements OnInit, OnDestroy {
     private _ucFirst: UcFirstPipe,
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
-    private store: Store<fromPage.State>,
-    private _storeDel: Store<fromComment.State>
+    private store: Store<fromStore.State>
   ) {
-    this.loading$ = this.store.pipe(select(fromPage.getLoading));
+    this.loading$ = this.store.pipe(select(fromStore.getLoadingPage));
    }
 
   ngOnInit() {
@@ -76,7 +72,7 @@ export class PageComponent implements OnInit, OnDestroy {
     this.sub = this._route.fragment.subscribe(
       (collectionkey: string) => {
       this.collectionKey = collectionkey;
-       this.collections = this.store.select(fromPage.selectAll);
+       this.collections = this.store.select(fromStore.getAllPages);
         this.store.dispatch(  new pageActions.Query() );
         this.collections.subscribe(data => {
           this.pages =  data.filter((item) => {
@@ -227,9 +223,9 @@ export class PagesComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
     private _masonry: NgMasonryGridService,
-    private store: Store<fromPage.State>
+    private store: Store<fromStore.State>
   ) {
-    this.loading$ = this.store.pipe(select(fromPage.getLoading));
+    this.loading$ = this.store.pipe(select(fromStore.getLoading));
    }
 
   ngOnInit() {
@@ -238,7 +234,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   this.sub = this._route.fragment.subscribe(
     (collectionkey: string) => {
       this.collectionKey = collectionkey;
-     this.collections = this.store.select(fromPage.selectAll);
+     this.collections = this.store.select(fromStore.getAllPages);
       this.store.dispatch(  new pageActions.Query() );
       this.collections.subscribe(data => {
         this.pages =  data.filter((item) => {

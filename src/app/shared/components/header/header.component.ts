@@ -12,12 +12,14 @@ import { Component,
  } from '@angular/core';
 import {MediaMatcher} from '@angular/cdk/layout';
 import { MatMenuTrigger, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { NgForm } from '@angular/forms';
 import { SpinnerService } from '@shared/services/spinner.service';
 
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { User } from './../../../auth/state/auth.model';
 import * as userActions from './../../../auth/state/auth.actions';
+import * as fromApp from './../../../reducers';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -33,19 +35,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   searchOpen: boolean = false;
   auth = false;
-
+  user$: Observable<User>;
     mobileQue: MediaQueryList;
     private _mobileQueryListener: () => void;
     constructor(
       private changeDetectorRef: ChangeDetectorRef,
       private media: MediaMatcher,
       private _dailog: MatDialog,
-      private renderer: Renderer2
+      private renderer: Renderer2,
+      private store: Store<fromApp.AppState>
       ) {
     }
 
     ngOnInit() {
-
+      this.user$ = this.store.select('auth');
+      this.store.dispatch(new userActions.GetUser());
     }
 
     ngOnDestroy() {
@@ -133,7 +137,8 @@ export class LoginCard implements OnInit {
   Onload: boolean = false;
   user$: Observable<User>;
   constructor(
-  public _spinner: SpinnerService
+  public _spinner: SpinnerService,
+  private store: Store<fromApp.AppState>
   ) {
 
   }
@@ -142,10 +147,13 @@ export class LoginCard implements OnInit {
    setTimeout(() => {
      this.Onload = !this.Onload;
    }, 2000);
+
+   this.user$ = this.store.select('auth');
+   this.store.dispatch(new userActions.GetUser());
   }
 
   googleLogin() {
-    console.log('google')
+    this.store.dispatch(new userActions.GoogleLogin());
   }
 
   facebookLogin() {
@@ -154,7 +162,17 @@ export class LoginCard implements OnInit {
   logout() {
    //
   }
+  onSignup(form: NgForm) {
+    const email = form.value.email;
+    const password = form.value.password;
+    //this.store.dispatch(new authActions.TrySignup({username: email, password: password}));
+  }
 
+  onLogin(form: NgForm) {
+    const email = form.value.email;
+    const password = form.value.password;
+   // this.store.dispatch(new authActions.TrySignin({username: email, password: password}));
+  }
   OnSpinner() {
     this._spinner.show('appSpinner');
   }

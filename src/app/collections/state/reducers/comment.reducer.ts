@@ -3,6 +3,7 @@ import { Comment } from '@collections/state/models/comment.model';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
+
 export interface State extends EntityState<Comment> {
   success_comment: boolean;
   loading: boolean;
@@ -25,7 +26,16 @@ export function commentReducer(
 
     switch (action.type) {
         case actions.ADD_ALL:
-            return adapter.addAll(action.comments, state);
+            return {
+              /**
+               * The addMany function provided by the created adapter
+               * adds many records to the entity dictionary
+               * and returns a new state including those records. If
+               * the collection is to be sorted, the adapter will
+               * sort each record upon entry into the sorted array.
+               */
+              ...adapter.addAll(action.comments, state)
+            };
         case actions.SUCCESS:
             { return {...state, loading: true, success_comment: true}; }
         case actions.CREATE_SUCCESS:
@@ -37,20 +47,5 @@ export function commentReducer(
 }
 
 // Create the default selectors
-export const getCommentState = createFeatureSelector<State>('comment');
-
-export const {
-    selectIds,
-    selectEntities,
-    selectAll,
-    selectTotal,
-  } = adapter.getSelectors(getCommentState);
-  export const getLoading = createSelector(
-    getCommentState,
-    (state: State) => state.loading
-  );
-export const getSuccessComment = createSelector(
-    getCommentState,
-    (state: State) => state.success_comment
-  );
-
+export const getLoading = (state: State) => state.loading;
+export const getCreated = (state: State) => state.success_comment;

@@ -1,6 +1,33 @@
 import * as AuthActions from './auth.actions';
-
+import { User } from './auth.model';
+export type Action = AuthActions.All;
 export interface State {
+    uid:         string;
+    displayName: string;
+    loading?:    boolean;
+    error?:      string;
+}
+
+const initialState: State = new User(null, 'GUEST');
+/// Reducer function
+export function authReducer(state: User = initialState, action: Action) {
+  switch (action.type) {
+    case AuthActions.GET_USER:
+        return { ...state, loading: true };
+
+    case AuthActions.AUTHENTICATED:
+        return { ...state, ...action.payload, loading: false };
+    case AuthActions.NOT_AUTHENTICATED:
+        return { ...state, ...initialState, loading: false };
+    case AuthActions.GOOGLE_LOGIN:
+      return { ...state, loading: true };
+    case AuthActions.AUTH_ERROR:
+      return { ...state, ...action.payload, loading: false };
+    case AuthActions.LOGOUT:
+      return { ...state, loading: true };
+  }
+}
+/*export interface State {
   token: string;
   authenticated: boolean;
 }

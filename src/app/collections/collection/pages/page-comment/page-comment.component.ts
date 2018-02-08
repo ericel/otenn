@@ -5,7 +5,7 @@ import { SessionService } from '@shared/services/session.service';
 
 import { Store, select } from '@ngrx/store';
 import * as commentActions from '@collections/state/actions/comment.actions';
-import * as fromComment from '@collections/state/reducers/comment.reducer';
+import * as fromStore from '@collections/state';
 import { Observable } from 'rxjs/Observable';
 import { Comment } from '@collections/state/models/comment.model';
 import { SpinnerService } from '@shared/services/spinner.service';
@@ -20,7 +20,7 @@ export class PageCommentComponent implements OnInit, OnDestroy {
 @Input() page: Page;
 commentForm: FormGroup;
 comment: Comment;
-comments: Observable<fromComment.State>;
+comments: Observable<fromStore.State>;
 coms: Observable<any>;
 sub: Subscription;
 forbiddenUsernames = ['fuck', 'bitch'];
@@ -29,12 +29,12 @@ createdCom$: Observable<boolean>;
   constructor(
     private _session: SessionService,
     private _spinner: SpinnerService,
-    private store: Store<fromComment.State>,
+    private store: Store<fromStore.State>,
     private _router: Router
   ) {
 
-    this.createdCom$ = this.store.pipe(select(fromComment.getSuccessComment));
-    this.loading$ = this.store.pipe(select(fromComment.getLoading));
+    this.createdCom$ = this.store.pipe(select(fromStore.getSuccessComment));
+    this.loading$ = this.store.pipe(select(fromStore.getLoadingComment));
   }
 
   ngOnInit() {
@@ -49,7 +49,7 @@ createdCom$: Observable<boolean>;
   }
 
   private getComments() {
-    this.coms = this.store.pipe(select(fromComment.selectAll));
+    this.coms = this.store.select(fromStore.getAllComments);
     this.store.dispatch(  new commentActions.Query() );
     this.coms.subscribe(data => {
       this.comments =  data.filter((item) => {

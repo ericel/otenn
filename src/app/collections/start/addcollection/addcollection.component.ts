@@ -16,7 +16,7 @@ import { SessionService } from '@shared/services/session.service';
 
 import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import * as fromStore from '@collections/state';
 @Component({
   selector: 'app-addcollection',
   templateUrl: './addcollection.component.html',
@@ -75,9 +75,9 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public _upload: UploadService,
     private _session: SessionService,
-    private store: Store<fromCollection.State>
+    private store: Store<fromStore.State>
   ) {
-    this.created$ = this.store.pipe(select(fromCollection.getSuccessCollection));
+    this.created$ = this.store.pipe(select(fromStore.getSuccessCollection));
   }
 
   ngOnInit() {
@@ -93,7 +93,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
         this.allow = queryParams['allow'] === '1' ? true : false;
       }
     );
-    this.collections = this.store.pipe(select(fromCollection.selectAll))
+    this.collections = this.store.select(fromStore.getAllCollections)
     this.store.dispatch(  new actions.Query() );
     this.collections = this.collections.subscribe((collections) => {
       this.collections = collections;

@@ -11,7 +11,7 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
-import * as fromCollection from '@collections/state/reducers/collection.reducer';
+import * as fromCollection from '@collections/state';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 type UserFields = 'collectionName';
@@ -86,7 +86,7 @@ validationMessages = {
       { name: 'description', content: 'Start your own collection. It could be a blog, forum or community page!' }
     ]);
 
-    this.collections = this.store.pipe(select(fromCollection.selectAll))
+    this.collections = this.store.pipe(select(fromCollection.getAllCollections))
     this.store.dispatch(  new actions.Query() );
     this.buildstartCollectFForm();
 
