@@ -10,25 +10,25 @@ import { Observable } from 'rxjs/Observable';
 import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 
-import * as actions from '@collections/state/actions/page.actions';
+import * as actions from '@collections/state/actions/forum.actions';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Page } from '@collections/state/models/page.model';
+import { Forum } from '@collections/state/models/forum.model';
 import { NotifyService } from '@shared/services/notify.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Injectable()
-export class PageEffects {
+export class ForumEffects {
 
   // Listen for the 'QUERY' action, must be the first effect you trigger
   @Effect() query$: Observable<Action> = this.actions$.ofType(actions.QUERY)
     .switchMap(action => {
-      const item: AngularFirestoreCollection<Page> = this.afs.collection(`o-t-pages`,
+      const item: AngularFirestoreCollection<Forum> = this.afs.collection(`o-t-forums`,
       (ref) => ref.orderBy('updatedAt', 'desc'));
         return item.snapshotChanges().map(arr => {
             return arr.map( doc => {
                 const data = doc.payload.doc.data()
-                return { id: doc.payload.doc.id, ...data } as Page;
+                return { id: doc.payload.doc.id, ...data } as Forum;
             })
         })
     })
@@ -40,13 +40,15 @@ export class PageEffects {
 
    // Listen for the 'CREATE' action
   @Effect() create$: Observable<Action> = this.actions$.ofType(actions.CREATE)
-   .map((action: actions.Create) => action.page )
-   .switchMap(page => {
-       const ref = this.afs.doc<Page>(`o-t-pages/${page.id}`);
-       return Observable.fromPromise( ref.set(Object.assign({}, page)));
+   .map((action: actions.Create) => action.forum )
+   .switchMap(forum => {
+       const ref = this.afs.doc<Forum>(`o-t-forums/${forum.id}`);
+       return Observable.fromPromise( ref.set(Object.assign({}, forum)));
    })
    .map(() => {
-       this._notify.update('<strong>Page Added!</strong> Page Successfully Added. It May Require Review! You will be redirected!', 'info');
+       this._notify
+       .update('<strong>Forum Created!</strong> Forum Successfully Added. It May Require Review! You will be redirected!',
+        'info');
        return new actions.CreateSuccess()
    })
 
@@ -54,7 +56,7 @@ export class PageEffects {
    @Effect() update$: Observable<Action> = this.actions$.ofType(actions.UPDATE)
    .map((action: actions.Update) => action)
    .mergeMap(data => {
-       const ref = this.afs.doc<Page>(`o-t-pages/${data.id}`)
+       const ref = this.afs.doc<Forum>(`o-t-forums/${data.id}`)
        return Observable.fromPromise( ref.update(Object.assign({}, data.changes)) )
        .map(() =>  new actions.CreateSuccess())
        .catch(err => {
@@ -67,7 +69,7 @@ export class PageEffects {
   .ofType(actions.DELETE)
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
-  return of(this.afs.doc<Page>(`o-t-pages/${id}`).delete())
+  return of(this.afs.doc<Forum>(`o-t-forums/${id}`).delete())
   .map(() =>  {
     //this._router.navigate(['../collections/c'], {relativeTo: this._route});
     return new actions.Success();

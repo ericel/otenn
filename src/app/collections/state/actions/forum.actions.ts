@@ -1,16 +1,16 @@
 
 import { Action } from '@ngrx/store';
-import { Page } from '@collections/state/models/page.model';
+import { Forum } from '@collections/state/models/forum.model';
 
-export const QUERY      = '[Pages] Query';
+export const QUERY      = '[Forums] Query';
 export const SELECT = '[Collection] Get A Single Collection';
 
-export const ADD_ALL    = '[Pages] Add All';
-export const CREATE = '[Page] Create';
-export const UPDATE     = '[Page] Update';
-export const DELETE     = '[Page] Delete';
-export const SUCCESS    = '[Page] Successful firestore write';
-export const ERROR = '[Page] Fail';
+export const ADD_ALL    = '[Forums] Add All';
+export const CREATE = '[Forum] Create';
+export const UPDATE     = '[Forum] Update';
+export const DELETE     = '[Forum] Delete';
+export const SUCCESS    = '[Forum] Successful firestore write';
+export const ERROR = '[Forum] Fail';
 export const CREATE_SUCCESS = '[Comment] Successful firestore write';
 /**
  * Every action is comprised of at least a type and an optional
@@ -31,7 +31,7 @@ export class Select implements Action {
 
 export class AddAll implements Action {
   readonly type = ADD_ALL;
-  constructor(public pages: Page[]) {
+  constructor(public forums: Forum[]) {
   }
 }
 
@@ -57,7 +57,7 @@ export class Fail implements Action {
 export class Create implements Action {
   readonly type = CREATE;
 
-  constructor(public page: Page) {}
+  constructor(public forum: Forum) {}
 }
 
 
@@ -65,7 +65,7 @@ export class Update implements Action {
   readonly type = UPDATE;
   constructor(
       public id: string,
-      public changes: Partial<Page>,
+      public changes: Partial<Forum>,
     ) {}
 }
 
@@ -79,7 +79,7 @@ export class Delete implements Action {
  * so that reducers can easily compose action types
  */
 
-export type PageActions
+export type ForumActions
 = Create
 | Success
 | CreateSuccess

@@ -4,8 +4,10 @@ import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from 'app/app.routes';
+
+import { CoreModule } from 'app/core/core.module';
+import { AuthModule } from 'app/auth/auth.module';
 import { HomeModule } from 'app/home/home.module';
-import { SharedModule } from '@shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -23,7 +25,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './reducers';
 import { PizzaModule } from 'app/pizza/pizza.module';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { AuthModule } from 'app/auth/auth.module';
+import { SharedModule } from '@shared/shared.module';
+import { AuthEffects } from 'app/auth/state/auth.effects';
 
 @NgModule({
   declarations: [
@@ -42,9 +45,9 @@ import { AuthModule } from 'app/auth/auth.module';
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    PizzaModule,
-    AuthModule
-    //StoreRouterConnectingModule,
+    //PizzaModule,
+    CoreModule,
+    AuthModule.forRoot()
   ],
   providers: [...SHARED_SERVICES],
   bootstrap: [AppComponent]

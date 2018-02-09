@@ -35,7 +35,7 @@
     <!-- User NOT logged in -->
     <ng-template #guest>
         <div class="navbar-text">
-            <div class="name-text"><span  *ngIf="!mobilequery">Howdy, GUEST
+            <div class="name-text"><span  *ngIf="!mobilequery" >Howdy, GUEST
             </span>
                 <button mat-icon-button #userMenu="matMenuTrigger" [matMenuTriggerFor]="menuGuest" class="c menu-lang"  xPosition="before"><img class="img-thumbnail user-image"
                     src="./assets/img/avatar.png" alt="Username" (contextmenu)="showmenu()">
@@ -46,23 +46,40 @@
     <mat-menu class="drop-1" #menuGuest="matMenu">
         <h3>Howdy, GUEST</h3>
         <p>Login to get started...</p>
-        <a mat-menu-item *ngIf="user$ | async as user">
+        <a mat-menu-item >
+            <div *ngIf="user$ | async as user">
+                          {{user.displayName}}
 
+                <h1>Howdy, {{ user.displayName }}</h1>
+                <h4>{{ user.uid }}</h4>
+                <button *ngIf="!user.uid"
+                        (click)="googleLogin()"
+                        [class.is-loading]="user.loading">
+                    Sign In with Google
+                </button>
 
-          <h1>Howdy, {{ user.displayName }}</h1>
-          <h4>{{ user.uid }}</h4>
+                <button *ngIf="user.uid"
+                        (click)="logout()">
+
+                      Logout
+                </button>
+              </div>
+
         </a>
         <a mat-menu-item routerLink="collections/start/">Start a Collection</a>
         <a (click)="onLogin()" mat-raised-button color="primary">
             Login now
         </a>
+        <button mat-raised-button
+        (click)="logout()">
 
-
+            Logout
+         </button>
       </mat-menu>
     <!-- User logged in -->
     <ng-template #authenticated>
             <div class="navbar-text">
-                <div *ngIf="auth" class="name-text" >{{ user.displayName.username  | shorten: 8: '' }}
+                <div *ngIf="authenticated$" class="name-text" >{{ user.displayName.username  | shorten: 8: '' }}
                     auth
                 </div>
             </div>
@@ -96,3 +113,4 @@
         <a mat-menu-item><mat-icon>help</mat-icon> <span>Frequently Asked Questions</span> </a>
         <a mat-menu-item><mat-icon>trending_up</mat-icon> <span>Getting started</span> </a>
 </mat-menu>
+<app-notify></app-notify>

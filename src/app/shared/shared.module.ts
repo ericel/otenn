@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { SkinModule } from '@shared/skin/skin.module';
 import * as moment from 'moment';
 import { App_Pipes } from '@shared/pipes';
-import { HeaderComponent, SignupDialog } from './components/header/header.component';
 import { SHARED_COMPONENTS, SHARED_ENTRY_COMPONENTS } from '@shared/components';
 import { RouterModule } from '@angular/router';
 import { SHARED_SERVICES } from '@shared/services';
@@ -34,13 +33,13 @@ firebase.initializeApp(environment.firebase);
     NgbModule,
     NgPipesModule,
     ...App_Pipes,
-    ...SHARED_COMPONENTS,
     NgxPageScrollModule,
-    NgMasonryGridModule
+    NgMasonryGridModule,
+    ...SHARED_COMPONENTS
   ],
   declarations: [
     ...App_Pipes,
-    ...SHARED_COMPONENTS
+   ...SHARED_COMPONENTS
   ],
   providers: [
   ],

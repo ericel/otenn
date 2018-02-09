@@ -1,5 +1,5 @@
-import { Page } from '@collections/state/models/page.model';
-import * as actions from '@collections/state/actions/page.actions';
+import { Forum } from '@collections/state/models/forum.model';
+import * as actions from '@collections/state/actions/forum.actions';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import * as fromApp from './../../../reducers';
@@ -11,10 +11,10 @@ import * as fromApp from './../../../reducers';
  * model type by id. This interface is extended to include
  * any additional interface properties.
  */
-export interface State extends EntityState<Page> {
+export interface State extends EntityState<Forum> {
   success_create: boolean;
   loading: boolean;
-  selectedPageId: string | null;
+  selectedForumId: string | null;
 }
 /**
  * createEntityAdapter creates many an object of helper
@@ -24,8 +24,8 @@ export interface State extends EntityState<Page> {
  * a sortComparer option which is set to a compare
  * function if the records are to be sorted.
  */
-export const adapter: EntityAdapter<Page> = createEntityAdapter<Page>({
-  selectId: (page: Page) => page.id,
+export const adapter: EntityAdapter<Forum> = createEntityAdapter<Forum>({
+  selectId: (forum: Forum) => forum.id,
   sortComparer: false
 });
 /** getInitialState returns the default initial state
@@ -35,17 +35,17 @@ export const adapter: EntityAdapter<Page> = createEntityAdapter<Page>({
 export const initialState: State  = adapter.getInitialState({
   success_create: false,
   loading: false,
-  selectedPageId: null,
+  selectedForumId: null,
 });
 
 // Reducer
-export function pageReducer(
+export function forumReducer(
     state: State = initialState,
-    action: actions.PageActions) {
+    action: actions.ForumActions) {
 
     switch (action.type) {
         case actions.ADD_ALL:
-           // return adapter.addAll(action.pages, state);
+           // return adapter.addAll(action.Forums, state);
             return {
               /**
                * The addAll function provided by the created adapter
@@ -54,8 +54,8 @@ export function pageReducer(
                * the collection is to be sorted, the adapter will
                * sort each record upon entry into the sorted array.
                */
-              ...adapter.addAll(action.pages, state),
-              selectedBookId: state.selectedPageId,
+              ...adapter.addAll(action.forums, state),
+              selectedBookId: state.selectedForumId,
             };
         case actions.SUCCESS:
         { return {...state, loading: true, success_create: false}};
@@ -77,4 +77,4 @@ export function pageReducer(
 
 export const getLoading = (state: State) => state.loading;
 export const getCreated = (state: State) => state.success_create;
-export const getSelectedId = (state: State) => state.selectedPageId;
+export const getSelectedId = (state: State) => state.selectedForumId;

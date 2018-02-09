@@ -12,7 +12,6 @@ import { PageComponent, PagesComponent } from '@collections/collection/pages/pag
 import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.component';
 import { ForumsComponent } from '@collections/collection/forums/forums.component';
 import { ForumComponent } from '@collections/collection/forums/forum/forum.component';
-import { NotFoundComponent } from '@shared/components/404/404.component';
 
 
 const collectionsRoutes: Routes = [

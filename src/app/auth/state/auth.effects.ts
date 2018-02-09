@@ -17,6 +17,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as authActions from './auth.actions';
 import { NotifyService } from '@shared/services/notify.service';
 import { User } from 'app/auth/state/auth.model';
+import { Authenticated } from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -24,7 +25,7 @@ export class AuthEffects {
   getUser:  Observable<Action> = this.actions$.ofType(authActions.GET_USER)
       .map((action: authActions.GetUser) => action.payload )
       .switchMap(payload => this._afAuth.authState )
-      .delay(2000) // delay to show loading spinner, delete me!
+      //.delay(2000) // delay to show loading spinner, delete me!
       .map( authData => {
           if (authData) {
               /// User logged in

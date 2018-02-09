@@ -9,7 +9,6 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from 'app/home/about/about.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from 'app/home/contact/contact.component';
-
 @NgModule({
   imports: [
     CommonModule,

@@ -1,32 +1,41 @@
-import * as AuthActions from './auth.actions';
+import * as authActions from './auth.actions';
+import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { User } from './auth.model';
-export type Action = AuthActions.All;
 export interface State {
-    uid:         string;
-    displayName: string;
-    loading?:    boolean;
-    error?:      string;
+  user: User;
+  authenticated: boolean;
 }
 
-const initialState: State = new User(null, 'GUEST');
+const initialState: State = {
+  user: null,
+  authenticated: false
+};
+export type Action = authActions.All;
 /// Reducer function
-export function authReducer(state: User = initialState, action: Action) {
+export function authReducer(state = initialState, action: Action) {
   switch (action.type) {
-    case AuthActions.GET_USER:
-        return { ...state, loading: true };
+    case authActions.AUTHENTICATED: {
+      return {
+        ...state,
+        loggedIn: true,
+        user: action.payload
+      };
+    }
 
-    case AuthActions.AUTHENTICATED:
-        return { ...state, ...action.payload, loading: false };
-    case AuthActions.NOT_AUTHENTICATED:
-        return { ...state, ...initialState, loading: false };
-    case AuthActions.GOOGLE_LOGIN:
-      return { ...state, loading: true };
-    case AuthActions.AUTH_ERROR:
-      return { ...state, ...action.payload, loading: false };
-    case AuthActions.LOGOUT:
-      return { ...state, loading: true };
+    case authActions.LOGOUT: {
+      return initialState;
+    }
+
+    default: {
+      return state;
+    }
   }
+
 }
+
+export const getAuthenticated = (state: State) => state.authenticated;
+export const getUser = (state: State) => state.user;
+
 /*export interface State {
   token: string;
   authenticated: boolean;

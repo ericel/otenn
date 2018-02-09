@@ -15,11 +15,12 @@ import { MatMenuTrigger, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angul
 import { NgForm } from '@angular/forms';
 import { SpinnerService } from '@shared/services/spinner.service';
 
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { User } from './../../../auth/state/auth.model';
-import * as userActions from './../../../auth/state/auth.actions';
-import * as fromApp from './../../../reducers';
+import { User } from './../../auth/state/auth.model';
+import * as authActions from './../../auth/state/auth.actions';
+import * as fromStore from './../../reducers';
+import * as fromAuth from './../../auth/state';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -33,9 +34,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('collectionMenu') trigger_collections: MatMenuTrigger;
   @ViewChild('collections') collections: ElementRef;
   mobileQuery: MediaQueryList;
-  searchOpen: boolean = false;
+  searchOpen = false;
   auth = false;
-  user$: Observable<User>;
+  user$: Observable<any>;
+  authenticated$: Observable<boolean>;
     mobileQue: MediaQueryList;
     private _mobileQueryListener: () => void;
     constructor(
@@ -43,14 +45,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       private media: MediaMatcher,
       private _dailog: MatDialog,
       private renderer: Renderer2,
-      private store: Store<fromApp.AppState>
+      private store: Store<fromStore.State>
       ) {
+       this.authenticated$  = this.store.pipe(select(fromAuth.getLoggedIn));
+
     }
 
     ngOnInit() {
-      this.user$ = this.store.select('auth');
-      this.store.dispatch(new userActions.GetUser());
+
+      this.user$ = this.store.pipe(select(fromAuth.getUser));
+      this.store.dispatch(new authActions.GetUser());
     }
+
 
     ngOnDestroy() {
 
@@ -96,6 +102,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }
         });
     }
+
+    logout(){
+      this.store.dispatch(new authActions.Logout());
+    }
 }
 
 @Component({
@@ -138,7 +148,7 @@ export class LoginCard implements OnInit {
   user$: Observable<User>;
   constructor(
   public _spinner: SpinnerService,
-  private store: Store<fromApp.AppState>
+  private store: Store<fromStore.State>
   ) {
 
   }
@@ -148,12 +158,13 @@ export class LoginCard implements OnInit {
      this.Onload = !this.Onload;
    }, 2000);
 
-   this.user$ = this.store.select('auth');
-   this.store.dispatch(new userActions.GetUser());
+   this.user$ = this.store.select(fromAuth.getUser);
+   this.store.dispatch(new authActions.GetUser());
+
   }
 
   googleLogin() {
-    this.store.dispatch(new userActions.GoogleLogin());
+    this.store.dispatch(new authActions.GoogleLogin());
   }
 
   facebookLogin() {

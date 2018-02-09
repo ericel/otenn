@@ -14,7 +14,7 @@ export const SUCCESS    = '[Collections] Successful firestore write';
 export const QUERY_COLLECTION = '[Collection] Get A Single Collection';
 export const SELECT = '[Collection] Get A Single Collection';
 export const CREATE_SUCCESS = '[Comment] Successful firestore write';
-
+export const GETCOLLECTION = '[Collection] get collection';
 export class Query implements Action {
   readonly type = QUERY;
   constructor() { }
@@ -33,8 +33,12 @@ export class AddAll implements Action {
 
 export class Success implements Action {
   readonly type = SUCCESS;
-  loading = true;
   constructor() {}
+}
+
+export class GetCollection implements Action {
+  readonly type = GETCOLLECTION;
+  constructor(public payload: any) {}
 }
 
 export class CreateSuccess implements Action {

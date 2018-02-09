@@ -93,14 +93,15 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
         this.allow = queryParams['allow'] === '1' ? true : false;
       }
     );
+
+    this._route.fragment.subscribe((fragment: string) => {
+      this.title = this._ucfirst.transform(fragment);
+    });
+
     this.collections = this.store.select(fromStore.getAllCollections)
     this.store.dispatch(  new actions.Query() );
     this.collections = this.collections.subscribe((collections) => {
       this.collections = collections;
-    });
-
-    this._route.fragment.subscribe((fragment: string) => {
-      this.title = this._ucfirst.transform(fragment);
     });
 
   }

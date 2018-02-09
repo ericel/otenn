@@ -2,25 +2,28 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { combineReducers } from '@ngrx/store';
 import * as fromCollections from '@collections/state/reducers/collection.reducer';
 import * as fromPages from '@collections/state/reducers/page.reducer';
-import * as fromRoot from './../../reducers';
+import * as fromStore from './../../reducers';
 import { adapter } from '@collections/state/reducers/page.reducer';
 import { commentReducer } from '@collections/state/reducers/comment.reducer';
 import * as fromComments from '@collections/state/reducers/comment.reducer';
-
-export interface CollectionsState {
+import * as fromForums from '@collections/state/reducers/forum.reducer';
+import { forumReducer } from '@collections/state/reducers/forum.reducer';
+export interface CollectionsState  {
   collections: fromCollections.State;
   pages: fromPages.State;
   comments: fromComments.State;
+  forums: fromForums.State;
 }
 
-export interface State extends fromRoot.AppState {
+export interface State extends fromStore.State {
   collections: CollectionsState;
 }
 
 export const reducers = {
   collections: fromCollections.collectionReducer,
   pages: fromPages.pageReducer,
-  comments: fromComments.commentReducer
+  comments: fromComments.commentReducer,
+  forums: fromForums.forumReducer
 };
 
 /**
@@ -170,3 +173,52 @@ export const {
   selectTotal: getTotalComments,
 } = fromComments.adapter.getSelectors(getCommentsEntitiesState);
 
+/**
+ * Just like with the Comments selectors, we also have to compose the forum
+ * reducer's and collection reducer's selectors.
+ */
+
+export const getForumsEntitiesState = createSelector(
+  getCollectionsState,
+  state => state.forums
+);
+export const getSelectedForumId = createSelector(
+  getForumsEntitiesState,
+  fromForums.getSelectedId
+);
+/**
+ * Adapters created with @ngrx/entity generate
+ * commonly used selector functions including
+ * getting all ids in the record set, a dictionary
+ * of the records by id, an array of records and
+ * the total number of records. This reducers boilerplate
+ * in selecting records from the entity state.
+ */
+export const getForumState = createSelector(
+  getCollectionsState,
+  (state: CollectionsState) => state.forums
+);
+
+export const getLoadingForum = createSelector(
+  getForumState,
+  fromForums.getLoading
+);
+export const getSuccessForum = createSelector(
+  getForumState,
+  fromForums.getCreated
+);
+
+export const {
+  selectIds: getForumIds,
+  selectEntities: getForumEntities,
+  selectAll: getAllForums,
+  selectTotal: getTotalForums,
+} = fromForums.adapter.getSelectors(getForumsEntitiesState);
+
+export const getSelectedForum = createSelector(
+  getForumEntities,
+  getSelectedForumId,
+  (entities, selectedId) => {
+    return selectedId && entities[selectedId];
+  }
+);

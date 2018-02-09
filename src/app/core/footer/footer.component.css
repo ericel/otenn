@@ -1,6 +1,6 @@
 .footer {
     width: 100%;
-    background:url('./../../../../assets/img/listings.png') repeat; background-attachment:fixed;
+    background:url('./../../../assets/img/listings.png') repeat; background-attachment:fixed;
     clear: both;
 }
 .footer-2 {
@@ -30,5 +30,5 @@
 .nav-footer  {
    list-style: none;
    padding: 0;
-   
+
 }

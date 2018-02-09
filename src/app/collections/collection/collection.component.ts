@@ -10,12 +10,12 @@ import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
 import { WINDOW } from '@shared/services/windows.service';
 import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { Collection } from '@collections/state/models/collection.model';
-import { UcFirstPipe } from 'ngx-pipes';
+import { UcFirstPipe, SlugifyPipe } from 'ngx-pipes';
 import { SessionService } from '@shared/services/session.service';
 import { Title, Meta } from '@angular/platform-browser';
 
 
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
 import * as fromStore from '@collections/state/';
 import { Observable } from 'rxjs/Observable';
@@ -23,7 +23,7 @@ import { Observable } from 'rxjs/Observable';
   selector: 'app-collection',
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.css'],
-  providers: [UcFirstPipe],
+  providers: [UcFirstPipe, SlugifyPipe],
 })
 export class CollectionComponent implements OnInit, OnDestroy {
   @ViewChild('router') route: ElementRef;
@@ -32,6 +32,9 @@ export class CollectionComponent implements OnInit, OnDestroy {
   collections: Observable<any>;
   verticalOffset;
   isMini = false;
+  actionsSubscription: Subscription;
+  book$: Observable<Collection>;
+  isSelectedBookInCollection$: Observable<boolean>;
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -40,13 +43,24 @@ export class CollectionComponent implements OnInit, OnDestroy {
     @Inject( WINDOW) private window,
     private pageScrollService: PageScrollService,
     private _ucfirst: UcFirstPipe,
+    private _slugify: SlugifyPipe,
     public _sessions: SessionService,
     private _title: Title,
     private _meta: Meta,
     private store: Store<fromStore.State>
-  ) { }
+  ) {
+    /*this.actionsSubscription = this._route.fragment
+    .map((collectionKey: string) => new actions.Select(collectionKey))
+    .subscribe(store);
+   */
+   }
 
   ngOnInit() {
+    /*
+    this.book$ = this.store.select(fromStore.getSelectedCollection);
+    this.book$.subscribe(collection => this.collection = collection);
+    */
+  const url = this._router.url;
   this.sub = this._route.fragment.subscribe(
     (collectionKey: string) => {
      this.collections = this.store.select(fromStore.getAllCollections);
@@ -56,7 +70,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
            return item.id === collectionKey;
          });
         this.collection = this.collection[0];
-        if(this.collection){
+        if(this.collection && url === '/collections/c/' + this._slugify.transform(this.collection.title)+'#'+collectionKey){
           this._router.navigate([this.collection.homepage], {relativeTo: this._route, fragment: this.collection.id})
         }
        })

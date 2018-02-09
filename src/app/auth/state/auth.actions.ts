@@ -1,3 +1,4 @@
+
 import { Action } from '@ngrx/store';
 import { User } from './auth.model';
 export const GET_USER               = '[Auth] Get user';
@@ -15,7 +16,8 @@ export class GetUser implements Action {
 }
 export class Authenticated implements Action {
     readonly type = AUTHENTICATED;
-    constructor(public payload?: any) {}
+    constructor(public payload?: any) {
+    }
 }
 export class NotAuthenticated implements Action {
     readonly type = NOT_AUTHENTICATED;
