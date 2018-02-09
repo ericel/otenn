@@ -35,6 +35,8 @@ export class ForumsComponent implements OnInit, OnDestroy {
   sub: Subscription;
   collectionKey: String;
   forums;
+  forum_view = false;
+  forum_new = true;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
@@ -56,6 +58,11 @@ export class ForumsComponent implements OnInit, OnDestroy {
   });
   }
 
+
+  onNewThread() {
+   this.forum_view = !this.forum_view;
+   this.forum_new = !this.forum_new;
+  }
 
   ngOnDestroy () {
     this.sub.unsubscribe();

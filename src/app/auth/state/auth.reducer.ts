@@ -17,7 +17,7 @@ export function authReducer(state = initialState, action: Action) {
     case authActions.AUTHENTICATED: {
       return {
         ...state,
-        loggedIn: true,
+        authenticated: true,
         user: action.payload
       };
     }

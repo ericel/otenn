@@ -20,6 +20,7 @@ import { SessionService } from '@shared/services/session.service';
 import { Store } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
 import * as fromStore from '@collections/state';
+import { AuthService } from 'app/auth/state/auth.service';
 @Component({
   selector: 'app-editcollection',
   templateUrl: './editcollection.component.html',
@@ -79,7 +80,8 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public _upload: UploadService,
     private _session: SessionService,
-    private store: Store<fromStore.State>
+    private store: Store<fromStore.State>,
+    public _auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -131,7 +133,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     }
     const collection: Collection = new Collection(this.$key, this.title, this.description, this.photoUrl,
      this.statusmodel.options, this.itemsmodel, this._notify.getCurrentTime(),
-      this._notify.getCurrentTime(), this.homepage, this.collectionAdmins, this.color, 'uid');
+      this._notify.getCurrentTime(), this.homepage, this.collectionAdmins, this.color, this._auth.userId);
     if (this.description !== undefined && this.description.length > 100) {
         this.changesSaved = true;
         this.store.dispatch( new actions.Update(this.$key, collection) );
@@ -158,7 +160,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
       const name = this.title;
       const path = `collections/${this.$key}`;
       const firestoreUrl = `o-t-collections/${this.$key}`;
-      this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
+      this._upload.pushUpload(this._auth.userId, this.currentUpload, name, path, firestoreUrl);
     } else {
       this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }

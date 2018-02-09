@@ -21,6 +21,7 @@ import { User } from './../../auth/state/auth.model';
 import * as authActions from './../../auth/state/auth.actions';
 import * as fromStore from './../../reducers';
 import * as fromAuth from './../../auth/state';
+import { AuthService } from 'app/auth/state/auth.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -45,16 +46,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
       private media: MediaMatcher,
       private _dailog: MatDialog,
       private renderer: Renderer2,
-      private store: Store<fromStore.State>
+      private store: Store<fromStore.State>,
+      public _auth: AuthService
       ) {
-       this.authenticated$  = this.store.pipe(select(fromAuth.getLoggedIn));
+       //this.authenticated$  = this.store.pipe(select(fromAuth.getLoggedIn));
 
     }
 
     ngOnInit() {
 
-      this.user$ = this.store.pipe(select(fromAuth.getUser));
-      this.store.dispatch(new authActions.GetUser());
+      //this.user$ = this.store.pipe(select(fromAuth.getUser));
+      //this.store.dispatch(new authActions.GetUser());
     }
 
 
@@ -148,7 +150,8 @@ export class LoginCard implements OnInit {
   user$: Observable<User>;
   constructor(
   public _spinner: SpinnerService,
-  private store: Store<fromStore.State>
+  private store: Store<fromStore.State>,
+  public _auth: AuthService
   ) {
 
   }

@@ -16,6 +16,7 @@ import { UploadService } from '@shared/services/upload/upload.service';
 import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromStore from '@collections/state';
+import { AuthService } from 'app/auth/state/auth.service';
 
 @Component({
   selector: 'app-editpage',
@@ -74,7 +75,8 @@ export class EditpageComponent implements OnInit, OnDestroy {
     private _meta: Meta,
     public _session: SessionService,
     private _upload: UploadService,
-    private store: Store<fromStore.State>
+    private store: Store<fromStore.State>,
+    private _auth: AuthService
   ) {
     this.created$ = this.store.pipe(select(fromStore.getSuccessPage));
    }
@@ -95,7 +97,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
     if (this.pageForm.form.status === 'VALID') {
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl, 'Draft',
          this.collectValue.value, this.component,
-        this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
+        this.createdAt, this._session.getCurrentTime(), this.collectionkey, this._auth.userId);
         this.store.dispatch( new pageActions.Update(this.$key, newPage) );
         this.created$.subscribe((created) => {
           if(created) {
@@ -131,7 +133,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
       }
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       this.status, this.collectValue.value, this.component,
-        this.createdAt, this._session.getCurrentTime(), this.collectionkey, 'uid');
+        this.createdAt, this._session.getCurrentTime(), this.collectionkey, this._auth.userId);
         this.store.dispatch( new pageActions.Update(this.$key, newPage) );
         this.created$.subscribe((created) => {
           if(created) {
@@ -168,7 +170,7 @@ export class EditpageComponent implements OnInit, OnDestroy {
       this.currentUpload = new Upload(file.item(0));
       const path = `${this.section}/${this.component}/${this.$key}`;
       const firestoreUrl = `o-t-pages/${this.$key}`;
-     this._upload.pushUpload('uid', this.currentUpload, this.$key, path, firestoreUrl);
+     this._upload.pushUpload(this._auth.userId, this.currentUpload, this.$key, path, firestoreUrl);
     } else {
       this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }

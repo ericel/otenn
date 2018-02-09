@@ -12,6 +12,7 @@ import { PageComponent, PagesComponent } from '@collections/collection/pages/pag
 import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.component';
 import { ForumsComponent } from '@collections/collection/forums/forums.component';
 import { ForumComponent } from '@collections/collection/forums/forum/forum.component';
+import { AuthGuard } from 'app/auth/state/auth.guard';
 
 
 const collectionsRoutes: Routes = [
@@ -35,16 +36,24 @@ const collectionsRoutes: Routes = [
       path: 'start', component: StartComponent
   },
   {
-    path: 'addcollection', component: AddcollectionComponent, canDeactivate: [CanDeactivateGuard]
+    path: 'addcollection', component: AddcollectionComponent,
+    canDeactivate: [CanDeactivateGuard],
+     canActivate: [AuthGuard]
   },
   {
-    path: 'editcollection/:string', component: EditcollectionComponent, canDeactivate: [CanDeactivateGuard]
+    path: 'editcollection/:string', component: EditcollectionComponent,
+     canDeactivate: [CanDeactivateGuard],
+     canActivate: [AuthGuard]
   },
   {
-    path: 'editpage/:string', component: EditpageComponent, canDeactivate: [CanDeactivateGuard]
+    path: 'editpage/:string', component: EditpageComponent,
+    canDeactivate: [CanDeactivateGuard],
+    canActivate: [AuthGuard]
   },
   {
-    path: 'addpage', component: AddpageComponent, canDeactivate: [CanDeactivateGuard]
+    path: 'addpage', component: AddpageComponent,
+     canDeactivate: [CanDeactivateGuard],
+     canActivate: [AuthGuard]
   }
 ];
 

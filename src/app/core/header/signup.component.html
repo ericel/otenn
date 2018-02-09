@@ -13,10 +13,12 @@
     <div class="container signupbuttons">
         <div class="row">
           <div class="col-md-12">
-            <button mat-raised-button class="facebook font-weight-bold" (click)="facebookLogin()" ><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Continue with facebook</button>
+            <button mat-raised-button class="facebook font-weight-bold"
+            (click)="facebookLogin()" ><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Continue with facebook</button>
           </div>
           <div class="col-md-12">
-              <button mat-raised-button class="google font-weight-bold" (click)="googleLogin()"><i class="fa fa-google fa-2x" aria-hidden="true"></i> Continue with Google</button>
+              <button mat-raised-button class="google font-weight-bold"
+              (click)="_auth.googleLogin()"><app-spinner name="mySpinnerg" [(show)]="spinnerShowingg"><i class="fa fa-spinner fa-spin"></i></app-spinner><i class="fa fa-google fa-2x" aria-hidden="true"></i> Continue with Google</button>
           </div>
         </div>
       </div>

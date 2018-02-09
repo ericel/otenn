@@ -1,41 +1,46 @@
 <main #pageRef [@myAnimation]>
     <div class="gutter-2 row">
       <div class="col-md-8">
-          <mat-card class="text-center" *ngIf="collection">
-            <h1>Welcome to The <strong class="text-primary">{{collection.title | ucfirst}}</strong> Collections Forums</h1>
-            <p [innerHTML]="collection.description"></p>
-            <p>If your question is about a {{collection.title}}, the following forums may be better equipped to answer your questions!</p>
-            <div>
-                <button mat-button color="accent">New Topic</button>
-              </div>
-          </mat-card>
-          <div class="mar-30" *ngIf="forums && forums.length < 1">
-              <div class="display-5 text-center">
-                 <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
-                 <div>No Pages Yet! Be the First!</div>
-                 <a routerLink="/collections/addpage">Start A New Thread</a>
-              </div>
-           </div>
-           <mat-card class="forums nopadding mar-20" >
-              <mat-nav-list *ngIf="forums">
-                  <mat-list-item *ngFor="let forum of forums" routerLink="{{forum.title}}/{{forum.$key}}" [fragment]="collection.id">
-                     <h3 class="h4"> typescript angular2 template queryParams
-                      </h3>
-                     <p>If your question is about a , the following forums may be better equipped to answer your questions!</p>
-                     <div class="row">
-                        <div class="col-md-4">
-                          <small>Thread By <strong>Oj Obasi</strong></small>
+          <ng-container *ngIf="forum_view">
+            <mat-card class="text-center" *ngIf="collection">
+              <h1>Welcome to The <strong class="text-primary">{{collection.title | ucfirst}}</strong> Collections Forums</h1>
+              <p [innerHTML]="collection.description"></p>
+              <p>If your question is about a {{collection.title}}, the following forums may be better equipped to answer your questions!</p>
+              <div>
+                  <button mat-button color="accent" (click)="onNewThread()">New Topic</button>
+                </div>
+            </mat-card>
+            <div class="mar-30" *ngIf="forums && forums.length < 1">
+                <div class="display-5 text-center">
+                   <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+                   <div>No Pages Yet! Be the First!</div>
+                   <a routerLink="/collections/addpage">Start A New Thread</a>
+                </div>
+             </div>
+             <mat-card class="forums nopadding mar-20" >
+                <mat-nav-list *ngIf="forums">
+                    <mat-list-item *ngFor="let forum of forums" routerLink="{{forum.title}}/{{forum.$key}}" [fragment]="collection.id">
+                       <h3 class="h4"> typescript angular2 template queryParams
+                        </h3>
+                       <p>If your question is about a , the following forums may be better equipped to answer your questions!</p>
+                       <div class="row">
+                          <div class="col-md-4">
+                            <small>Thread By <strong>Oj Obasi</strong></small>
+                          </div>
+                          <div class="col-md-4">
+                             2 days ago.
+                          </div>
+                          <div class="col-md-4 text-right">
+                            88 replies
+                          </div>
                         </div>
-                        <div class="col-md-4">
-                           2 days ago.
-                        </div>
-                        <div class="col-md-4 text-right">
-                          88 replies
-                        </div>
-                      </div>
-                  </mat-list-item>
-                </mat-nav-list>
-           </mat-card>
+                    </mat-list-item>
+                  </mat-nav-list>
+             </mat-card>
+          </ng-container>
+          <ng-container *ngIf="forum_new">
+           <forum-creator></forum-creator>
+          </ng-container>
       </div>
       <div class="col-md-4">
           <app-ads-content-match></app-ads-content-match>
@@ -43,3 +48,4 @@
       </div>
     </div>
 </main>
+

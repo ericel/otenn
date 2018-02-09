@@ -6,7 +6,7 @@
     <a routerLink="/" class="side-app-name"><img src="./assets/logo_m.png"></a>
 
     <button mat-button *ngIf="!mobilequery" class="menu-main" #collectionMenu="matMenuTrigger" [matMenuTriggerFor]="appMenu"
-    (mouseenter)="onCollectionsIn()"  ><mat-icon class="text-muted">view_comfy</mat-icon> <span class="ellipsis">Collections <i class="fa fa-caret-down" aria-hidden="true"></i></span></button>
+     ><mat-icon class="text-muted">view_comfy</mat-icon> <span class="ellipsis">Collections <i class="fa fa-caret-down" aria-hidden="true"></i></span></button>
     <button mat-button *ngIf="!mobilequery" class="menu-main"><mat-icon class="text-muted" triggers="hover"
       placement="bottom"
       [ngbPopover]="popContent"
@@ -31,7 +31,7 @@
         <span class="Search-close"> <button mat-icon-button type="search" value="search" class="submit-button"><span class="Search-icon"><mat-icon>search</mat-icon></span></button> <!--<i class="Search-close-icon">Close</i>-->  </span>
     </form>
     <span class="app-toolbar-filler"></span>
-    <span *ngIf="auth else guest"> </span>
+    <span *ngIf="_auth.user | async; then authenticated else guest"> </span>
     <!-- User NOT logged in -->
     <ng-template #guest>
         <div class="navbar-text">
@@ -46,43 +46,41 @@
     <mat-menu class="drop-1" #menuGuest="matMenu">
         <h3>Howdy, GUEST</h3>
         <p>Login to get started...</p>
-        <a mat-menu-item >
-            <div *ngIf="user$ | async as user">
-                          {{user.displayName}}
 
-                <h1>Howdy, {{ user.displayName }}</h1>
-                <h4>{{ user.uid }}</h4>
-                <button *ngIf="!user.uid"
-                        (click)="googleLogin()"
-                        [class.is-loading]="user.loading">
-                    Sign In with Google
-                </button>
-
-                <button *ngIf="user.uid"
-                        (click)="logout()">
-
-                      Logout
-                </button>
-              </div>
-
-        </a>
-        <a mat-menu-item routerLink="collections/start/">Start a Collection</a>
         <a (click)="onLogin()" mat-raised-button color="primary">
             Login now
         </a>
-        <button mat-raised-button
-        (click)="logout()">
-
-            Logout
-         </button>
       </mat-menu>
     <!-- User logged in -->
+    <mat-menu class="drop-1" #menuUser="matMenu">
+        <div *ngIf="_auth.user | async as user">
+            <mat-list>
+                <mat-list-item><a mat-menu-item routerLink="collections/start/">Start a Collection</a> </mat-list-item>
+                <mat-list-item class="text-center"><button (click)="_auth.signOut()" mat-button color="warn">Logout</button></mat-list-item>
+                <!--<mat-list-item>
+                  <img class="user-image"   [src]="user.photoURL" alt="{{user.displayName.username">
+                  <h4 mat-line class="font-weight-bold primary-text"> {{ user.displayName.username }}</h4>
+                  <p *ngIf="user" mat-line class="text-muted">Online: {{user.updatedAt | amTimeAgo | shorten: 10:'...' | ucfirst}} </p>
+                  <a *ngIf="user.roles.admin && user.roles.dealer" mat-line mat-raised-button color="primary" routerLink="users/d/1/{{user.uid}}">My Account</a>
+                  <a *ngIf="user.roles.dealer && !user.roles.admin" mat-line mat-raised-button color="primary" routerLink="users/d/0/{{user.uid}}">My Account</a>
+                  <a *ngIf="!user.roles.admin && !user.roles.dealer" mat-line mat-raised-button color="primary" routerLink="users/u/0/{{user.uid}}">My Account</a>
+                </mat-list-item>
+                <mat-list-item><mat-icon mat-list-icon>attach_money</mat-icon>  <a mat-line class="black" routerLink="money">Send money</a> </mat-list-item>
+                <mat-list-item><mat-icon mat-list-icon>folder</mat-icon>  <a mat-line class="black" routerLink="/content/editor">Write a blog</a> </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item><mat-icon mat-list-icon>settings</mat-icon> <a mat-line class="black" routerLink="/">Setting</a> </mat-list-item>
+                <mat-list-item class="text-center"><button (click)="auth.signOut()" mat-button color="warn">Logout</button></mat-list-item>-->
+            </mat-list>
+        </div>
+    </mat-menu>
     <ng-template #authenticated>
-            <div class="navbar-text">
-                <div *ngIf="authenticated$" class="name-text" >{{ user.displayName.username  | shorten: 8: '' }}
-                    auth
-                </div>
+        <div class="navbar-text">
+            <div *ngIf="_auth.user | async as user" class="name-text" >{{ user.displayName.username  | shorten: 8: '' }}
+                <button mat-icon-button [matMenuTriggerFor]="menuUser" class="c menu-lang" xPosition="before" (contextmenu)="showmenu()"> <img class="img-thumbnail user-image" [src]="user.photoURL" alt="{{ user.displayName }}">
+                </button>
             </div>
+        </div>
+
     </ng-template>
     <div class="container-m-search" *ngIf="searchOpen">
         <div class="searchbox effect8">

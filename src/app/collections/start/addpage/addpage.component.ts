@@ -18,6 +18,7 @@ import { Page } from '@collections/state/models/page.model';
 import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromStore from '@collections/state';
+import { AuthService } from 'app/auth/state/auth.service';
 
 @Component({
   selector: 'app-addpage',
@@ -74,7 +75,8 @@ export class AddpageComponent implements OnInit, OnDestroy {
     private _meta: Meta,
     public _session: SessionService,
     private _upload: UploadService,
-    private store: Store<fromStore.State>
+    private store: Store<fromStore.State>,
+    private _auth: AuthService
   ) {
     this.created$ = this.store.pipe(select(fromStore.getSuccessPage));
    }
@@ -117,7 +119,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
       this.$key = this._session.generate();
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'Draft', this.collectValue.value, this.component,
-        this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
+        this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, this._auth.userId);
         this.store.dispatch( new pageActions.Create(newPage) );
         this.created$.subscribe((created) => {
           if(created) {
@@ -149,7 +151,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
       this.$key = this._session.generate();
       const newPage = new Page(this.$key, this.titleValue.value, this.descriptionValue.value, page, this.photoUrl,
       'On queue waiting..collection admin', this.collectValue.value, this.component,
-        this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, 'uid');
+        this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, this._auth.userId);
         this.store.dispatch( new pageActions.Create(newPage) );
         this.created$.subscribe((created) => {
           if(created) {
@@ -188,7 +190,7 @@ export class AddpageComponent implements OnInit, OnDestroy {
       const name = this.$key;
       const path = `${this.section}/${this.component}/${this.$key}`;
       const firestoreUrl = `o-t-pages/${this.$key}`;
-      this._upload.pushUpload('uid', this.currentUpload, name, path, firestoreUrl);
+      this._upload.pushUpload(this._auth.userId, this.currentUpload, name, path, firestoreUrl);
       setTimeout (() => {
         this.getPage();
       }, 2000);

@@ -46,8 +46,8 @@ import { AuthEffects } from 'app/auth/state/auth.effects';
     EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     //PizzaModule,
+    AuthModule.forRoot(),
     CoreModule,
-    AuthModule.forRoot()
   ],
   providers: [...SHARED_SERVICES],
   bootstrap: [AppComponent]
