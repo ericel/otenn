@@ -12,10 +12,10 @@ import { DialogImg } from '@shared/components/wysiwyg/wysiwyg.component';
 import { FormsModule } from '@angular/forms';
 import {NgxPageScrollModule} from 'ngx-page-scroll';
 import { NgMasonryGridModule } from 'ng-masonry-grid';
+import { MomentModule } from 'angular2-moment';
 import * as firebase from 'firebase';
 import { environment } from '@environments/environment';
 firebase.initializeApp(environment.firebase);
-
 @NgModule({
   imports: [
     CommonModule,
@@ -25,7 +25,8 @@ firebase.initializeApp(environment.firebase);
     NgPipesModule,
     FormsModule,
     NgxPageScrollModule,
-    NgMasonryGridModule
+    NgMasonryGridModule,
+    MomentModule
   ],
   exports: [
     RouterModule,
@@ -35,7 +36,8 @@ firebase.initializeApp(environment.firebase);
     ...App_Pipes,
     NgxPageScrollModule,
     NgMasonryGridModule,
-    ...SHARED_COMPONENTS
+    ...SHARED_COMPONENTS,
+    MomentModule
   ],
   declarations: [
     ...App_Pipes,

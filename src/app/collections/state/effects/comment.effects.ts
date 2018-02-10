@@ -33,7 +33,19 @@ export class CommentEffects {
             })
         })
     })
-    .delay(1000)
+    //.delay(1000)
+    .switchMap(arr => {
+      const userObservables = arr.map(comment => this.afs.doc(`o-t-users/${comment.uid}`).valueChanges()
+      );
+      return Observable.combineLatest(...userObservables)
+        .map((...eusers) => {
+          arr.forEach((comment, index) => {
+            comment['username'] = eusers[0][index].displayName.username;
+            comment['avatar'] = eusers[0][index].photoURL;
+          });
+          return arr;
+        });
+    })
     .mergeMap(arr => [
       new actions.AddAll(arr),
       new actions.Success()

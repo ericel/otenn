@@ -32,12 +32,23 @@ export class PageEffects {
             })
         })
     })
+    .switchMap(arr => {
+      const userObservables = arr.map(page => this.afs.doc(`o-t-users/${page.uid}`).valueChanges()
+      );
+      return Observable.combineLatest(...userObservables)
+        .map((...eusers) => {
+          arr.forEach((page, index) => {
+            page['username'] = eusers[0][index].displayName.username;
+            page['avatar'] = eusers[0][index].photoURL;
+          });
+          return arr;
+        });
+    })
     .mergeMap(arr => [
       new actions.AddAll(arr),
       new actions.Success()
    ])
    .catch(err =>  Observable.of(new actions.Fail(err.message)) );
-
    // Listen for the 'CREATE' action
   @Effect() create$: Observable<Action> = this.actions$.ofType(actions.CREATE)
    .map((action: actions.Create) => action.page )

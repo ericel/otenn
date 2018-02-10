@@ -35,7 +35,6 @@ export class IndexComponent implements OnInit{
   this.store.dispatch(  new actions.Query() );
    this._sessions.hide();
   }
-
 }
 
 @Component({

@@ -49,6 +49,12 @@
   color: #ffc107!important;
 }
 .vote-top button:focus { outline: thin dotted; }
+.date{
+  top: -15px !important;
+  position: relative;
+  font-style: italic;
+  color: #7f8890;
+}
 @media screen and (max-width: 500px) {
   .img-thumbnail {
     width: 30px;

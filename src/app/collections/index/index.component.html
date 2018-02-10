@@ -11,13 +11,13 @@
                        <mat-card class="collection-card" [style.background]="collection.color">
                            <img mat-card-image mat-elevation-z2 [src]="collection.photoURL" alt="{{collection.title}}">
                            <div class="collection-img">
-                             <img [src]="collection.photoURL" class="img-thumbnail" [alt]="">
+                             <img [src]="collection.avatar" class="img-thumbnail" [alt]="collection.username">
                           </div>
                            <mat-card-title class="collection-name">
                                {{collection.title}}
                            </mat-card-title>
                            <mat-card-subtitle class="text-muted">
-                               collection.creator
+                               {{collection.username}}
                            </mat-card-subtitle>
                            <mat-card-content>
                              <p>

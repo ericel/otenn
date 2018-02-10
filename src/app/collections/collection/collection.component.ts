@@ -14,11 +14,14 @@ import { UcFirstPipe, SlugifyPipe } from 'ngx-pipes';
 import { SessionService } from '@shared/services/session.service';
 import { Title, Meta } from '@angular/platform-browser';
 
+import { sum, values, union, unionBy, pick, keys, intersection } from 'lodash';
 
 import { Store, select } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
 import * as fromStore from '@collections/state/';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from 'app/auth/state/auth.service';
+import * as Rx from 'rxjs';
 @Component({
   selector: 'app-collection',
   templateUrl: './collection.component.html',
@@ -35,6 +38,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
   actionsSubscription: Subscription;
   book$: Observable<Collection>;
   isSelectedBookInCollection$: Observable<boolean>;
+  user;
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -47,7 +51,8 @@ export class CollectionComponent implements OnInit, OnDestroy {
     public _sessions: SessionService,
     private _title: Title,
     private _meta: Meta,
-    private store: Store<fromStore.State>
+    private store: Store<fromStore.State>,
+    private _auth: AuthService
   ) {
     /*this.actionsSubscription = this._route.fragment
     .map((collectionKey: string) => new actions.Select(collectionKey))
@@ -119,17 +124,25 @@ export class CollectionComponent implements OnInit, OnDestroy {
   <div class="collection-menu">
   <img mat-card-image [src]="collection.photoURL" [alt]="collection.title">
   <div class="creator">
-    <img [src]="photo" class="img-thumbnail ">
-   <div class="font-weight-bold">Oj Obasi</div>
+    <img [src]="collection.avatar" [alt]="collection.username" class="img-thumbnail ">
+   <div class="font-weight-bold">{{collection.username}}</div>
  </div>
  <button class="menu-button" mat-icon-button [matMenuTriggerFor]="collectionmenu">
   <mat-icon color="primary">more_vert</mat-icon>
  </button>
  <mat-menu #collectionmenu="matMenu" xPosition="before">
-  <a mat-menu-item>Report</a>
-  <a mat-menu-item routerLink="/collections/editcollection/{{collection.title | slugify}}"
-  [queryParams]="{ allow: 1}" [fragment]="collection.id">Edit Collection</a>
-  <a mat-menu-item (click)="onDelete(collection.id)">Delete Collection</a>
+  <div *ngIf="_auth.user | async; then authenticated else guest"></div>
+  <ng-template #guest>
+    <a mat-menu-item>Report</a>
+  </ng-template>
+  <ng-template #authenticated>
+    <a mat-menu-item>Report</a>
+    <ng-container *ngIf="_auth.user | async as user">
+      <a mat-menu-item *ngIf=" user.uid === collection.uid" routerLink="/collections/editcollection/{{collection.title | slugify}}"
+      [queryParams]="{ allow: 1}" [fragment]="collection.id">Edit Collection</a>
+      <a mat-menu-item *ngIf=" user.uid === collection.uid" (click)="onDelete(collection.id)">Delete Collection</a>
+    </ng-container>
+  </ng-template>
 </mat-menu>
   <div class="card-content afix" >
      <mat-list>
@@ -177,19 +190,13 @@ export class CollectionComponent implements OnInit, OnDestroy {
   styleUrls: ['./collection.component.css']
 })
 
-export class CollectionMenu implements OnInit {
+export class CollectionMenu  {
   @Input() collection: any;
   @Output() route = new EventEmitter<void>();
   @Output() delete = new EventEmitter;
-  photo = 'https://www.w3schools.com/bootstrap4/paris.jpg';
   constructor (
-
+  public _auth: AuthService
   ) {}
-
-  ngOnInit () {
-
-  }
-
   onRoute(e) {
     this.route.emit(e);
   }

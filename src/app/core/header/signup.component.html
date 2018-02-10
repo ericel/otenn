@@ -11,18 +11,22 @@
        <div class="clearfix"></div>
     </div>
     <div class="container signupbuttons">
-        <div class="row">
+        <div class="row mar-20">
           <div class="col-md-12">
             <button mat-raised-button class="facebook font-weight-bold"
-            (click)="facebookLogin()" ><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Continue with facebook</button>
+            (click)="_auth.facebookLogin()"><app-spinner name="mySpinnerf" [(show)]="spinnerShowingf"><i class="fa fa-spinner fa-spin"></i></app-spinner><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Continue with facebook</button>
           </div>
           <div class="col-md-12">
               <button mat-raised-button class="google font-weight-bold"
               (click)="_auth.googleLogin()"><app-spinner name="mySpinnerg" [(show)]="spinnerShowingg"><i class="fa fa-spinner fa-spin"></i></app-spinner><i class="fa fa-google fa-2x" aria-hidden="true"></i> Continue with Google</button>
           </div>
         </div>
+
+        <div class="mar-10">
+            <small class="text-muted">By signing up, you agree to our Terms of Use and Privacy Policy.</small>
+        </div>
       </div>
-      <div class="or-cl"><span>Alternatively</span></div>
+   <!--  <div class="or-cl"><span>Alternatively</span></div>
    <div class="container">
     <mat-tab-group>
         <mat-tab label="Log In ">
@@ -61,7 +65,8 @@
                          <mat-icon matPrefix class="text-muted">account_circle</mat-icon>
                           <input matInput placeholder="User-Name">
                      </mat-form-field>-->
-                    <mat-form-field class="w-100">
+                     <!--
+                   <mat-form-field class="w-100">
                            <mat-icon matPrefix class="text-muted">mail</mat-icon>
                            <input matInput placeholder="E-mail" type="email" id="email" name="email" ngModel>
                      </mat-form-field>
@@ -88,7 +93,8 @@
         <small class="text-muted">By signing up, you agree to our Terms of Use and Privacy Policy.</small>
     </div>
 
-   </div>
+   </div>-->
+
 </mat-card>
 <!--</ng-container>-->
 

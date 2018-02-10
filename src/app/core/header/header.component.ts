@@ -50,7 +50,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       public _auth: AuthService
       ) {
        //this.authenticated$  = this.store.pipe(select(fromAuth.getLoggedIn));
-
     }
 
     ngOnInit() {
@@ -58,8 +57,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       //this.user$ = this.store.pipe(select(fromAuth.getUser));
       //this.store.dispatch(new authActions.GetUser());
     }
-
-
     ngOnDestroy() {
 
     }
@@ -116,14 +113,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 })
 export class SignupDialog implements OnInit {
-
-  Onload: boolean = false;
+  Onload = false;
   constructor(public dialogRef: MatDialogRef<SignupDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
   public _spinner: SpinnerService
-  ) {
-
-  }
-
+  ) {}
   ngOnInit() {
    setTimeout(() => {
      this.Onload = !this.Onload;
@@ -152,10 +145,7 @@ export class LoginCard implements OnInit {
   public _spinner: SpinnerService,
   private store: Store<fromStore.State>,
   public _auth: AuthService
-  ) {
-
-  }
-
+  ) {}
   ngOnInit() {
    setTimeout(() => {
      this.Onload = !this.Onload;
@@ -163,7 +153,6 @@ export class LoginCard implements OnInit {
 
    this.user$ = this.store.select(fromAuth.getUser);
    this.store.dispatch(new authActions.GetUser());
-
   }
 
   googleLogin() {
@@ -171,7 +160,7 @@ export class LoginCard implements OnInit {
   }
 
   facebookLogin() {
-    console.log('facebook')
+    //console.log('facebook')
   }
   logout() {
    //

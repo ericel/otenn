@@ -18,6 +18,7 @@ import { Store, select } from '@ngrx/store';
 import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromStore from '@collections/state';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from 'app/auth/state/auth.service';
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
@@ -61,7 +62,8 @@ export class PageComponent implements OnInit, OnDestroy {
     private _ucFirst: UcFirstPipe,
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
-    private store: Store<fromStore.State>
+    private store: Store<fromStore.State>,
+    public _auth: AuthService
   ) {
     this.loading$ = this.store.pipe(select(fromStore.getLoadingPage));
    }
@@ -148,13 +150,13 @@ export class PageComponent implements OnInit, OnDestroy {
       <mat-card class="collection-card">
           <img mat-card-image mat-elevation-z2 [src]="page.photoURL" alt="{{page.title}}">
           <div class="collection-img">
-            <img [src]="page.photoURL" class="img-thumbnail" [alt]="">
+            <img [src]="page.avatar" class="img-thumbnail" [alt]="page.username">
         </div>
           <mat-card-title class="collection-name">
               {{page.collection}}
           </mat-card-title>
           <mat-card-subtitle class="text-muted">
-              collection.creator
+              {{page.username}}
           </mat-card-subtitle>
           <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.id}}"
           [fragment]="page.collectionKey">{{page.title | shorten: 100:'..'}}</a></mat-card-title>

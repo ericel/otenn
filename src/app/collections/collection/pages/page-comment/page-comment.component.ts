@@ -11,6 +11,7 @@ import { Comment } from '@collections/state/models/comment.model';
 import { SpinnerService } from '@shared/services/spinner.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Router, NavigationStart } from '@angular/router';
+import { AuthService } from 'app/auth/state/auth.service';
 @Component({
   selector: 'page-comment',
   templateUrl: './page-comment.component.html',
@@ -30,7 +31,8 @@ createdCom$: Observable<boolean>;
     private _session: SessionService,
     private _spinner: SpinnerService,
     private store: Store<fromStore.State>,
-    private _router: Router
+    private _router: Router,
+    public _auth: AuthService
   ) {
 
     this.createdCom$ = this.store.pipe(select(fromStore.getSuccessComment));
@@ -66,7 +68,7 @@ createdCom$: Observable<boolean>;
       this.page.collection,
       this._session.getCurrentTime(),
       this.page.collectionKey,
-      'uid'
+      this._auth.userId
     );
     this.store.dispatch( new commentActions.Create(newComment) );
     this.createdCom$.subscribe((created) => {

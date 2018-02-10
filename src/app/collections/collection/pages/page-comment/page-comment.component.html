@@ -1,7 +1,14 @@
 <div class="comment-box clearfix">
-    <div class="clearfix">
+    <span *ngIf="_auth.user | async; then authenticated else guest"> </span>
+    <ng-template #guest>
+        <div>
+            Please <a routerlink="login">log in</a> to comment
+        </div>
+      </ng-template>
+    <ng-template #authenticated>
+    <div class="clearfix" *ngIf="_auth.user | async as user">
       <div class="float-left">
-        <img src='./assets/img/avatar.png' class="img-thumbnail">
+        <img [src]='user.photoURL' [alt]="user.displayName.username" class="img-thumbnail">
       </div>
       <div class="float-right">
        <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
@@ -29,15 +36,19 @@
         </form>
       </div>
     </div>
+  </ng-template>
+
 </div>
 <loading-comments [load]="(loading$ | async)"></loading-comments>
 <ng-container *ngIf="comments && (loading$ | async)">
   <div class="clearfix mar-20" *ngFor="let comment of comments">
     <div class="float-left">
-      <img src='./assets/img/avatar.png' class="img-thumbnail">
+      <a routerLink=''><img [src]='comment.avatar' [alt]='comment.username' class="img-thumbnail"></a>
+      <div class="d-none d-md-block"><a routerLink=''>{{comment.username}}</a></div>
     </div>
     <div class="float-right">
-       <p [innerHTML]="comment.comment">
+       <p [innerHTML]="comment.comment"></p>
+         <small class="date">{{comment.createdAt  | amTimeAgo}}</small>
        <div class="row">
          <div class="col-sm-6">
             <div class="vote-top">
@@ -45,9 +56,11 @@
                 <button mat-icon-button><mat-icon  class="downvote">thumb_down</mat-icon><span class="count">-2226</span></button>
             </div>
          </div>
-         <div class="col-sm-6 text-right">
+         <ng-container *ngIf="_auth.user | async as user">
+         <div *ngIf="user.uid === comment.uid" class="col-sm-6 text-right">
              <button class="delete_btn" mat-icon-button (click)="onDelete(comment.id)"><mat-icon>delete</mat-icon></button>
           </div>
+        </ng-container>
        </div>
     </div>
   </div>
