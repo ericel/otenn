@@ -26,7 +26,7 @@ export class LoadingComponent {
   selector: 'loading-comments',
   template: `<main class="main" *ngIf='!load'>
   <div class="container-fluid text-center justify-vertically-loading">
-    <ng-container ><i class="fa fa-ellipsis-h fa-spin fa-4x text-muted" aria-hidden="true"></i></ng-container>
+    <ng-container ><i class="fa fa-spinner fa-spin"></i></ng-container>
   </div>
 </main>`,
   styles: [`

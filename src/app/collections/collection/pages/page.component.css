@@ -91,8 +91,8 @@
   z-index: 9;
 }
 
-.page-cart {
-  height: 450px !important;
+.pag-1 .mat-card{
+  height: 380px !important;
   word-break: break-all;
   clear: both;
   overflow: hidden;
@@ -132,7 +132,8 @@
   .mat-card-title.h1 {
     font-size: 1.2rem;
    }
-   .page-cart {
+
+  .pag-1 .mat-card{
     height: auto !important;
   }
 }

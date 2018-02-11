@@ -78,7 +78,7 @@ export class PageComponent implements OnInit, OnDestroy {
         this.store.dispatch(  new pageActions.Query() );
         this.collections.subscribe(data => {
           this.pages =  data.filter((item) => {
-             return item.collectionKey === collectionkey;
+             return item.collectionKey === collectionkey && item.status !== 'Unpublished';
            });
           this._route.params.subscribe((section: Params) => {
             const pageData =  data.filter((item) => {
@@ -134,9 +134,9 @@ export class PageComponent implements OnInit, OnDestroy {
   <div  #pageRef></div>
   <section  *ngIf="pages && (pages.length > 0) && (loading$ | async)">
   <div  class="main-collect row" >
-  <div  class="main-collect col-md-4 mar-20" *ngFor="let page of pages">
+  <div  class="main-collect pag-1 col-md-4 mar-20" *ngFor="let page of pages">
   <a routerLink="{{page.title | slugify }}/{{page.id}}"
-  [fragment]="page.collectionKey" [fragment]="page.collectionKey" mat-raised-button class="checkit"> Check it</a>
+  [fragment]="page.collectionKey"  mat-raised-button class="checkit"> Check it</a>
     <loading [load]="deleting" class="card-loader"></loading>
         <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
         <mat-icon>more_vert</mat-icon>
@@ -171,6 +171,7 @@ export class PageComponent implements OnInit, OnDestroy {
         </mat-card>
 </div>
        </div>
+       <app-ads-content-match></app-ads-content-match>
 </section>
 
 
@@ -249,7 +250,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       this.store.dispatch(  new pageActions.Query() );
       this.collections.subscribe(data => {
         this.pages =  data.filter((item) => {
-           return (item.collectionKey === collectionkey) && (item.status !== 'Draft');
+           return (item.collectionKey === collectionkey) && (item.status === 'Published');
          });
         const page = this.pages[0];
         if (page) {

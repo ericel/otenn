@@ -20,6 +20,8 @@ import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromStore from '@collections/state';
 import { AuthService } from 'app/auth/state/auth.service';
 
+import * as commentActions from '@collections/state/actions/comment.actions';
+import { Comment } from '@collections/state/models/comment.model';
 @Component({
   selector: 'app-addpage',
   templateUrl: './addpage.component.html',
@@ -121,8 +123,18 @@ export class AddpageComponent implements OnInit, OnDestroy {
       'Draft', this.collectValue.value, this.component,
         this._session.getCurrentTime(), this._session.getCurrentTime(), this.collectionKey, this._auth.userId);
         this.store.dispatch( new pageActions.Create(newPage) );
+        const newComment = new Comment(
+          this._session.generate(),
+          this.$key,
+          this.descriptionValue.value,
+          this.collectValue.value,
+          this._session.getCurrentTime(),
+          this.collectionKey,
+          this._auth.userId
+        );
         this.created$.subscribe((created) => {
           if(created) {
+            this.store.dispatch( new commentActions.Create(newComment) );
             this.changesSaved = false;
             this.submitted = false;
             this.addImg = false;

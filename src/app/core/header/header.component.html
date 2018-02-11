@@ -75,7 +75,7 @@
     </mat-menu>
     <ng-template #authenticated>
         <div class="navbar-text">
-            <div *ngIf="_auth.user | async as user" class="name-text" >{{ user.displayName.username  | shorten: 8: '' }}
+            <div *ngIf="_auth.user | async as user" class="name-text" ><span  *ngIf="!mobilequery" >{{ user.displayName.username  | shorten: 8: '' }}</span>
                 <button mat-icon-button [matMenuTriggerFor]="menuUser" class="c menu-lang" xPosition="before" (contextmenu)="showmenu()"> <img class="img-thumbnail user-image" [src]="user.photoURL" alt="{{ user.displayName }}">
                 </button>
             </div>

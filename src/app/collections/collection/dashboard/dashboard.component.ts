@@ -6,6 +6,7 @@ import * as pageActions from '@collections/state/actions/page.actions';
 import * as fromStore from '@collections/state';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { Title, Meta } from '@angular/platform-browser';
 @Component({
   selector: 'app-dashboard',
   templateUrl:'./dashboard.component.html',
@@ -25,10 +26,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
   constructor(
     private _route: ActivatedRoute,
+    private _title: Title,
+    private _meta: Meta,
     private store: Store<fromStore.State>
   ) { }
 
   ngOnInit() {
+    this._title.setTitle('Collection Admins Dashboard');
+    this._meta.addTags([
+      { name: 'keywords', content: 'Collection Admins Dashboard'},
+      { name: 'description', content: 'Collection Admins Dashboard' }
+    ]);
+
     this.sub = this._route.fragment.subscribe(
       (collectionKey: string) => {
        this.pages = this.store.select(fromStore.getAllPages);

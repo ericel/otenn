@@ -23,7 +23,8 @@
                       <!-- title Column -->
                       <ng-container matColumnDef="title">
                         <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+                        <mat-cell *matCellDef="let element"><a routerLink="/collections/c/{{element.collection | slugify }}/pages/{{element.title | slugify }}/{{element.id}}"
+                          [fragment]="element.collectionKey">{{element.title}}</a>  </mat-cell>
                       </ng-container>
 
                       <!-- photo Column -->
