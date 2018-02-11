@@ -15,16 +15,17 @@ import {trigger, transition, style, animate, state} from '@angular/animations';
 import { Upload } from '@shared/services/upload/upload.model';
 import { UploadService } from '@shared/services/upload/upload.service';
 import { SessionService } from '@shared/services/session.service';
-
-
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import 'rxjs/add/operator/map';
 import { Store } from '@ngrx/store';
 import * as actions from '@collections/state/actions/collection.actions';
 import * as fromStore from '@collections/state';
 import { AuthService } from 'app/auth/state/auth.service';
+import { User } from 'app/auth/state/auth.model';
 @Component({
   selector: 'app-editcollection',
   templateUrl: './editcollection.component.html',
-  styleUrls: ['./../addcollection.component.css'],
+  styleUrls: ['./../addcollection.component.css', './editcollection.component.css'],
   providers: [UcFirstPipe],
   animations: [
     trigger(
@@ -54,7 +55,7 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   statusmodel = { options: 'Public' };
   itemsmodel = {pages: true, videos: false, photos: false, forums: false};
   components = ['pages', 'forums', 'videos', 'photos']
-  collectionAdmins = ['494949393'];
+  collectionAdmins;
   addspinner;
   collection;
   color = '#fff';
@@ -68,6 +69,9 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   selectedFiles: FileList | null;
   currentUpload: Upload;
   homepage;
+  admins$: Observable<any>;
+  username = '';
+  users;
   @ViewChild('descForm') descForm: NgForm;
   constructor(
     private _route: ActivatedRoute,
@@ -85,10 +89,10 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-  this._title.setTitle('Create A Collection');
+  this._title.setTitle('Edit A Collection');
   this._meta.addTags([
-    { name: 'keywords', content: 'Create an Otenn Collection'},
-    { name: 'description', content: 'Create an Otenn Collection' }
+    { name: 'keywords', content: 'Edit an Otenn Collection'},
+    { name: 'description', content: 'Edit an Otenn Collection' }
   ]);
 
    this.sub = this._route.queryParams
@@ -115,12 +119,35 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
               this.photoUrl = this.collection.photoURL;
               this.color = this.collection.color;
               this.homepage = this.collection.homepage || 'pages';
+              this.collectionAdmins = this.collection.admins;
+              this.getAdmins();
             }
+
            });
      });
+    this.users = this._auth.getSnapshot();
   }
 
+  private getAdmins() {
+    const abs = this.collectionAdmins
+    .map(id => this._auth.getUser(id));
+     this.admins$  = combineLatest(abs);
+  }
+  addAdmin(uid) {
+    this.collectionAdmins.indexOf(uid) === -1 ?
+    this.collectionAdmins.push(uid) :
+    this._notify.update('<strong>Opps!</strong> User Already exist as admin', 'error');
+  }
 
+  removeAdmin(uid) {
+    if (confirm('Are you sure to remove admin')) {
+      const index = this.collectionAdmins.indexOf(uid);
+      if (index > -1) {
+        this.collectionAdmins.splice(index, 1);
+      }
+    }
+    this.getAdmins();
+  }
   onAddCollection() {
     this.description = this.descForm.value.description;
     this._spinner.show('addspinner');
@@ -170,9 +197,8 @@ export class EditcollectionComponent implements OnInit, OnDestroy {
     if (!this.allow) {
       return true;
     }
-    if ((this.itemsmodel !== this.itemsmodel || this.statusmodel.options !== this.statusmodel.options) && !this.changesSaved &&
-     (this.description !== this.description) ) {
-      return confirm('Do you want to discard the changes?');
+    if (this.changesSaved === false) {
+      return confirm('Any Changes You Made Would be Discarded?');
     } else {
       return true;
     }

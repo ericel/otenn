@@ -39,6 +39,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
   book$: Observable<Collection>;
   isSelectedBookInCollection$: Observable<boolean>;
   user;
+  main_container = false;
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -54,37 +55,48 @@ export class CollectionComponent implements OnInit, OnDestroy {
     private store: Store<fromStore.State>,
     private _auth: AuthService
   ) {
-    /*this.actionsSubscription = this._route.fragment
+   /* this.actionsSubscription = this._route.fragment
     .map((collectionKey: string) => new actions.Select(collectionKey))
-    .subscribe(store);
-   */
+    .subscribe(store);*/
    }
 
   ngOnInit() {
-    /*
-    this.book$ = this.store.select(fromStore.getSelectedCollection);
-    this.book$.subscribe(collection => this.collection = collection);
-    */
-  const url = this._router.url;
-  this.sub = this._route.fragment.subscribe(
+ /*
+    this.sub = this._route.fragment.subscribe((collectionKey: string) => {
+      this.store.dispatch( new actions.Select(collectionKey));
+      const col = this.store.select(fromStore.getSelectedCollection);
+      col.subscribe(collection => this.collection = collection);
+      console.log(this.collection)
+   });
+*/
+
+
+
+    this.sub = this._route.fragment.subscribe(
     (collectionKey: string) => {
      this.collections = this.store.select(fromStore.getAllCollections);
       this.store.dispatch(  new actions.Query() );
+     if(collectionKey) {
       this.collections.subscribe(data => {
         this.collection =  data.filter((item) => {
            return item.id === collectionKey;
          });
         this.collection = this.collection[0];
-        if(this.collection && url === '/collections/c/' + this._slugify.transform(this.collection.title)+'#'+collectionKey){
+
+        const url = this._router.url;
+        if(this.collection && url === '/collections/c/' + this._slugify.transform(this.collection.title)+'#'+this.collection.id){
           this._router.navigate([this.collection.homepage], {relativeTo: this._route, fragment: this.collection.id})
+          this.main_container = true;
         }
-       })
+       });
+     }
     });
 
   this._sessions.hide();
   }
 
   onRoute(e) {
+
     if (this.verticalOffset < 300) {
          this.isMini = true;
     }
@@ -138,6 +150,8 @@ export class CollectionComponent implements OnInit, OnDestroy {
   <ng-template #authenticated>
     <a mat-menu-item>Report</a>
     <ng-container *ngIf="_auth.user | async as user">
+     <a mat-menu-item *ngIf=" user.uid === collection.uid" routerLink="dashboard/{{collection.title | slugify}}"
+     [fragment]="collection.id">Manage Components</a>
       <a mat-menu-item *ngIf=" user.uid === collection.uid" routerLink="/collections/editcollection/{{collection.title | slugify}}"
       [queryParams]="{ allow: 1}" [fragment]="collection.id">Edit Collection</a>
       <a mat-menu-item *ngIf=" user.uid === collection.uid" (click)="onDelete(collection.id)">Delete Collection</a>

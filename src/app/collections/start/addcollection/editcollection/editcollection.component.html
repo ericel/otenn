@@ -7,9 +7,15 @@
             <h1 class="text-info h1">{{title}} Collection</h1>
             <mat-divider></mat-divider>
               <h2>Collection Team</h2>
-              <mat-list role="list">
-                  <mat-list-item role="listitem">Oj Obasi</mat-list-item>
-              </mat-list>
+              <ul class="list-group">
+                  <li class="list-group-item" *ngFor="let admin of admins$ | async">
+                   <a  routerLink=""> <i class="fa fa-user-circle" aria-hidden="true"></i> {{admin.displayName.username}}</a>
+                    <span
+                    class="badge text-right" (click)="removeAdmin(admin.uid)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </span>
+                </li>
+              </ul>
                 <mat-accordion>
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>
@@ -21,11 +27,28 @@
                       </mat-panel-description>
                     </mat-expansion-panel-header>
 
-                    <mat-form-field class="w-100">
-                      <input matInput placeholder="Enter User Name">
-                    </mat-form-field>
+                    <div class="w-100">
+                      <input  class="form-control"
+                      placeholder="Enter User Name"
+                      required
+                      name="username"
+                      ngModel
+                      id="username"
+                      #username
+                      >
+                    </div>
                   </mat-expansion-panel>
                   </mat-accordion>
+                  <ul class="list-group" *ngIf="(username.value).length > 3">
+                    <li
+                      class="list-group-item"
+                      *ngFor="let user of users | async | filterBy: ['displayName.username']: username.value"
+                      (click)="addAdmin(user.uid)"
+                      >
+                      <i class="fa fa-user-circle" aria-hidden="true"></i>
+                      <strong>{{ user.displayName.username | shorten:15 }}</strong>
+                    </li>
+                  </ul>
           </mat-card>
 
           <mat-card class="mar-30">

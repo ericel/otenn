@@ -13,6 +13,7 @@ import { EditpageComponent } from '@collections/start/addpage/editpage/editpage.
 import { ForumsComponent } from '@collections/collection/forums/forums.component';
 import { ForumComponent } from '@collections/collection/forums/forum/forum.component';
 import { AuthGuard } from 'app/auth/state/auth.guard';
+import { DashboardComponent } from '@collections/collection/dashboard/dashboard.component';
 
 
 const collectionsRoutes: Routes = [
@@ -28,7 +29,11 @@ const collectionsRoutes: Routes = [
              {path: 'forums', component: ForumsComponent},
              {path: 'forums/:string/:key', component: ForumComponent},
              {path: 'videos', component: PagesComponent},
-             {path: 'photos', component: PagesComponent}
+             {path: 'photos', component: PagesComponent},
+             {
+              path: 'dashboard/:string', component: DashboardComponent,
+              canActivate: [AuthGuard]
+            }
           ]}
       ]
   },
@@ -54,7 +59,7 @@ const collectionsRoutes: Routes = [
     path: 'addpage', component: AddpageComponent,
      canDeactivate: [CanDeactivateGuard],
      canActivate: [AuthGuard]
-  }
+  },
 ];
 
 @NgModule({

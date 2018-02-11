@@ -46,12 +46,13 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
   allow = false;
   changesSaved = false;
   sub: Subscription;
+  subPhoto: Subscription;
   title: string;
   description: string;
   status = 'Public Private'.split(' ');
   statusmodel = { options: 'Public' };
   itemsmodel: CollectionComponents = {pages: true, videos: false, photos: false, forums: false};
-  collectionAdmins = ['494949393'];
+  collectionAdmins = [];
   addspinner;
   color = '#fff';
   photoUrl= './assets/assets/favinco.png';
@@ -105,6 +106,8 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     this.collections = this.collections.subscribe((collections) => {
       this.collections = collections;
     });
+
+
   }
 
 
@@ -123,6 +126,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
     this.description = this.descForm.value.description;
     this._spinner.show('addspinner');
     this.$key = this._session.generate();
+    this.collectionAdmins = [this._auth.userId];
     if(this.color === '#fff') {this.color = '#029ae4'}
     const collection: Collection = new Collection(this.$key, this.title, this.description, this.photoUrl,
      this.statusmodel.options, this.itemsmodel, this._notify.getCurrentTime(),
@@ -163,11 +167,17 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
       const path = `collections/${this.$key}`;
       const firestoreUrl = `o-t-collections/${this.$key}`;
       this._upload.pushUpload(this._auth.userId, this.currentUpload, name, path, firestoreUrl);
+      this.getPhotoUrl(this.$key)
     } else {
       this._notify.update('<strong>No file found!</strong> upload again.', 'error')
     }
    }
 
+   private getPhotoUrl(collectionKey) {
+      this.store.dispatch(new actions.Select(collectionKey));
+      const collection = this.store.select(fromStore.getSelectedCollection);
+     this.subPhoto = collection.subscribe(col => this.photoUrl = col.photoURL);
+   }
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (!this.allow) {
       return true;
@@ -182,6 +192,7 @@ export class AddcollectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy () {
     this.sub.unsubscribe();
+    this.subPhoto.unsubscribe();
   }
 }
 

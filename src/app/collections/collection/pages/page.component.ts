@@ -142,11 +142,19 @@ export class PageComponent implements OnInit, OnDestroy {
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #pageMenu="matMenu" xPosition="before">
-        <a mat-menu-item>Report</a>
-        <a mat-menu-item routerLink="/collections/editpage/{{page.title | slugify}}"
-        [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
-        <a mat-menu-item  (click)="onDelete(page.id)">Delete</a>
-      </mat-menu>
+      <div *ngIf="_auth.user | async; then authenticated else guest"></div>
+      <ng-template #guest>
+         <a mat-menu-item>Report</a>
+      </ng-template>
+      <ng-template #authenticated>
+        <ng-container *ngIf="_auth.user | async as user">
+            <a mat-menu-item>Report</a>
+            <a mat-menu-item *ngIf=" user.uid === page.uid" routerLink="/collections/editpage/{{page.title | slugify}}"
+            [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
+            <a mat-menu-item *ngIf=" user.uid === page.uid" (click)="onDelete(page.id)">Delete</a>
+        </ng-container>
+      </ng-template>
+     </mat-menu>
       <mat-card class="collection-card">
           <img mat-card-image mat-elevation-z2 [src]="page.photoURL" alt="{{page.title}}">
           <div class="collection-img">
@@ -225,7 +233,8 @@ export class PagesComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
     private _masonry: NgMasonryGridService,
-    private store: Store<fromStore.State>
+    private store: Store<fromStore.State>,
+    public _auth: AuthService
   ) {
     this.loading$ = this.store.pipe(select(fromStore.getLoading));
    }

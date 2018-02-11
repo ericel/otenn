@@ -33,6 +33,7 @@ import { PageCommentComponent } from './collection/pages/page-comment/page-comme
 import { CommentEffects } from '@collections/state/effects/comment.effects';
 import { commentReducer } from '@collections/state/reducers/comment.reducer';
 import { FORUM_ADDONS } from '@collections/collection/forums/shared';
+import { DashboardComponent } from './collection/dashboard/dashboard.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { FORUM_ADDONS } from '@collections/collection/forums/shared';
     RecentPages,
     ForumComponent,
     PageCommentComponent,
-    ...FORUM_ADDONS
+    ...FORUM_ADDONS,
+    DashboardComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

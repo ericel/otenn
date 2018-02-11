@@ -14,7 +14,7 @@ export class LocationService {
     private afs: AngularFirestore,
   ) { }
   getCurrentIpLocation(): Observable<any> {
-    return this._http.get('http://ipinfo.io')
+    return this._http.get('https://ipinfo.io')
     .map(response => response.json())
     .catch(error => {
         console.log(error);
@@ -25,7 +25,7 @@ export class LocationService {
 
  // Return a single observable User
 getUserLocal(id: string) {
-  const ref =  this.afs.doc<Local>(`wi-users-local/${id}`);
+  const ref =  this.afs.doc<Local>(`o-t-users-local/${id}`);
   return ref.valueChanges();
 }
 }

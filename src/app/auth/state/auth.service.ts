@@ -50,7 +50,6 @@ export class AuthService {
       const ref =  this.afs.doc<User>(`o-t-users/${id}`);
       return ref.valueChanges();
   }
-
   getSnapshot(): Observable<User[]> {
     return this.users.snapshotChanges().map(actions => {
       return actions.map(a => {
