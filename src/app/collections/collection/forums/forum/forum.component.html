@@ -1,25 +1,27 @@
 <section #pageRef>
-  <div class="row forum"  *ngIf="collection" >
+  <div class="row forum"  *ngIf="forum && collection" >
     <div class="col-md-8">
       <div class="card">
         <div class="card-header" [ngStyle]="{'background-color': collection.color}">
-                 <img [src]='collection.photoURL' [alt]='collection.title' class="img-thumbnail forum-user-1">
-                 <div class="auth-1 font-wight-bold">Oj Obasi Forum Author</div>
-                 <div><small class="text-muted">30 days ago</small></div>
+                 <img [src]='forum.avatar' [alt]='forum.username' class="img-thumbnail forum-user-1">
+                 <div class="auth-1 font-wight-bold"><a>{{forum.username}}</a> Forum Author</div>
+                 <div><small class="text-muted">{{forum.updatedAt | amTimeAgo}}</small></div>
                  <button mat-button class="auth-1-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
         </div>
         <div class="card-block">
-          <h1 class="font-weight-bold h3 main-title">How to Esl lessons and lesson plans. Available in printable formats.</h1>
-          come to Esl lesson plans collection
-  Download free Esl lessons and lesson plans. Available in printable formats. You can also share your lesson plans here..
-  In this collection, you can post blogs, forums, photos, videos on this topic.
+          <h1 class="font-weight-bold h3 main-title">{{forum.title}}</h1>
+         <div [innerHTML]="forum.description"></div>
         </div>
         <div class="card-footer">
-            <span class="date">Posted 2018/03/31</span>
-           <button mat-button class="float-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
+            <span class="date">Posted {{forum.updatedAt}}</span>
+           <button mat-button class="float-right" color="warn" (click)="onReply()"><mat-icon>reply</mat-icon> Reply</button>
         </div>
       </div>
-
+      <ng-container *ngIf="reply_new">
+        <div class="card mar-20">
+          <reply-creator (newreply)="replyClose($event)" [forum]="forum"></reply-creator>
+        </div>
+      </ng-container>
       <div class="card mar-20">
           <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
         <div class="card-header">

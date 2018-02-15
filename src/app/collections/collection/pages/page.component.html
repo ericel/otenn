@@ -31,7 +31,7 @@
                         posted on <a routerLink="/collections/c/{{page.collection | slugify }}" fragment="{{page.collectionKey}}"><strong>{{page.collection}}</strong></a> <span>{{page.createdAt}}</span>
                     </mat-card-subtitle>
                 </mat-card-header>
-                <app-share class="mar-30"></app-share>
+                <app-share [content]="page" class="mar-30"></app-share>
               <div  [innerHTML]="page.page" class="mar-20 main-content"></div>
 
               <mat-divider></mat-divider>

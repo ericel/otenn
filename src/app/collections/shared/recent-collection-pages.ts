@@ -40,7 +40,7 @@ export class RecentPages implements OnInit {
         this.store.dispatch(  new pageActions.Query() );
          collections.subscribe(data => {
           this.pages =  data.filter((item) => {
-             return item.collectionKey === this.collection.id;
+             return item.collectionKey === this.collectionKey;
        });
    });
   }

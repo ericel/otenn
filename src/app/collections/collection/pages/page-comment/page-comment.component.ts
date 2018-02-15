@@ -37,7 +37,6 @@ createdCom$: Observable<boolean>;
 
     this.createdCom$ = this.store.pipe(select(fromStore.getSuccessComment));
     this.loading$ = this.store.pipe(select(fromStore.getLoadingComment));
-    console.log(this.loading$.subscribe(value => console.log(value)))
   }
 
   ngOnInit() {

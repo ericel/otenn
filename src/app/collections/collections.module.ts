@@ -34,6 +34,7 @@ import { CommentEffects } from '@collections/state/effects/comment.effects';
 import { commentReducer } from '@collections/state/reducers/comment.reducer';
 import { FORUM_ADDONS } from '@collections/collection/forums/shared';
 import { DashboardComponent } from './collection/dashboard/dashboard.component';
+import { ForumEffects } from '@collections/state/effects/forum.effects';
 
 
 @NgModule({
@@ -45,7 +46,7 @@ import { DashboardComponent } from './collection/dashboard/dashboard.component';
     CollectionsRoutingModule,
     NgMasonryGridModule,
     StoreModule.forFeature('collections', reducers),
-    EffectsModule.forFeature([CollectionEffects, PageEffects, CommentEffects])
+    EffectsModule.forFeature([CollectionEffects, PageEffects, CommentEffects, ForumEffects])
   ],
   declarations: [
     IndexComponent,

@@ -55,6 +55,9 @@
   font-style: italic;
   color: #7f8890;
 }
+.comms {
+  line-height: 1.55em;
+}
 @media screen and (max-width: 500px) {
   .img-thumbnail {
     width: 30px;

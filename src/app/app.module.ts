@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from 'app/app.routes';
@@ -27,7 +28,7 @@ import { PizzaModule } from 'app/pizza/pizza.module';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { SharedModule } from '@shared/shared.module';
 import { AuthEffects } from 'app/auth/state/auth.effects';
-
+import { ShareButtonsModule } from '@ngx-share/buttons';
 @NgModule({
   declarations: [
     AppComponent
@@ -36,6 +37,8 @@ import { AuthEffects } from 'app/auth/state/auth.effects';
     BrowserModule.withServerTransition({appId: 'Otenn' }),
     BrowserAnimationsModule,
     HttpModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
     AngularFireModule.initializeApp(environment.firebase, 'Otenn'),
     AngularFirestoreModule,
     AngularFireAuthModule,
@@ -48,6 +51,7 @@ import { AuthEffects } from 'app/auth/state/auth.effects';
     //PizzaModule,
     AuthModule.forRoot(),
     CoreModule,
+    ShareButtonsModule.forRoot()
   ],
   providers: [...SHARED_SERVICES],
   bootstrap: [AppComponent]

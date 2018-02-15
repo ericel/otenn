@@ -4,7 +4,7 @@ import { Component, Input } from "@angular/core";
   selector: 'loading',
   template: `<main *ngIf='!load'>
   <div class=" text-center justify-vertically-loading">
-    <ng-container ><i class="fa fa-spinner fa-spin fa-4x text-muted" aria-hidden="true"></i></ng-container>
+    <ng-container ><i class="fas fa-spinner fa-pulse fa-4x text-muted" aria-hidden="true"></i></ng-container>
   </div>
 </main>`,
   styles: [`
@@ -26,7 +26,7 @@ export class LoadingComponent {
   selector: 'loading-comments',
   template: `<main class="main" *ngIf='!load'>
   <div class="container-fluid text-center justify-vertically-loading">
-    <ng-container ><i class="fa fa-spinner fa-spin"></i></ng-container>
+    <ng-container ><i class="fas fa-spinner fa-pulse"></i></ng-container>
   </div>
 </main>`,
   styles: [`

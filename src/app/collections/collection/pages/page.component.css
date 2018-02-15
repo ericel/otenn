@@ -83,13 +83,7 @@
   margin-top: 10px;
   line-height: 1.2;
 }
-.menu-button {
-  position: absolute;
-  top: 25px;
-  right: 10px;
-  color: #006064;
-  z-index: 9;
-}
+
 
 .pag-1 .mat-card{
   height: 380px !important;

@@ -32,6 +32,18 @@ export class ForumEffects {
             })
         })
     })
+    .switchMap(arr => {
+      const userObservables = arr.map(forum => this.afs.doc(`o-t-users/${forum.uid}`).valueChanges()
+      );
+      return Observable.combineLatest(...userObservables)
+        .map((...eusers) => {
+          arr.forEach((forum, index) => {
+            forum['username'] = eusers[0][index].displayName.username;
+            forum['avatar'] = eusers[0][index].photoURL;
+          });
+          return arr;
+        });
+    })
     .mergeMap(arr => [
       new actions.AddAll(arr),
       new actions.Success()

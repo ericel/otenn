@@ -193,7 +193,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
                <h4>Collections Social</h4>
                </div>
               <div class="card-block text-center padding-10">
-               <app-share></app-share>
+               <app-share [content]="collection"></app-share>
               </div>
           </div>
         </div>

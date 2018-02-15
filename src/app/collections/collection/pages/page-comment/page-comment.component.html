@@ -50,13 +50,14 @@
 <loading-comments [load]="(loading$ | async)"></loading-comments>
 <ng-container *ngIf="comments && (loading$ | async)">
 
-  <div class="clearfix mar-20" *ngFor="let comment of comments">
+  <div class="clearfix mar-20 comms" *ngFor="let comment of comments">
 
     <div class="float-left">
       <a routerLink=''><img [src]='comment.avatar' [alt]='comment.username' class="img-thumbnail"></a>
-      <div class="d-none d-md-block"><a routerLink=''>{{comment.username}}</a></div>
+      <!--<div class="d-none d-md-block"><a routerLink=''>{{comment.username}}</a></div>-->
     </div>
     <div class="float-right">
+       <h3 class="h5"><a routerLink="">{{comment.username}}</a></h3>
        <p [innerHTML]="comment.comment"></p>
          <small class="date">{{comment.createdAt  | amTimeAgo}}</small>
        <div class="row">

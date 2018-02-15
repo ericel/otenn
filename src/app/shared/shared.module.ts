@@ -13,8 +13,10 @@ import { FormsModule } from '@angular/forms';
 import {NgxPageScrollModule} from 'ngx-page-scroll';
 import { NgMasonryGridModule } from 'ng-masonry-grid';
 import { MomentModule } from 'angular2-moment';
+import { ShareButtonsModule } from '@ngx-share/buttons';
 import * as firebase from 'firebase';
 import { environment } from '@environments/environment';
+
 firebase.initializeApp(environment.firebase);
 @NgModule({
   imports: [
@@ -26,7 +28,8 @@ firebase.initializeApp(environment.firebase);
     FormsModule,
     NgxPageScrollModule,
     NgMasonryGridModule,
-    MomentModule
+    MomentModule,
+    ShareButtonsModule
   ],
   exports: [
     RouterModule,
@@ -44,6 +47,7 @@ firebase.initializeApp(environment.firebase);
    ...SHARED_COMPONENTS
   ],
   providers: [
+
   ],
   entryComponents: [
     SHARED_ENTRY_COMPONENTS

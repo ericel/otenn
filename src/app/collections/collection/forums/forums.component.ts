@@ -6,10 +6,21 @@ import { Subscription } from 'rxjs/Subscription';
 import { isPlatformBrowser, isPlatformServer, DOCUMENT } from '@angular/common';
 import {  PageScrollConfig, PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import {trigger, transition, style, animate, state, keyframes} from '@angular/animations';
+
+import { Title, Meta } from '@angular/platform-browser';
+import { UcFirstPipe } from 'ngx-pipes';
+
+import { Store, select } from '@ngrx/store';
+import * as forumActions from '@collections/state/actions/forum.actions';
+import * as fromStore from '@collections/state';
+import { Observable } from 'rxjs/Observable';
+import { Forum } from '@collections/state/models/forum.model';
+import { AuthService } from '../../../auth/state/auth.service';
 @Component({
   selector: 'app-forums',
   templateUrl: './forums.component.html',
   styleUrls: ['./forums.component.css'],
+  providers: [UcFirstPipe],
   animations: [
     trigger(
       'myAnimation',
@@ -35,17 +46,24 @@ export class ForumsComponent implements OnInit, OnDestroy {
   sub: Subscription;
   collectionKey: String;
   forums;
-  forum_view = false;
-  forum_new = true;
+  forum_view = true;
+  forum_new = false;
+  loading$: Observable<boolean>;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
     @Inject(DOCUMENT) private document: Document,
     private pageScrollService: PageScrollService,
-  ) { }
+    private _title: Title,
+    private _meta: Meta,
+    private _ucFirst: UcFirstPipe,
+    private store: Store<fromStore.State>,
+    public _auth: AuthService
+  ) {
+    this.loading$ = this.store.pipe(select(fromStore.getLoadingForum));
+   }
 
   ngOnInit() {
-    this.forums = this._collections.collections;
     const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.pageRef.nativeElement);
     this.pageScrollService.start(pageScrollInstance);
     this.sub = this._route.fragment
@@ -54,8 +72,29 @@ export class ForumsComponent implements OnInit, OnDestroy {
       this._collections.getCollection(collectionKey).subscribe((collection: Collection) => {
        this.collection = collection;
        this.collectionKey = collectionKey;
+
+       this._title.setTitle(this._ucFirst.transform(this.collection.title) + ' Forums');
+       this._meta.addTags([
+         { name: 'keywords',
+         content: this._ucFirst.transform(this.collection.title) + ' Forums' + this._ucFirst.transform(this.collection.title) + 'Blogs'},
+         { name: 'description',
+          content: this._ucFirst.transform(this.collection.description) + ' Forums and blogs contributed by collection subscribers.' }
+       ]);
     });
+
+     const forums = this.store.select(fromStore.getAllForums);
+      this.store.dispatch(  new forumActions.Query() );
+       forums.subscribe(data => {
+        const forumsAll =  data.filter((item) => {
+           return (item.collectionKey === collectionKey) && (item.status === 'Published');
+         });
+
+         if(forumsAll) {
+           this.forums = forumsAll;
+         }
+       });
   });
+
   }
 
 
@@ -64,6 +103,10 @@ export class ForumsComponent implements OnInit, OnDestroy {
    this.forum_new = !this.forum_new;
   }
 
+  newThread(e){
+    this.forum_view = !this.forum_view;
+    this.forum_new = !this.forum_new;
+  }
   ngOnDestroy () {
     this.sub.unsubscribe();
   }
