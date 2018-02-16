@@ -41,6 +41,7 @@ import { AuthService } from '../../../../auth/state/auth.service';
 })
 export class ForumComponent implements OnInit, OnDestroy {
 @ViewChild('pageRef') pageRef: ElementRef;
+@ViewChild('replyRef') replyRef: ElementRef;
 collection: Collection;
 sub: Subscription;
 loading$: Observable<boolean>;
@@ -96,23 +97,44 @@ reply_new = false;
          });
         });
     });
-    /*   this._title.setTitle(this._ucFirst.transform(page.title));
-                this._meta.addTags([
-                  { name: 'keywords',
-                  content: this._ucFirst.transform(page.title) + ',' + this._ucFirst.transform(collection.title) + 'page'},
-                  { name: 'description',
-                  content: this._ucFirst.transform(page.description) }
-                ]);
-                */
-
   }
 
   onReply() {
     this.reply_new = !this.reply_new;
   }
 
+  onReplyButton($event) {
+   this.reply_new = true;
+  if(this.reply_new) {
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(this.document, this.replyRef.nativeElement);
+    this.pageScrollService.start(pageScrollInstance);
+  }
+  }
+
   replyClose($event) {
     this.reply_new = !this.reply_new;
+  }
+
+  onDelete(id) {
+   if(confirm('Are you sure to delete thread?')){
+    this._collections.getCommentCount(id, 'forumId', 'o-t-forum-replies').subscribe((comments) => {
+      const commentCount =  comments.length;
+      console.log(commentCount)
+      if(commentCount > 1){
+        this._collections.deleteCollection('o-t-forum-replies', commentCount, id, 'forumId').subscribe((status) => {
+          this.deletePage(id);
+        });
+      } else {
+        this.deletePage(id);
+      }
+    });
+   }
+  }
+
+  private deletePage(id) {
+    setTimeout(() => {
+      this.store.dispatch( new forumActions.Delete(id));
+    }, 2000)
   }
   ngOnDestroy () {
     this.sub.unsubscribe();

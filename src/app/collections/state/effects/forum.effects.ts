@@ -83,7 +83,7 @@ export class ForumEffects {
   .mergeMap(id => {
   return of(this.afs.doc<Forum>(`o-t-forums/${id}`).delete())
   .map(() =>  {
-    //this._router.navigate(['../collections/c'], {relativeTo: this._route});
+    this._router.navigate(['../collections/c'], {relativeTo: this._route});
     return new actions.Success();
   })
   .catch(err => Observable.of(new actions.Fail(err.message)));

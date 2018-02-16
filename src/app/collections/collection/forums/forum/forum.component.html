@@ -6,7 +6,25 @@
                  <img [src]='forum.avatar' [alt]='forum.username' class="img-thumbnail forum-user-1">
                  <div class="auth-1 font-wight-bold"><a>{{forum.username}}</a> Forum Author</div>
                  <div><small class="text-muted">{{forum.updatedAt | amTimeAgo}}</small></div>
-                 <button mat-button class="auth-1-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
+                 <button mat-button class="auth-1-right" color="warn" (click)="onReply()"><mat-icon>reply</mat-icon> Reply</button>
+
+                 <button class="menu-button" mat-icon-button [matMenuTriggerFor]="forumMenu">
+                    <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #forumMenu="matMenu" xPosition="before">
+                        <div *ngIf="_auth.user | async; then authenticated else guest"></div>
+                        <ng-template #guest>
+                           <a mat-menu-item>Report</a>
+                        </ng-template>
+                        <ng-template #authenticated>
+                          <ng-container *ngIf="_auth.user | async as user">
+                              <a mat-menu-item>Report</a>
+                              <a mat-menu-item *ngIf=" user.uid === forum.uid" routerLink="/collections/editforum/{{forum.title | slugify}}"
+                              [queryParams]="{ key: forum.id}" [fragment]="forum.collectionKey">Edit forum</a>
+                              <a mat-menu-item *ngIf=" user.uid === forum.uid" (click)="onDelete(forum.id)">Delete</a>
+                          </ng-container>
+                        </ng-template>
+                    </mat-menu>
         </div>
         <div class="card-block">
           <h1 class="font-weight-bold h3 main-title">{{forum.title}}</h1>
@@ -17,96 +35,17 @@
            <button mat-button class="float-right" color="warn" (click)="onReply()"><mat-icon>reply</mat-icon> Reply</button>
         </div>
       </div>
+      <span  #replyRef></span>
       <ng-container *ngIf="reply_new">
         <div class="card mar-20">
           <reply-creator (newreply)="replyClose($event)" [forum]="forum"></reply-creator>
         </div>
       </ng-container>
-      <div class="card mar-20">
-          <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
-        <div class="card-header">
-                <img  [src]='collection.photoURL' [alt]='collection.title' class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
-                <span >Oj Obasi Said:</span>
-                <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
-        </div>
-        <div class="card-block">
-          come to Esl lesson plans collection
-  Download free Esl lessons and lesson plans. Available in printable formats. You can also share your lesson plans here..
-  In this collection, you can post blogs, forums, photos, videos on this topic.
-        </div>
-        <div class="card-footer">
-            <span class="date">Posted 2018/03/31</span>
-            <button mat-button class="float-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
-        </div>
-      </div>
-      <div class="card mar-20">
-          <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
-        <div class="card-header">
-                <img  [src]='collection.photoURL' [alt]='collection.title' class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
-                <span >Oj Obasi Said:</span>
-                <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
-        </div>
-        <div class="card-block">
-          come to Esl lesson plans collection
-  Download free Esl lessons and lesson plans. Available in printable formats. You can also share your lesson plans here..
-  In this collection, you can post blogs, forums, photos, videos on this topic.
-        </div>
-        <div class="card-footer">
-           <span class="date">Posted 2018/03/31</span>
-           <button mat-button class="float-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
-        </div>
-      </div>
-      <div class="card mar-20">
-          <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
-        <div class="card-header">
-                <img  [src]='collection.photoURL' [alt]='collection.title' class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
-                <span >Oj Obasi Said:</span>
-                <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
-        </div>
-        <div class="card-block">
-          come to Esl lesson plans collection
-  Download free Esl lessons and lesson plans. Available in printable formats. You can also share your lesson plans here..
-  In this collection, you can post blogs, forums, photos, videos on this topic.
-        </div>
-        <div class="card-footer">
-           <span class="date">Posted 2018/03/31</span>
-           <button mat-button class="float-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
-        </div>
-      </div>
-      <div class="card mar-20">
-          <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
-        <div class="card-header">
-                <img  [src]='collection.photoURL' [alt]='collection.title' class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
-                <span >Oj Obasi Said:</span>
-                <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
-        </div>
-        <div class="card-block">
-          come to Esl lesson plans collection
-  Download free Esl lessons and lesson plans. Available in printable formats. You can also share your lesson plans here..
-  In this collection, you can post blogs, forums, photos, videos on this topic.
-        </div>
-        <div class="card-footer">
-           <span class="date">Posted 2018/03/31</span>
-           <button mat-button class="float-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
-        </div>
-      </div>
-      <div class="card mar-20">
-          <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
-        <div class="card-header">
-                <img  [src]='collection.photoURL' [alt]='collection.title' class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
-                <span >Oj Obasi Said:</span>
-                <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
-        </div>
-        <div class="card-block">
-          come to Esl lesson plans collection
-  Download free Esl lessons and lesson plans. Available in printable formats. You can also share your lesson plans here..
-  In this collection, you can post blogs, forums, photos, videos on this topic.
-        </div>
-        <div class="card-footer">
-           <span class="date">Posted 2018/03/31</span>
-           <button mat-button class="float-right" color="warn"><mat-icon>reply</mat-icon> Reply</button>
-        </div>
-      </div>
+         <app-forum-reply
+         [forum]="forum"
+         [collection]="collection"
+         (replynew)="onReplyButton($event)"
+         ></app-forum-reply>
     </div>
     <div class="col-md-4">
       <app-ads-right></app-ads-right>

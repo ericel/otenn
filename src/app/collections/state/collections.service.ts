@@ -12,63 +12,6 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
 import { expand, takeWhile, mergeMap, take } from 'rxjs/operators';
 @Injectable()
 export class CollectionsService {
-  collections = [
-    {
-      title: 'Blogs',
-      color: 'gray',
-      description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
-      creator: 'Oj Obasi',
-      photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      createdAt: '2 June 1987',
-      $key: 'ue82942j'
-    },
-    {
-      title: 'Angular',
-      color: 'orange',
-      description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
-      creator: 'Oj Obasi',
-      photoURL: 'https://christianliebel.com/wp-content/uploads/2016/02/Angular2-825x510.png',
-      createdAt: '2 June 1987',
-      $key: 'ue82942r'
-    },
-    {
-      title: 'Shitholes',
-      color: 'silver',
-      description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
-      creator: 'Oj Obasi',
-      photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      createdAt: '2 June 1987',
-      $key: 'te82942j'
-    },
-    {
-      title: 'Economy',
-      color: 'indigo',
-      photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
-      creator: 'Oj Obasi',
-      createdAt: '2 June 1987',
-      $key: 'me82942j'
-    },
-    {
-      title: 'ReactJs',
-      color: 'teal',
-      photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
-      creator: 'Oj Obasi',
-      createdAt: '2 June 1987',
-      $key: 'we82942j'
-    },
-    {
-      title: 'Wordpress',
-      color: 'cyan',
-      photoURL: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
-      description: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog',
-      creator: 'Oj Obasi',
-      createdAt: '2 June 1987',
-      $key: '3e82942j'
-    }
-
-  ];
 
   constructor (
     private _notify: NotifyService,
@@ -90,19 +33,19 @@ export class CollectionsService {
   }
 
 
-  getCommentCount(id) {
-    return this._afs.collection('o-t-pages-comments', ref => ref.where('pageId', '==', id) )
+  getCommentCount(id, condition, collection) {
+    return this._afs.collection(collection, ref => ref.where(condition, '==', id) )
     .valueChanges();
   }
 
 
-  deleteCollection(path: string, batchSize: number, id): Observable<any> {
+  deleteCollection(path: string, batchSize: number, id, condition): Observable<any> {
 
-    const source = this.deleteBatch(path, batchSize, id)
+    const source = this.deleteBatch(path, batchSize, id, condition)
 
     // expand will call deleteBatch recursively until the collection is deleted
     return source.pipe(
-      expand(val => this.deleteBatch(path, batchSize, id)),
+      expand(val => this.deleteBatch(path, batchSize, id, condition)),
       takeWhile(val => val > 0)
    )
 
@@ -110,8 +53,8 @@ export class CollectionsService {
 
 
   // Detetes documents as batched transaction
-  private deleteBatch(path: string, batchSize: number, id): Observable<any> {
-    const colRef = this._afs.collection(path, ref => ref.where('pageId', '==', id).limit(batchSize) )
+  private deleteBatch(path: string, batchSize: number, id, condition): Observable<any> {
+    const colRef = this._afs.collection(path, ref => ref.where(condition, '==', id).limit(batchSize) )
 
     return colRef.snapshotChanges().pipe(
       take(1),

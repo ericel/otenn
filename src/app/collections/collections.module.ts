@@ -35,6 +35,8 @@ import { commentReducer } from '@collections/state/reducers/comment.reducer';
 import { FORUM_ADDONS } from '@collections/collection/forums/shared';
 import { DashboardComponent } from './collection/dashboard/dashboard.component';
 import { ForumEffects } from '@collections/state/effects/forum.effects';
+import { ReplyForumEffects } from '@collections/state/effects/replyforum.effects';
+import { ForumReplyComponent } from './collection/forums/forum/forum-reply/forum-reply.component';
 
 
 @NgModule({
@@ -46,7 +48,7 @@ import { ForumEffects } from '@collections/state/effects/forum.effects';
     CollectionsRoutingModule,
     NgMasonryGridModule,
     StoreModule.forFeature('collections', reducers),
-    EffectsModule.forFeature([CollectionEffects, PageEffects, CommentEffects, ForumEffects])
+    EffectsModule.forFeature([CollectionEffects, PageEffects, CommentEffects, ForumEffects, ReplyForumEffects])
   ],
   declarations: [
     IndexComponent,
@@ -66,7 +68,8 @@ import { ForumEffects } from '@collections/state/effects/forum.effects';
     ForumComponent,
     PageCommentComponent,
     ...FORUM_ADDONS,
-    DashboardComponent
+    DashboardComponent,
+    ForumReplyComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

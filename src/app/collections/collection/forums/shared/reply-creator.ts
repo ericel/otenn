@@ -3,7 +3,7 @@ import { AuthService } from '../../../../auth/state/auth.service';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Store, select } from '@ngrx/store';
-import * as forumActions from '@collections/state/actions/forum.actions';
+import * as replyForumActions from '@collections/state/actions/replyforum.actions';
 import * as fromStore from '@collections/state';
 import { SessionService } from '@shared/services/session.service';
 import { SpinnerService } from '@shared/services/spinner.service';
@@ -79,19 +79,14 @@ export class ReplyCreator implements OnInit {
     private _spinner: SpinnerService,
     private store: Store<fromStore.State>,
   ) {
-    this.createdForum$ = this.store.pipe(select(fromStore.getSuccessForum));
-    this.loading$ = this.store.pipe(select(fromStore.getLoadingForum));
+    this.createdForum$ = this.store.pipe(select(fromStore.getSuccessReplyForum));
+    this.loading$ = this.store.pipe(select(fromStore.getLoadingReplyforum));
   }
 
   ngOnInit () {
     this.buildForm();
   }
-/*
-  public id: string,
-  public reply: string,
-  public createdAt: any,
-  public forumId: string,
-  public uid: string ) {}*/
+
   onSubmit() {
     this._spinner.show('showSpinner');
     const newReply = new ReplyForum(
@@ -101,8 +96,7 @@ export class ReplyCreator implements OnInit {
       this.forumKey,
       this._auth.userId
     );
-   console.log(newReply)
-    /*this.store.dispatch( new replyforumActions.Create(newReply) );
+    this.store.dispatch( new replyForumActions.Create(newReply) );
     this.createdForum$.subscribe((created) => {
       if(created) {
         setTimeout(() => {
@@ -112,7 +106,7 @@ export class ReplyCreator implements OnInit {
         }, 1000)
       } else {
       }
-    } );*/
+    } );
   }
   close() {
     if(confirm('Any changes will be discarded?')) {

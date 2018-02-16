@@ -107,10 +107,10 @@ export class PageComponent implements OnInit, OnDestroy {
 
   onDelete(id) {
     if (confirm('Are you sure you want to delete this page and properties?')){
-      this._collections.getCommentCount(id).subscribe((comments) => {
+      this._collections.getCommentCount(id, 'pageId', 'o-t-pages-comments').subscribe((comments) => {
         const commentCount =  comments.length;
         if(commentCount > 1){
-          this._collections.deleteCollection('o-t-pages-comments', commentCount, id).subscribe((status) => {
+          this._collections.deleteCollection('o-t-pages-comments', commentCount, id, 'pageId').subscribe((status) => {
             this.deletePage(id);
           });
         } else {
@@ -271,10 +271,10 @@ export class PagesComponent implements OnInit, OnDestroy {
     if (confirm('Are you sure you want to delete this page and properties?')){
       this.deleting = false;
 
-      this._collections.getCommentCount(id).subscribe((comments) => {
+      this._collections.getCommentCount(id, 'pageId', 'o-t-pages-comments').subscribe((comments) => {
         const commentCount =  comments.length;
         if(commentCount > 1){
-          this._collections.deleteCollection('o-t-pages-comments', commentCount, id).subscribe((status) => {
+          this._collections.deleteCollection('o-t-pages-comments', commentCount, id, 'pageId').subscribe((status) => {
             this.deletePage(id);
           });
         } else {

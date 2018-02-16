@@ -1,6 +1,4 @@
-.forum .main-title {
 
-}
 .forum-user-1 {
   border-radius: 100%;
   width: 70px;
@@ -30,7 +28,7 @@
 }
  .auth-1-right {
    position: absolute;
-   right: 5px;
+   right: 35px;
    top: 20px;
  }
  .auth-1-right-1 {

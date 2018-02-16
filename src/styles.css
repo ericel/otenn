@@ -589,6 +589,8 @@ video {
   right: 10px;
   color: #006064;
   z-index: 9;
+  background: #e5e5e5;
+  padding: 10px;
 }
 pre {
   padding: 10px;

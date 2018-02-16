@@ -8,11 +8,14 @@ import { commentReducer } from '@collections/state/reducers/comment.reducer';
 import * as fromComments from '@collections/state/reducers/comment.reducer';
 import * as fromForums from '@collections/state/reducers/forum.reducer';
 import { forumReducer } from '@collections/state/reducers/forum.reducer';
+import { replyforumReducer } from '@collections/state/reducers/replyforum.reducer';
+import * as fromReplyforums from '@collections/state/reducers/replyforum.reducer';
 export interface CollectionsState  {
   collections: fromCollections.State;
   pages: fromPages.State;
   comments: fromComments.State;
   forums: fromForums.State;
+  replyforums: fromReplyforums.State;
 }
 
 export interface State extends fromStore.State {
@@ -23,7 +26,8 @@ export const reducers = {
   collections: fromCollections.collectionReducer,
   pages: fromPages.pageReducer,
   comments: fromComments.commentReducer,
-  forums: fromForums.forumReducer
+  forums: fromForums.forumReducer,
+  replyforums: fromReplyforums.replyforumReducer
 };
 
 /**
@@ -222,3 +226,41 @@ export const getSelectedForum = createSelector(
     return selectedId && entities[selectedId];
   }
 );
+/**
+ * Just like with the books selectors, we also have to compose the forumreplies
+ * reducer's and collection reducer's selectors.
+ */
+
+export const getReplyForumsEntitiesState = createSelector(
+  getCollectionsState,
+  state => state.replyforums
+);
+
+/**
+ * Adapters created with @ngrx/entity generate
+ * commonly used selector functions including
+ * getting all ids in the record set, a dictionary
+ * of the records by id, an array of records and
+ * the total number of records. This reducers boilerplate
+ * in selecting records from the entity state.
+ */
+export const getReplyForumState = createSelector(
+  getCollectionsState,
+  (state: CollectionsState) => state.replyforums
+);
+
+export const getLoadingReplyforum = createSelector(
+  getReplyForumState,
+  fromReplyforums.getLoading
+);
+export const getSuccessReplyForum = createSelector(
+  getReplyForumState,
+  fromReplyforums.getCreated
+);
+
+export const {
+  selectIds: getReplyForumIds,
+  selectEntities: getReplyForumEntities,
+  selectAll: getAllReplyForums,
+  selectTotal: getTotalReplyForums,
+} = fromReplyforums.adapter.getSelectors(getReplyForumsEntitiesState);
