@@ -1,6 +1,6 @@
 <div  #pageRef></div>
 <loading [load]="(loading$ | async)"></loading>
-<main *ngIf="page && (loading$ | async)" >
+<main *ngIf="page && collection && (loading$ | async)" >
   <div class="page">
     <mat-card>
         <mat-card-content>
@@ -41,17 +41,22 @@
             <div class="col-lg-4 content-right">
                 <app-ads-content-match></app-ads-content-match>
 
-                <mat-nav-list>
-                    <div class="display-5">Related Pages:</div>
-                    <ng-container *ngFor="let pageOf of pages; let i = index">
-                    <ng-container *ngIf="i < 5 && pageOf.id !== page.id">
-                    <a  routerLink="/collections/c/mark-_-eye-sjss/pages/{{pageOf.title | slugify }}/{{pageOf.id}}"
-                    [fragment]="pageOf.collectionKey" mat-list-item >
-                         {{pageOf.title}}
-                    </a>
-                    </ng-container>
-                  </ng-container>
-                  </mat-nav-list>
+
+                <mat-card class="mar-20" *ngIf="pages">
+                    <mat-card-header>
+                      Recent Similar Pages:
+                    </mat-card-header>
+                  <div class="clearfix li_t" *ngFor="let pageLike of pages; let i=index">
+                  <div *ngIf="i < 5 && pageLike.id !== page.id">
+                      <mat-divider></mat-divider>
+                      <a routerLink="/collections/c/{{collection.title | slugify}}/pages/{{pageLike.title | slugify}}/{{pageLike.id}}" fragment="{{pageLike.collectionKey}}">
+                      <img [src]="pageLike.avatar" [alt]="pageLike.username" class="img-thumbnail forum-user float-left" [ngStyle]="{'background-color': collection.color}">
+                        <h1 class="title h6">{{pageLike.title | shorten: '100'}}</h1>
+                        <div class="date text-muted float-right">{{pageLike.updatedAt | amTimeAgo}}</div>
+                      </a>
+                  </div>
+                  </div>
+                  </mat-card>
                   <app-ads-right></app-ads-right>
                   <div class="mar-20"></div>
                   <app-ads-right-2></app-ads-right-2>

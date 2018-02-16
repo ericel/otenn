@@ -1,76 +1,65 @@
 <main #pageRef [@myAnimation]>
-    <div class="gutter-2 row">
-      <div class="col-md-8">
+    <div class="gutter-2 main-collect row">
+      <div class="main-collect col-md-8">
           <ng-container *ngIf="forum_view">
             <mat-card class="text-center" *ngIf="collection">
-              <h1>Welcome to The <strong class="text-primary">{{collection.title | ucfirst}}</strong> Collections Forums</h1>
+                <app-share [content]="collection"></app-share>
+              <h1><strong class="text-primary">{{collection.title | ucfirst}}</strong> Collections Forums</h1>
               <p [innerHTML]="collection.description"></p>
               <p>If your question is about <strong> {{collection.title}}</strong>, the following forums may be better equipped to answer your questions!</p>
               <div>
                   <button mat-button color="accent" (click)="onNewThread()">New Topic</button>
-                  <loading [load]="(loading$ | async)"></loading>
                 </div>
             </mat-card>
-            <div class="mar-30" *ngIf="forums && forums.length < 1">
-                <div class="display-5 text-center">
-                   <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
-                   <div>No Pages Yet! Be the First!</div>
-                   <a routerLink="/collections/addpage">Start A New Thread</a>
-                </div>
-             </div>
-
-             <ng-container  *ngIf="forums  && (loading$ | async)">
-             <mat-card class="forums nopadding mar-20"  *ngFor="let forum of forums">
-
-                <mat-nav-list  >
-                    <mat-list-item >
-                        <button class="menu-button" mat-icon-button [matMenuTriggerFor]="forumMenu">
-                            <mat-icon>more_vert</mat-icon>
-                          </button>
-
-                        <mat-menu #forumMenu="matMenu" xPosition="before">
-                            <div *ngIf="_auth.user | async; then authenticated else guest"></div>
-                            <ng-template #guest>
-                               <a mat-menu-item>Report</a>
-                            </ng-template>
-                            <ng-template #authenticated>
-                              <ng-container *ngIf="_auth.user | async as user">
-                                  <a mat-menu-item>Report</a>
-                                  <a mat-menu-item *ngIf=" user.uid === forum.uid" routerLink="/collections/editforum/{{forum.title | slugify}}"
-                                  [queryParams]="{ key: forum.id}" [fragment]="forum.collectionKey">Edit forum</a>
-                                  <a mat-menu-item *ngIf=" user.uid === forum.uid" (click)="onDelete(forum.id)">Delete</a>
-                              </ng-container>
-                            </ng-template>
-                           </mat-menu>
-                       <a  routerLink="{{forum.title | slugify}}/{{forum.id}}" [fragment]="forum.collectionKey">
-                        <h3 class="h4"> {{forum.title | ucfirst}}
-                        </h3>
-                       <div [innerHTML]="forum.description | shorten:'200': '..'"></div>
-                       <div class="row">
-                          <div class="col-md-4">
-                            <small>Thread By <strong>{{forum.username}}</strong></small>
-                          </div>
-                          <div class="col-md-4">
-                             {{forum.updatedAt | amTimeAgo}}
-                          </div>
-                          <div class="col-md-4 text-right">
-                            88 replies
-                          </div>
+            <loading [load]="(loading$ | async)"></loading>
+            <ng-container *ngIf="forums && collection">
+                <section *ngIf="forums.length > 0; then forumsIs else noforums"></section>
+                <ng-template #noforums>
+                    <div class="mar-30" >
+                        <div class="display-5 text-center">
+                           <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+                           <div>No Pages Yet! Be the First!</div>
+                           <a (click)="onNewThread()">Start A New Thread</a>
                         </div>
-                       </a>
-                    </mat-list-item>
-                  </mat-nav-list>
-             </mat-card>
+                     </div>
+                </ng-template>
+                <ng-template #forumsIs>
+                    <mat-card class="forums nopadding mar-20"  *ngFor="let forum of forums">
+
+                        <mat-nav-list  >
+                            <mat-list-item >
+                               <a  routerLink="{{forum.title | slugify}}/{{forum.id}}" [fragment]="forum.collectionKey">
+                                <h3 class="h4"> {{forum.title | ucfirst}}
+                                </h3>
+                               <div [innerHTML]="forum.description | shorten:'200': '..'"></div>
+                               <div class="row">
+                                  <div class="col-md-4">
+                                    <small>Thread By <strong>{{forum.username}}</strong></small>
+                                  </div>
+                                  <div class="col-md-4">
+                                     {{forum.updatedAt | amTimeAgo}}
+                                  </div>
+                                  <div class="col-md-4 text-right">
+                                    88 replies
+                                  </div>
+                                </div>
+                               </a>
+                            </mat-list-item>
+                          </mat-nav-list>
+                     </mat-card>
+                </ng-template>
             </ng-container>
+
           </ng-container>
           <ng-container *ngIf="forum_new">
            <forum-creator (newthread)="newThread($event)" [collection]="collection"></forum-creator>
           </ng-container>
       </div>
-      <div class="col-md-4">
+      <div class="main-collect col-md-4">
           <app-ads-content-match></app-ads-content-match>
-          <!--<recent-pages-card *ngIf="collection" [collectionKey]="collectionKey" [limit]="3"></recent-pages-card>-->
-          <app-ads-right></app-ads-right>
+          <div class="mar-20">
+              <app-ads-right></app-ads-right>
+          </div>
           <app-ads-right-2></app-ads-right-2>
       </div>
     </div>

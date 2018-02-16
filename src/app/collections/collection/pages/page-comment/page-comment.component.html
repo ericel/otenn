@@ -39,41 +39,48 @@
   </ng-template>
 
 </div>
-<!--<ng-container class="mar-30" *ngIf="comments && (comments | async).length < 1">
-    <div class="display-5 text-center">
-        <mat-card class="mar-20">
-          <h1>No Comments yet! Be the first.</h1>
-        </mat-card>
-      </div>
 
-</ng-container>-->
 <loading-comments [load]="(loading$ | async)"></loading-comments>
-<ng-container *ngIf="comments && (loading$ | async)">
-
-  <div class="clearfix mar-20 comms" *ngFor="let comment of comments">
-
-    <div class="float-left">
-      <a routerLink=''><img [src]='comment.avatar' [alt]='comment.username' class="img-thumbnail"></a>
-      <!--<div class="d-none d-md-block"><a routerLink=''>{{comment.username}}</a></div>-->
-    </div>
-    <div class="float-right">
-       <h3 class="h5"><a routerLink="">{{comment.username}}</a></h3>
-       <p [innerHTML]="comment.comment"></p>
-         <small class="date">{{comment.createdAt  | amTimeAgo}}</small>
-       <div class="row">
-         <div class="col-sm-6">
-            <div class="vote-top">
-                <button mat-icon-button><mat-icon  class="upvote">thumb_up</mat-icon><span class="count">2226</span></button>
-                <button mat-icon-button><mat-icon  class="downvote">thumb_down</mat-icon><span class="count">-2226</span></button>
+<ng-container *ngIf="comments">
+    <section *ngIf="comments.length > 0; then commentsIs else nocomments"></section>
+    <ng-template #nocomments>
+        <div class="mar-30" >
+            <div class="display-5 text-center">
+               <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+               <div>No Comments Yet! Be the First!</div>
             </div>
          </div>
-         <ng-container *ngIf="_auth.user | async as user">
-         <div *ngIf="user.uid === comment.uid" class="col-sm-6 text-right">
-             <button class="delete_btn" mat-icon-button (click)="onDelete(comment.id)"><mat-icon>delete</mat-icon></button>
-          </div>
-        </ng-container>
-       </div>
-    </div>
-  </div>
+    </ng-template>
+    <ng-template #commentsIs>
+        <ng-container *ngIf="comments && (loading$ | async)">
 
+            <div class="clearfix mar-20 comms" *ngFor="let comment of comments">
+
+              <div class="float-left">
+                <a routerLink=''><img [src]='comment.avatar' [alt]='comment.username' class="img-thumbnail"></a>
+                <!--<div class="d-none d-md-block"><a routerLink=''>{{comment.username}}</a></div>-->
+              </div>
+              <div class="float-right">
+                 <h3 class="h5"><a routerLink="">{{comment.username}}</a></h3>
+                 <p [innerHTML]="comment.comment"></p>
+                   <small class="date">{{comment.createdAt  | amTimeAgo}}</small>
+                 <div class="row">
+                   <div class="col-sm-6">
+                      <div class="vote-top">
+                          <button mat-icon-button><mat-icon  class="upvote">thumb_up</mat-icon><span class="count">2226</span></button>
+                          <button mat-icon-button><mat-icon  class="downvote">thumb_down</mat-icon><span class="count">-2226</span></button>
+                      </div>
+                   </div>
+                   <ng-container *ngIf="_auth.user | async as user">
+                   <div *ngIf="user.uid === comment.uid" class="col-sm-6 text-right">
+                       <button class="delete_btn" mat-icon-button (click)="onDelete(comment.id)"><mat-icon>delete</mat-icon></button>
+                    </div>
+                  </ng-container>
+                 </div>
+              </div>
+            </div>
+
+          </ng-container>
+    </ng-template>
 </ng-container>
+

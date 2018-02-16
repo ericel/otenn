@@ -19,7 +19,6 @@ import { ForumsComponent } from './collection/forums/forums.component';
 import { PhotosComponent } from './collection/photos/photos.component';
 import { VideosComponent } from './collection/videos/videos.component';
 import { EditpageComponent } from './start/addpage/editpage/editpage.component';
-import { RecentPages } from '@collections/shared/recent-collection-pages';
 import { ForumComponent } from './collection/forums/forum/forum.component';
 
 import { EffectsModule } from '@ngrx/effects';
@@ -64,12 +63,10 @@ import { ForumReplyComponent } from './collection/forums/forum/forum-reply/forum
     PhotosComponent,
     VideosComponent,
     EditpageComponent,
-    RecentPages,
     ForumComponent,
     PageCommentComponent,
     ...FORUM_ADDONS,
-    DashboardComponent,
-    ForumReplyComponent
+    DashboardComponent
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

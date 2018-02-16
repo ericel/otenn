@@ -3,14 +3,14 @@ import { AuthService } from '../../../../auth/state/auth.service';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Store, select } from '@ngrx/store';
-import * as replyForumActions from '@collections/state/actions/replyforum.actions';
+import * as forumActions from '@collections/state/actions/forum.actions';
 import * as fromStore from '@collections/state';
 import { SessionService } from '@shared/services/session.service';
 import { SpinnerService } from '@shared/services/spinner.service';
 import { Observable } from 'rxjs/Observable';
-import { Forum, ReplyForum } from '@collections/state/models/forum.model';
+import { Forum } from '@collections/state/models/forum.model';
 @Component ({
-  selector: 'reply-creator',
+  selector: 'forum-editor',
   template:`
   <mat-card class='w-100 host animated shake'>
   <button mat-icon-button (click)="close()" class="menu-button" color="warn"><mat-icon>close</mat-icon></button>
@@ -19,28 +19,45 @@ import { Forum, ReplyForum } from '@collections/state/models/forum.model';
       <span class='auth'>As {{user.displayName.username}}</span>
    </div>
     <form [formGroup]="forumForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class='w-100'>
+      <input matInput placeholder='Your Question'
+      formControlName="title"
+      #title
+      minlength="10"
+      maxlength="500"
+      required
+      >
+      <mat-hint align="end">{{title.value?.length || 0}}/150</mat-hint>
+    </mat-form-field>
+    <div *ngIf="!forumForm.get('title').valid && forumForm.get('title').touched" class="alert alert-danger">
+      <span *ngIf="forumForm.get('title').errors['nameIsForbidden']">Curse words Not Allowed</span>
+      <span *ngIf="forumForm.get('title').errors['required']
+       || forumForm.get('title').errors['maxlength'] || forumForm.get('title').errors['minlength']">
+          Forum Title is required and must be between 10 to 150 characters
+       </span>
+    </div>
     <mat-form-field class='w-100' >
-      <textarea matInput placeholder='More details on your reply'
-      formControlName="reply"
-      #reply
+      <textarea matInput placeholder='More details on your question'
+      formControlName="description"
+      #description
       minlength="10"
       maxlength="500"
       required
       ></textarea>
-      <mat-hint align="end">{{reply.value?.length || 0}}/500</mat-hint>
+      <mat-hint align="end">{{description.value?.length || 0}}/500</mat-hint>
     </mat-form-field>
-    <div *ngIf="!forumForm.get('reply').valid && forumForm.get('reply').touched" class="alert alert-danger">
-    <span *ngIf="forumForm.get('reply').errors['nameIsForbidden']">Curse words Not Allowed</span>
-    <span *ngIf="forumForm.get('reply').errors['required']
-     || forumForm.get('reply').errors['maxlength'] || forumForm.get('reply').errors['minlength']">
-        Reply is required and must be between 10 to 150 characters
+    <div *ngIf="!forumForm.get('description').valid && forumForm.get('description').touched" class="alert alert-danger">
+    <span *ngIf="forumForm.get('description').errors['nameIsForbidden']">Curse words Not Allowed</span>
+    <span *ngIf="forumForm.get('description').errors['required']
+     || forumForm.get('description').errors['maxlength'] || forumForm.get('description').errors['minlength']">
+        Forum description is required and must be between 10 to 150 characters
      </span>
   </div>
     <button mat-raised-button color='primary' class='float-right'
      type='submit'
      [disabled]="!forumForm.valid">
-     <app-spinner name="showeSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
-           Reply To Thread
+     <app-spinner name="showSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
+          Edit Thread
     </button>
     </form>
     <div class='clearfix'></div>
@@ -66,9 +83,10 @@ import { Forum, ReplyForum } from '@collections/state/models/forum.model';
   }
   `]
 })
-export class ReplyCreator implements OnInit {
+export class ForumEditor implements OnInit {
+  @Input() collection;
   @Input() forum;
-  @Output() newreply = new EventEmitter<boolean>();
+  @Output() closeEdit = new EventEmitter<boolean>();
   forumForm: FormGroup;
   forbiddenUsernames = ['fuck', 'bitch'];
   loading$: Observable<boolean>;
@@ -79,8 +97,8 @@ export class ReplyCreator implements OnInit {
     private _spinner: SpinnerService,
     private store: Store<fromStore.State>,
   ) {
-    this.createdForum$ = this.store.pipe(select(fromStore.getSuccessReplyForum));
-    this.loading$ = this.store.pipe(select(fromStore.getLoadingReplyforum));
+    this.createdForum$ = this.store.pipe(select(fromStore.getSuccessForum));
+    this.loading$ = this.store.pipe(select(fromStore.getLoadingForum));
   }
 
   ngOnInit () {
@@ -89,18 +107,24 @@ export class ReplyCreator implements OnInit {
 
   onSubmit() {
     this._spinner.show('showSpinner');
-    const newReply = new ReplyForum(
-      this._session.generate(),
-      this.forumForm.value.reply,
+    const newThread = new Forum(
+      this.forum.id,
+      this.forumForm.value.title,
+      this.forumForm.value.description,
+      'Published',
+      this.collectionTitle,
+      'Forums',
+      this.forum.createdAt,
       this._session.getCurrentTime(),
-      this.forumKey,
+      this.collectionKey,
       this._auth.userId
     );
-    this.store.dispatch( new replyForumActions.Create(newReply) );
+
+    this.store.dispatch( new forumActions.Update(this.forum.id, newThread) );
     this.createdForum$.subscribe((created) => {
       if(created) {
         setTimeout(() => {
-          this.newreply.next(true);
+          this.closeEdit.next(true);
           this.forumForm.reset();
          this._spinner.hideAll();
         }, 1000)
@@ -108,9 +132,9 @@ export class ReplyCreator implements OnInit {
       }
     } );
   }
-  close() {
+close() {
     if(confirm('Any changes will be discarded?')) {
-      this.newreply.next(true);
+      this.closeEdit.next(true);
       this.forumForm.reset();
     }
 
@@ -124,7 +148,13 @@ export class ReplyCreator implements OnInit {
 
   private buildForm() {
     this.forumForm = new FormGroup({
-      'reply': new FormControl(null, [
+      'title': new FormControl(this.forum.title, [
+         Validators.required,
+         Validators.minLength(10),
+         Validators.maxLength(150),
+         this.forbiddenNames.bind(this)
+        ]),
+      'description': new FormControl(this.forum.description, [
           Validators.required,
           Validators.minLength(4),
           Validators.maxLength(500),
@@ -133,11 +163,11 @@ export class ReplyCreator implements OnInit {
     });
    }
 
-   get forumKey() {
-     return this.forum.id;
+   get collectionKey() {
+     return this.collection.id;
    }
 
-   get forumTitle() {
-     return this.forum.title;
+   get collectionTitle() {
+     return this.collection.title;
    }
 }

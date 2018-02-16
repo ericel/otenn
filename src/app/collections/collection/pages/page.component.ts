@@ -50,6 +50,7 @@ export class PageComponent implements OnInit, OnDestroy {
   sub: Subscription;
   collectionKey: string;
   collectionTitle: string;
+  collection;
   loading$: Observable<boolean>;
 
   @ViewChild('pageRef') pageRef: ElementRef;
@@ -74,11 +75,15 @@ export class PageComponent implements OnInit, OnDestroy {
     this.sub = this._route.fragment.subscribe(
       (collectionkey: string) => {
       this.collectionKey = collectionkey;
+      this._collections.getCollection(collectionkey).subscribe(
+        (collection: Collection) => {
+            this.collection = collection;
+        });
        this.collections = this.store.select(fromStore.getAllPages);
         this.store.dispatch(  new pageActions.Query() );
         this.collections.subscribe(data => {
           this.pages =  data.filter((item) => {
-             return item.collectionKey === collectionkey && item.status !== 'Unpublished';
+             return item.collectionKey === collectionkey && item.status !== 'Unpublished' && item.status !== 'Draft';
            });
           this._route.params.subscribe((section: Params) => {
             const pageData =  data.filter((item) => {
@@ -132,67 +137,72 @@ export class PageComponent implements OnInit, OnDestroy {
   providers: [UcFirstPipe],
   template: `
   <div  #pageRef></div>
-  <section  *ngIf="pages && (pages.length > 0) && (loading$ | async)">
-  <div  class="main-collect row" >
-  <div  class="main-collect pag-1 col-md-4 mar-20" *ngFor="let page of pages">
-  <a routerLink="{{page.title | slugify }}/{{page.id}}"
-  [fragment]="page.collectionKey"  mat-raised-button class="checkit"> Check it</a>
-    <loading [load]="deleting" class="card-loader"></loading>
-        <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #pageMenu="matMenu" xPosition="before">
-      <div *ngIf="_auth.user | async; then authenticated else guest"></div>
-      <ng-template #guest>
-         <a mat-menu-item>Report</a>
-      </ng-template>
-      <ng-template #authenticated>
-        <ng-container *ngIf="_auth.user | async as user">
-            <a mat-menu-item>Report</a>
-            <a mat-menu-item *ngIf=" user.uid === page.uid" routerLink="/collections/editpage/{{page.title | slugify}}"
-            [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
-            <a mat-menu-item *ngIf=" user.uid === page.uid" (click)="onDelete(page.id)">Delete</a>
-        </ng-container>
-      </ng-template>
-     </mat-menu>
-      <mat-card class="collection-card">
-          <img mat-card-image mat-elevation-z2 [src]="page.photoURL" alt="{{page.title}}">
-          <div class="collection-img">
-            <img [src]="page.avatar" class="img-thumbnail" [alt]="page.username">
+  <loading [load]="(loading$ | async)"></loading>
+  <ng-container *ngIf="pages">
+     <section *ngIf="pages.length > 0; then pagesIs else nopages"></section>
+     <ng-template #nopages>
+      <div class="row mar-30">
+        <div class="col-md-8">
+          <div class="display-5 text-center">
+              <mat-card class="mar-20">
+                <h1>In this collection, you can post blogs, forums, photos, videos on this topic.</h1>
+              </mat-card>
+              <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
+              <div>No Pages Yet! Be the First!</div>
+              <a routerLink="/collections/addpage"
+              [queryParams]="{allow:'1'}"
+              [fragment]="collectionKey">Create a page</a>
+            </div>
         </div>
-          <mat-card-title class="collection-name">
-              {{page.collection}}
-          </mat-card-title>
-          <mat-card-subtitle class="text-muted">
-              {{page.username}}
-          </mat-card-subtitle>
-          <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.id}}"
-          [fragment]="page.collectionKey">{{page.title | shorten: 100:'..'}}</a></mat-card-title>
-        </mat-card>
-</div>
-       </div>
-       <app-ads-content-match></app-ads-content-match>
-</section>
-
-
-<loading [load]="(loading$ | async)"></loading>
-<div class="row mar-30" *ngIf="pages && pages.length==0">
-   <div class="col-md-8">
-    <div class="display-5 text-center">
-        <mat-card class="mar-20">
-          <h1>In this collection, you can post blogs, forums, photos, videos on this topic.</h1>
-        </mat-card>
-        <img class="img-thumbnails no-content" src="./assets/forums.png" alt="Not Pages Yet">
-        <div>No Pages Yet! Be the First!</div>
-        <a routerLink="/collections/addpage"
-        [queryParams]="{allow:'1'}"
-        [fragment]="collectionKey">Create a page</a>
+        <div class="col-md-4">
+            <app-ads-right></app-ads-right>
+        </div>
       </div>
-   </div>
-   <div class="col-md-4">
-      <app-ads-right></app-ads-right>
-   </div>
-</div>
+     </ng-template>
+     <ng-template #pagesIs>
+     <section  *ngIf="pages && (loading$ | async)">
+     <div  class="main-collect row" >
+     <div  class="main-collect pag-1 col-md-4 mar-20" *ngFor="let page of pages">
+     <a routerLink="{{page.title | slugify }}/{{page.id}}"
+     [fragment]="page.collectionKey"  mat-raised-button class="checkit"> Check it</a>
+       <loading [load]="deleting" class="card-loader"></loading>
+           <button class="menu-button" mat-icon-button [matMenuTriggerFor]="pageMenu">
+           <mat-icon>more_vert</mat-icon>
+         </button>
+         <mat-menu #pageMenu="matMenu" xPosition="before">
+         <div *ngIf="_auth.user | async; then authenticated else guest"></div>
+         <ng-template #guest>
+            <a mat-menu-item>Report</a>
+         </ng-template>
+         <ng-template #authenticated>
+           <ng-container *ngIf="_auth.user | async as user">
+               <a mat-menu-item>Report</a>
+               <a mat-menu-item *ngIf=" user.uid === page.uid" routerLink="/collections/editpage/{{page.title | slugify}}"
+               [queryParams]="{ key: page.id}" [fragment]="page.collectionKey">Edit Page</a>
+               <a mat-menu-item *ngIf=" user.uid === page.uid" (click)="onDelete(page.id)">Delete</a>
+           </ng-container>
+         </ng-template>
+        </mat-menu>
+         <mat-card class="collection-card">
+             <img mat-card-image mat-elevation-z2 [src]="page.photoURL" alt="{{page.title}}">
+             <div class="collection-img">
+               <img [src]="page.avatar" class="img-thumbnail" [alt]="page.username">
+           </div>
+             <mat-card-title class="collection-name">
+                 {{page.collection}}
+             </mat-card-title>
+             <mat-card-subtitle class="text-muted">
+                 {{page.username}}
+             </mat-card-subtitle>
+             <mat-card-title><a routerLink="{{page.title | slugify }}/{{page.id}}"
+             [fragment]="page.collectionKey">{{page.title | shorten: 100:'..'}}</a></mat-card-title>
+            </mat-card>
+         </div>
+          </div>
+          <app-ads-content-match></app-ads-content-match>
+   </section>
+     </ng-template>
+  </ng-container>
   `,
   styleUrls: ['./page.component.css'],
   animations: [

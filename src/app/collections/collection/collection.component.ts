@@ -160,29 +160,34 @@ export class CollectionComponent implements OnInit, OnDestroy {
 </mat-menu>
   <div class="card-content afix" >
      <mat-list>
-          <h1 class="h4 text-center"><a class="title" routerLink="/collections/c/{{collection.title | slugify}}/pages" fragment="{{collection.id}}"
+          <h1 class="h4 text-center"><a class="title"
+          routerLink="/collections/c/{{collection.title | slugify}}/pages" fragment="{{collection.id}}"
             pageScroll href="#home">
           <i class="fa fa-home" aria-hidden="true"></i>
               {{collection.title | uppercase | shorten: 20:''}}
           </a>
         </h1>
             <mat-divider></mat-divider>
-              <a routerLink="pages" mat-list-item routerLinkActive="active" class="text-center" fragment="{{collection.id}}" (click)="onRoute($event)" >
+              <a routerLink="/collections/c/{{collection.title | slugify}}/pages" mat-list-item
+              routerLinkActive="active" class="text-center" fragment="{{collection.id}}" (click)="onRoute($event)" >
                  <mat-icon mat-list-icon>pages</mat-icon>
                    <h4 mat-line> Pages</h4>
                       <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-              <a routerLink="forums" mat-list-item routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
+              <a routerLink="/collections/c/{{collection.title | slugify}}/forums" mat-list-item
+              routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                  <mat-icon mat-list-icon>forums</mat-icon>
                   <h4 mat-line> Forums</h4>
                     <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-              <a routerLink="videos" mat-list-item routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
+              <a routerLink="/collections/c/{{collection.title | slugify}}/videos" mat-list-item
+              routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                    <mat-icon mat-list-icon>photo_library</mat-icon>
                    <h4 mat-line> Videos</h4>
                     <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-               <a routerLink="photos" mat-list-item routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
+               <a routerLink="/collections/c/{{collection.title | slugify}}/photos" mat-list-item
+               routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                      <mat-icon mat-list-icon>video_library</mat-icon>
                       <h4 mat-line> Photos</h4>
                   <p mat-line> {{collection.createdAt | date}} </p>

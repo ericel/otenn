@@ -47,6 +47,7 @@ sub: Subscription;
 loading$: Observable<boolean>;
 forums; forum;
 reply_new = false;
+edit_forum = false;
   constructor(
     private _collections: CollectionsService,
     private _route: ActivatedRoute,
@@ -119,7 +120,6 @@ reply_new = false;
    if(confirm('Are you sure to delete thread?')){
     this._collections.getCommentCount(id, 'forumId', 'o-t-forum-replies').subscribe((comments) => {
       const commentCount =  comments.length;
-      console.log(commentCount)
       if(commentCount > 1){
         this._collections.deleteCollection('o-t-forum-replies', commentCount, id, 'forumId').subscribe((status) => {
           this.deletePage(id);
@@ -136,7 +136,17 @@ reply_new = false;
       this.store.dispatch( new forumActions.Delete(id));
     }, 2000)
   }
+
+  editForum() {
+    this.edit_forum = !this.edit_forum;
+  }
+
+  onCloseEdit() {
+    this.edit_forum = false;
+  }
   ngOnDestroy () {
     this.sub.unsubscribe();
   }
+
+
 }

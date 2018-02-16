@@ -4,6 +4,7 @@ import { Store, select } from '@ngrx/store';
 import * as replyForumActions from '@collections/state/actions/replyforum.actions';
 import * as fromStore from '@collections/state';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from '../../../../../auth/state/auth.service';
 
 @Component({
   selector: 'app-forum-reply',
@@ -12,13 +13,29 @@ import { Observable } from 'rxjs/Observable';
  <ng-container *ngIf="replyforums && collection">
  <section *ngIf="replyforums.length > 0; then replies else noreplies"></section>
  <ng-template #replies>
-    <div class="card mar-20" *ngFor="let replyforum of replyforums">
+    <div class="card mar-20 reply-forums" *ngFor="let replyforum of replyforums">
     <div class="connector" [ngStyle]="{'background-color': collection.color}"></div>
     <div class="card-header">
             <img  [src]='replyforum.avatar' [alt]='replyforum.username'
             class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
             <span >{{replyforum.username}} Said:</span>
             <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
+
+            <button class="menu-button" mat-icon-button [matMenuTriggerFor]="forumMenu">
+            <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #forumMenu="matMenu" xPosition="before">
+                <div *ngIf="_auth.user | async; then authenticated else guest"></div>
+                <ng-template #guest>
+                   <a mat-menu-item>Report</a>
+                </ng-template>
+                <ng-template #authenticated>
+                  <ng-container *ngIf="_auth.user | async as user">
+                      <a mat-menu-item>Report</a>
+                      <a mat-menu-item *ngIf=" user.uid === replyforum.uid" (click)="onDelete(replyforum.id)">Delete</a>
+                  </ng-container>
+                </ng-template>
+            </mat-menu>
     </div>
     <div class="card-block">
       <div [innerHTML]="replyforum.reply"></div>
@@ -48,6 +65,7 @@ loading$: Observable<boolean>;
 replyforums;
   constructor(
     private store: Store<fromStore.State>,
+    public _auth: AuthService
   ) {
     this.loading$ = this.store.pipe(select(fromStore.getLoadingReplyforum));
   }
@@ -65,5 +83,9 @@ replyforums;
   onReplyButton() {
     this.replynew.emit();
 
+  }
+
+  onDelete(id) {
+    this.store.dispatch(new replyForumActions.Delete(id));
   }
 }
