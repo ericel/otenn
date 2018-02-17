@@ -36,6 +36,7 @@ import { DashboardComponent } from './collection/dashboard/dashboard.component';
 import { ForumEffects } from '@collections/state/effects/forum.effects';
 import { ReplyForumEffects } from '@collections/state/effects/replyforum.effects';
 import { ForumReplyComponent } from './collection/forums/forum/forum-reply/forum-reply.component';
+import { DASHBOARD_COMPONENTS } from '@collections/collection/dashboard/cards';
 
 
 @NgModule({
@@ -65,8 +66,9 @@ import { ForumReplyComponent } from './collection/forums/forum/forum-reply/forum
     EditpageComponent,
     ForumComponent,
     PageCommentComponent,
+    DashboardComponent,
     ...FORUM_ADDONS,
-    DashboardComponent
+    ...DASHBOARD_COMPONENTS,
   ],
   providers: [ CollectionsService, CanDeactivateGuard, NgMasonryGridService]
 

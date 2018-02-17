@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import { Page } from '@collections/state/models/page.model';
 import { Store, select } from '@ngrx/store';
-import * as pageActions from '@collections/state/actions/page.actions';
+import * as collectionActions from '@collections/state/actions/collection.actions';
 import * as fromStore from '@collections/state';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Title, Meta } from '@angular/platform-browser';
+import { Collection } from '@collections/state/models/collection.model';
 @Component({
   selector: 'app-dashboard',
   templateUrl:'./dashboard.component.html',
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dataSource;
   data;
   pages;
+  collection;
   sub: Subscription;
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
@@ -37,39 +39,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
       { name: 'keywords', content: 'Collection Admins Dashboard'},
       { name: 'description', content: 'Collection Admins Dashboard' }
     ]);
-
     this.sub = this._route.fragment.subscribe(
       (collectionKey: string) => {
-       this.pages = this.store.select(fromStore.getAllPages);
-        this.store.dispatch(  new pageActions.Query() );
-        this.pages.subscribe(pagesAll => {
-        this.data = pagesAll.filter((item) => {
-          return item.collectionKey === collectionKey;
-        });
-          this.dataSource = new MatTableDataSource(this.data);
-       });
-   });
-  }
+       const collections = this.store.select(fromStore.getAllCollections);
+        this.store.dispatch(  new collectionActions.Query() );
+       if(collectionKey) {
+        collections.subscribe(data => {
+          this.collection =  data.filter((item) => {
+             return item.id === collectionKey;
+           });
+          this.collection = this.collection[0];
 
-
-  approve(id, status){
-    if(status === 'Unpublished') {
-      const con = confirm('Are you sure you want to unpublish this page?')
-    }
-    this.pages.subscribe(pagesAll => {
-      const page = pagesAll.filter((item) => {
-        return item.id === id;
+         });
+       }
       });
-     if(page) {
-      const newPage = new Page(page[0].id, page[0].title, page[0].description, page[0].page, page[0].photoURL, status,
-         page[0].collection, page[0].component,
-         page[0].createdAt, page[0].updatedAt, page[0].collectionKey, page[0].uid);
-         this.store.dispatch( new pageActions.Update(id, newPage) );
-
-
-     }
-
-    });
 
   }
 

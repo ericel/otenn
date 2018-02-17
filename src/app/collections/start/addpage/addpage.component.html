@@ -84,7 +84,7 @@
                             {{description | shorten: 100:'..'}}
                         </p>
                         <a
-                         routerLink="/collections/c/{{section | slugify }}/{{component | slugify }}/{{title | slugify }}/{{$key}}"
+                         routerLink="/collections/{{section | slugify }}/{{component | slugify }}/{{title | slugify }}/{{$key}}"
                          fragment="{{collectionKey}}" mat-raised-button color="accent" class="w-100 padding-10">View Page</a>
                       </mat-card-content>
                     </mat-card>

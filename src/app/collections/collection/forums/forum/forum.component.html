@@ -61,7 +61,7 @@
       <div class="clearfix li_t" *ngFor="let forumLike of forums ; let i=index">
        <div *ngIf="i < 5 && forumLike.id !== forum.id">
           <mat-divider></mat-divider>
-          <a routerLink="/collections/c/collection/forums/{{forumLike.title | slugify}}/{{forumLike.id}}" fragment="{{forumLike.collectionKey}}">
+          <a routerLink="/collections/collection/forums/{{forumLike.title | slugify}}/{{forumLike.id}}" fragment="{{forumLike.collectionKey}}">
           <img [src]="forum.avatar" [alt]="forum.username" class="img-thumbnail forum-user float-left" [ngStyle]="{'background-color': collection.color}">
             <h1 class="title h6">{{forumLike.title | shorten: '100'}}</h1>
             <div class="date text-muted float-right">{{forumLike.updatedAt | amTimeAgo}}</div>

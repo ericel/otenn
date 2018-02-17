@@ -105,7 +105,7 @@ export class ShareComponent implements OnInit {
        id = '';
        collectionkey = this.id;
     }
-    return 'https://otenn-85c21.firebaseapp.com' + '/collections/c/'
+    return 'https://otenn-85c21.firebaseapp.com' + '/collections/'
     + collection +  component  + this._slugify.transform(this.title) + '/' + id + '#' + collectionkey;
   }
 }

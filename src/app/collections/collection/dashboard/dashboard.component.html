@@ -1,78 +1,41 @@
-<div *ngIf="data">
+<div>
     <mat-tab-group>
         <mat-tab  label="Pages">
-            <ng-container *ngIf="data.length > 0 then  pages else noPages"></ng-container>
-          <ng-template #pages>
-          <div class="card mar-30">
-             <div class="card-block">
-                <div class="table-container mat-elevation-z8">
-                    <div class="table-header">
-                      <mat-form-field>
-                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                      </mat-form-field>
-                    </div>
-
-                    <mat-table #table [dataSource]="dataSource">
-
-                      <!-- id Column -->
-                      <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
-                      </ng-container>
-
-                      <!-- title Column -->
-                      <ng-container matColumnDef="title">
-                        <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
-                        <mat-cell *matCellDef="let element"><a routerLink="/collections/c/{{element.collection | slugify }}/pages/{{element.title | slugify }}/{{element.id}}"
-                          [fragment]="element.collectionKey">{{element.title}}</a>  </mat-cell>
-                      </ng-container>
-
-                      <!-- photo Column -->
-                      <ng-container matColumnDef="photo">
-                        <mat-header-cell *matHeaderCellDef> Photo </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> <img [src]="element.photoURL" class="img-thumbnail" [alt]="element.title"> </mat-cell>
-                      </ng-container>
-
-                      <!-- status Column -->
-                      <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-                          <mat-cell *matCellDef="let element">
-                              <ng-container  *ngIf="element.status !== 'Draft' && element.status !== 'Published' ">
-                                <button mat-button (click)="approve(element.id, 'Published')" color="warn">Click to Approve </button>
-                             </ng-container>
-                             <ng-container  *ngIf="element.status === 'Draft'">
-                                <button mat-button disabled (click)="approve(element.id)">Still Draft</button>
-                             </ng-container>
-                             <ng-container  *ngIf="element.status === 'Published'">
-                                <button mat-button  color="primary" (click)="approve(element.id, 'Unpublished')">Unapproved Page</button>
-                             </ng-container>
-                          </mat-cell>
-                      </ng-container>
-
-                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                    </mat-table>
-                  </div>
-             </div>
-          </div>
-        </ng-template>
-        <ng-template #noPages>
-            no pages to manage yet!
-        </ng-template>
+            <ng-template mat-tab-label>
+                <mat-icon>pages</mat-icon><span> Pages</span>
+              </ng-template>
+          <pages-dashboard *ngIf="collection" [collection]="collection"></pages-dashboard>
         </mat-tab>
         <mat-tab label="Forums">
+            <ng-template mat-tab-label>
+                <mat-icon>forums</mat-icon><span> Forums</span>
+              </ng-template>
             <div class="mar-30">
-                Forums
+                <forums-dashboard *ngIf="collection" [collection]="collection"></forums-dashboard>
             </div>
         </mat-tab>
         <mat-tab label="Videos">
+            <ng-template mat-tab-label>
+                <mat-icon>video_library</mat-icon><span> Videos</span>
+              </ng-template>
             <div class="mar-30">
                 Videos
             </div>
         </mat-tab>
         <mat-tab label="Photos">
+            <ng-template mat-tab-label>
+                <mat-icon>photo_library</mat-icon><span> Photos</span>
+              </ng-template>
             <div class="mar-30">
                 Photos
+            </div>
+        </mat-tab>
+        <mat-tab label="Logs">
+            <ng-template mat-tab-label>
+                <mat-icon>data_usage</mat-icon><span> Admin Logs</span>
+              </ng-template>
+            <div class="mar-30">
+                Logs
             </div>
         </mat-tab>
       </mat-tab-group>

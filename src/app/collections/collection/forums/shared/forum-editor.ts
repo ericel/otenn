@@ -56,7 +56,7 @@ import { Forum } from '@collections/state/models/forum.model';
     <button mat-raised-button color='primary' class='float-right'
      type='submit'
      [disabled]="!forumForm.valid">
-     <app-spinner name="showSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
+     <app-spinner name="editSpinner" [(show)]="editSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
           Edit Thread
     </button>
     </form>
@@ -91,7 +91,7 @@ export class ForumEditor implements OnInit {
   forbiddenUsernames = ['fuck', 'bitch'];
   loading$: Observable<boolean>;
   createdForum$: Observable<boolean>;
-  showSpinner: any;
+  editSpinner: any;
   constructor(
     public _auth: AuthService,
     private _session: SessionService,
@@ -107,7 +107,7 @@ export class ForumEditor implements OnInit {
   }
 
   onSubmit() {
-    this._spinner.show('showSpinner');
+    this._spinner.show('editSpinner');
     const newThread = new Forum(
       this.forum.id,
       this.forumForm.value.title,

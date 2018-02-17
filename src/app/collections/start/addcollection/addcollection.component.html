@@ -97,7 +97,7 @@
                         <p>
                             {{description | shorten: 100:'..'}}
                         </p>
-                        <a *ngIf="currentUpload?.progress === 100" routerLink="/collections/c/{{title | slugify}}" fragment="{{$key}}" mat-raised-button color="accent" class="w-100 padding-10">View Collection</a>
+                        <a *ngIf="currentUpload?.progress === 100" routerLink="/collections/{{title | slugify}}" fragment="{{$key}}" mat-raised-button color="accent" class="w-100 padding-10">View Collection</a>
                       </mat-card-content>
                     </mat-card>
             </div>

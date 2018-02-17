@@ -18,7 +18,7 @@ import { DashboardComponent } from '@collections/collection/dashboard/dashboard.
 
 const collectionsRoutes: Routes = [
     {
-      path: 'c',
+      path: '',
       component: CollectionsStartComponent,
       children: [
           { path: '', component: IndexComponent},

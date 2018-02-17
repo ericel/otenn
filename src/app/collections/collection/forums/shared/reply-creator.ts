@@ -39,7 +39,7 @@ import { Forum, ReplyForum } from '@collections/state/models/forum.model';
     <button mat-raised-button color='primary' class='float-right'
      type='submit'
      [disabled]="!forumForm.valid">
-     <app-spinner name="showeSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
+     <app-spinner name="replySpinner" [(show)]="replySpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
            Reply To Thread
     </button>
     </form>
@@ -73,7 +73,7 @@ export class ReplyCreator implements OnInit {
   forbiddenUsernames = ['fuck', 'bitch'];
   loading$: Observable<boolean>;
   createdForum$: Observable<boolean>;
-  showSpinner: any;
+  replySpinner: any;
   constructor(
     public _auth: AuthService,
     private _session: SessionService,
@@ -89,7 +89,7 @@ export class ReplyCreator implements OnInit {
   }
 
   onSubmit() {
-    this._spinner.show('showSpinner');
+    this._spinner.show('replySpinner');
     const newReply = new ReplyForum(
       this._session.generate(),
       this.forumForm.value.reply,

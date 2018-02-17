@@ -84,7 +84,7 @@ export class CollectionComponent implements OnInit, OnDestroy {
         this.collection = this.collection[0];
 
         const url = this._router.url;
-        if(this.collection && url === '/collections/c/' + this._slugify.transform(this.collection.title)+'#'+this.collection.id){
+        if(this.collection && url === '/collections/' + this._slugify.transform(this.collection.title)+'#'+this.collection.id){
           this._router.navigate([this.collection.homepage], {relativeTo: this._route, fragment: this.collection.id})
           this.main_container = true;
         }
@@ -150,45 +150,46 @@ export class CollectionComponent implements OnInit, OnDestroy {
   <ng-template #authenticated>
     <a mat-menu-item>Report</a>
     <ng-container *ngIf="_auth.user | async as user">
-     <a mat-menu-item *ngIf=" user.uid === collection.uid" routerLink="dashboard/{{collection.title | slugify}}"
+     <a mat-menu-item *ngIf=" user.uid === collection.uid || isAdmin" routerLink="dashboard/{{collection.title | slugify}}"
      [fragment]="collection.id">Manage Components</a>
-      <a mat-menu-item *ngIf=" user.uid === collection.uid" routerLink="/collections/editcollection/{{collection.title | slugify}}"
+      <a mat-menu-item *ngIf=" user.uid === collection.uid || isAdmin"
+      routerLink="/collections/editcollection/{{collection.title | slugify}}"
       [queryParams]="{ allow: 1}" [fragment]="collection.id">Edit Collection</a>
-      <a mat-menu-item *ngIf=" user.uid === collection.uid" (click)="onDelete(collection.id)">Delete Collection</a>
+      <a mat-menu-item *ngIf=" user.uid === collection.uid || isAdmin" (click)="onDelete(collection.id)">Delete Collection</a>
     </ng-container>
   </ng-template>
 </mat-menu>
   <div class="card-content afix" >
      <mat-list>
           <h1 class="h4 text-center"><a class="title"
-          routerLink="/collections/c/{{collection.title | slugify}}/pages" fragment="{{collection.id}}"
+          routerLink="/collections/{{collection.title | slugify}}/pages" fragment="{{collection.id}}"
             pageScroll href="#home">
           <i class="fa fa-home" aria-hidden="true"></i>
               {{collection.title | uppercase | shorten: 20:''}}
           </a>
         </h1>
             <mat-divider></mat-divider>
-              <a routerLink="/collections/c/{{collection.title | slugify}}/pages" mat-list-item
+              <a *ngIf="collection.components.pages" routerLink="/collections/{{collection.title | slugify}}/pages" mat-list-item
               routerLinkActive="active" class="text-center" fragment="{{collection.id}}" (click)="onRoute($event)" >
                  <mat-icon mat-list-icon>pages</mat-icon>
                    <h4 mat-line> Pages</h4>
                       <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-              <a routerLink="/collections/c/{{collection.title | slugify}}/forums" mat-list-item
+              <a *ngIf="collection.components.forums" routerLink="/collections/{{collection.title | slugify}}/forums" mat-list-item
               routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
                  <mat-icon mat-list-icon>forums</mat-icon>
                   <h4 mat-line> Forums</h4>
                     <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-              <a routerLink="/collections/c/{{collection.title | slugify}}/videos" mat-list-item
+              <a *ngIf="collection.components.videos" routerLink="/collections/{{collection.title | slugify}}/videos" mat-list-item
               routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
-                   <mat-icon mat-list-icon>photo_library</mat-icon>
+                   <mat-icon mat-list-icon>video_library</mat-icon>
                    <h4 mat-line> Videos</h4>
                     <p mat-line> {{collection.createdAt | date}} </p>
               </a>
-               <a routerLink="/collections/c/{{collection.title | slugify}}/photos" mat-list-item
+               <a *ngIf="collection.components.photos" routerLink="/collections/{{collection.title | slugify}}/photos" mat-list-item
                routerLinkActive="active" fragment="{{collection.id}}" (click)="onRoute($event)">
-                     <mat-icon mat-list-icon>video_library</mat-icon>
+                     <mat-icon mat-list-icon>photo_library</mat-icon>
                       <h4 mat-line> Photos</h4>
                   <p mat-line> {{collection.createdAt | date}} </p>
                 </a>
@@ -209,13 +210,19 @@ export class CollectionComponent implements OnInit, OnDestroy {
   styleUrls: ['./collection.component.css']
 })
 
-export class CollectionMenu  {
+export class CollectionMenu implements OnInit {
   @Input() collection: any;
   @Output() route = new EventEmitter<void>();
   @Output() delete = new EventEmitter;
+  isAdmin = false;
   constructor (
   public _auth: AuthService
   ) {}
+
+  ngOnInit () {
+    if(this.collection.admins.indexOf(this._auth.userId) !== -1)
+      { this.isAdmin = true;}
+  }
   onRoute(e) {
     this.route.emit(e);
   }

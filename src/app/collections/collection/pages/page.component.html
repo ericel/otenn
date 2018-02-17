@@ -24,11 +24,11 @@
                         </ng-template>
                     </mat-menu>
                 <mat-card-header>
-                    <mat-card-title class="h1" [innerHTML]="page.title"></mat-card-title><span class="text-muted"><em>{{page.status}}</em></span>
+                    <mat-card-title class="h1" [innerHTML]="page.title"></mat-card-title>
                     <mat-card-subtitle>
                       <img  mat-card-avatar [src]="page.avatar" [alt]="page.uid">
                         <a routerLink=""> {{page.username}}</a>
-                        posted on <a routerLink="/collections/c/{{page.collection | slugify }}" fragment="{{page.collectionKey}}"><strong>{{page.collection}}</strong></a> <span>{{page.createdAt}}</span>
+                        posted on <a routerLink="/collections/{{page.collection | slugify }}" fragment="{{page.collectionKey}}"><strong>{{page.collection}}</strong></a> <span>{{page.createdAt}}</span>
                     </mat-card-subtitle>
                 </mat-card-header>
                 <app-share [content]="page" class="mar-30"></app-share>
@@ -49,7 +49,7 @@
                   <div class="clearfix li_t" *ngFor="let pageLike of pages; let i=index">
                   <div *ngIf="i < 5 && pageLike.id !== page.id">
                       <mat-divider></mat-divider>
-                      <a routerLink="/collections/c/{{collection.title | slugify}}/pages/{{pageLike.title | slugify}}/{{pageLike.id}}" fragment="{{pageLike.collectionKey}}">
+                      <a routerLink="/collections/{{collection.title | slugify}}/pages/{{pageLike.title | slugify}}/{{pageLike.id}}" fragment="{{pageLike.collectionKey}}">
                       <img [src]="pageLike.avatar" [alt]="pageLike.username" class="img-thumbnail forum-user float-left" [ngStyle]="{'background-color': collection.color}">
                         <h1 class="title h6">{{pageLike.title | shorten: '100'}}</h1>
                         <div class="date text-muted float-right">{{pageLike.updatedAt | amTimeAgo}}</div>
