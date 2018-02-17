@@ -71,4 +71,15 @@ export class CollectionsService {
       })
     )
 }
+
+
+getItemVotes(replyId) {
+  return this._afs.doc(`o-t-forum-replies-upvotes/${replyId}`).valueChanges();
+}
+
+updateUserVote(replyId, userId, vote): void {
+  const data = {}
+  data[userId] = vote;
+  this._afs.doc(`o-t-forum-replies-upvotes/${replyId}`).set(data, {merge: true});
+}
 }

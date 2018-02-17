@@ -66,10 +66,8 @@
                    <small class="date">{{comment.createdAt  | amTimeAgo}}</small>
                  <div class="row">
                    <div class="col-sm-6">
-                      <div class="vote-top">
-                          <button mat-icon-button><mat-icon  class="upvote">thumb_up</mat-icon><span class="count">2226</span></button>
-                          <button mat-icon-button><mat-icon  class="downvote">thumb_down</mat-icon><span class="count">-2226</span></button>
-                      </div>
+                      <app-voting [itemId]='comment.id' [condition]="'page'" [itemAuthId]="comment.uid"></app-voting>
+
                    </div>
                    <ng-container *ngIf="_auth.user | async as user">
                    <div *ngIf="user.uid === comment.uid" class="col-sm-6 text-right">

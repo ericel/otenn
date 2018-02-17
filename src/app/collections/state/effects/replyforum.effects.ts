@@ -69,11 +69,17 @@ export class ReplyForumEffects {
   .ofType(actions.DELETE)
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
-  return of(this.afs.doc<ReplyForum>(`o-t-forum-replies/${id}`).delete())
-  .map(() =>  new actions.Success())
+    return of(this.afs.doc<ReplyForum>(`o-t-forum-replies/${id}`).delete())
+  .map(() => {
+    this.deleteUpvoteReply(id);
+    return new actions.Success();
+  })
   .catch(err => Observable.of(new actions.Fail(err.message)));
   });
 
+ private deleteUpvoteReply(replyId) {
+   return this.afs.doc(`o-t-forum-replies-upvotes/${replyId}`).delete();
+ }
   constructor(
       private actions$: Actions,
       private afs: AngularFirestore,

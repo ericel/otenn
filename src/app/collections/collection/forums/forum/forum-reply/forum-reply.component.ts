@@ -18,8 +18,8 @@ import { AuthService } from '../../../../../auth/state/auth.service';
     <div class="card-header">
             <img  [src]='replyforum.avatar' [alt]='replyforum.username'
             class="img-thumbnail forum-user" [ngStyle]="{'background-color': collection.color}">
-            <span >{{replyforum.username}} Said:</span>
-            <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>
+            <span >{{replyforum.username | shorten: '8': '..'}} Said:</span>
+           <!-- <button mat-button class="auth-1-right-1" >9484 <mat-icon>favorite_border</mat-icon></button>-->
 
             <button class="menu-button" mat-icon-button [matMenuTriggerFor]="forumMenu">
             <mat-icon>more_vert</mat-icon>
@@ -38,7 +38,19 @@ import { AuthService } from '../../../../../auth/state/auth.service';
             </mat-menu>
     </div>
     <div class="card-block">
-      <div [innerHTML]="replyforum.reply"></div>
+     <div class="row">
+      <div class="col-md-1">
+      <ng-container>
+        <vote-replies [replyAuthId]="replyforum.uid"
+        [replyId]="replyforum.id">
+        </vote-replies>
+      </ng-container>
+      </div>
+      <div class="col-md-11">
+         <div [innerHTML]="replyforum.reply"></div>
+      </div>
+     </div>
+
     </div>
     <div class="card-footer">
         <span class="date">Posted {{replyforum.createdAt}}</span>
@@ -63,6 +75,7 @@ export class ForumReplyComponent implements OnInit {
 @Output() replynew = new EventEmitter<any>();
 loading$: Observable<boolean>;
 replyforums;
+showSpinner: any;
   constructor(
     private store: Store<fromStore.State>,
     public _auth: AuthService

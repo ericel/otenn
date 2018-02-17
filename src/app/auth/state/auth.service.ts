@@ -214,6 +214,7 @@ resetPassword(email: string) {
 
 signOut() {
     this.afAuth.auth.signOut().then(() => {
+      this.userId = undefined;
       this.back();
     });
 }

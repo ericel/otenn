@@ -54,9 +54,8 @@ import { Forum } from '@collections/state/models/forum.model';
      </span>
   </div>
     <button mat-raised-button color='primary' class='float-right'
-     type='submit'
-     [disabled]="!forumForm.valid">
-     <app-spinner name="showSpinner" [(show)]="showSpinner"><i class="fa fa-spinner fa-spin"></i></app-spinner>
+     type='submit' [disabled]="!forumForm.valid"> <app-spinner name="showSpinner" [(show)]="showSpinner">
+     <i class="fa fa-spinner fa-spin"></i></app-spinner>
            Add Thread
     </button>
     </form>
@@ -90,6 +89,7 @@ export class ForumCreator implements OnInit {
   forbiddenUsernames = ['fuck', 'bitch'];
   loading$: Observable<boolean>;
   createdForum$: Observable<boolean>;
+  showSpinner: any;
   constructor(
     public _auth: AuthService,
     private _session: SessionService,

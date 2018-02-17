@@ -71,10 +71,19 @@ export class CommentEffects {
   .map((action: actions.Delete) => action.id)
   .mergeMap(id => {
   return of(this.afs.doc<Comment>(`o-t-pages-comments/${id}`).delete())
-  .map(() =>  new actions.Success())
+  .map(() =>  {
+    this.deleteDownvoteReply(id);
+    this.deleteUpvoteReply(id);
+    return new actions.Success()
+  })
   .catch(err => Observable.of(new actions.Fail(err.message)));
   });
-
+  private deleteDownvoteReply(replyId) {
+    return this.afs.doc(`o-t-pages-comments-downvotes/${replyId}`).delete();
+  }
+  private deleteUpvoteReply(replyId) {
+    return this.afs.doc(`o-t-pages-comments-upvotes/${replyId}`).delete();
+  }
   constructor(
       private actions$: Actions,
       private afs: AngularFirestore,

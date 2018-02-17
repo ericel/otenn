@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-header" [ngStyle]="{'background-color': collection.color}">
                  <img [src]='forum.avatar' [alt]='forum.username' class="img-thumbnail forum-user-1">
-                 <div class="auth-1 font-wight-bold"><a>{{forum.username}}</a> Forum Author</div>
+                 <div class="auth-1 font-wight-bold"><a>{{forum.username | shorten: '8': '..'}}</a> Forum Author</div>
                  <div><small class="text-muted">{{forum.updatedAt | amTimeAgo}}</small></div>
                  <button mat-button class="auth-1-right" color="warn" (click)="onReply()"><mat-icon>reply</mat-icon> Reply</button>
 
@@ -50,6 +50,7 @@
          (replynew)="onReplyButton($event)"
          ></app-forum-reply>
        <app-ads-right-2></app-ads-right-2>
+       <div class="mar-30"></div>
     </div>
     <div class="main-collect col-md-4">
       <app-ads-right></app-ads-right>
@@ -71,6 +72,7 @@
       </mat-card>
 
       <app-ads-content-match></app-ads-content-match>
+      <div class="mar-30"></div>
     </div>
   </div>
 

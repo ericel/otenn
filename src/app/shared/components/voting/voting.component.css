@@ -1,0 +1,16 @@
+.voting-buttons button {
+   margin:0 20px;
+}
+button.down-v {
+    margin-left: 5px !important;
+}
+button.up-v {
+    margin-right: 5px !important;
+}
+.count {
+    background: #fff;
+    padding: 10px;
+    
+    border: 1px solid #ccd;
+    border-radius: 4px;
+}

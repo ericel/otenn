@@ -6,6 +6,7 @@ import { UploadService } from "@shared/services/upload/upload.service";
 import { AuthService } from "app/auth/state/auth.service";
 import { LocationService } from "@shared/services/location.service";
 import { AuthGuard } from "app/auth/state/auth.guard";
+import { VotingService } from "@shared/services/voting/voting.service";
 
 
 export const SHARED_SERVICES = [
@@ -17,5 +18,6 @@ export const SHARED_SERVICES = [
     UploadService,
     AuthService,
     LocationService,
-    AuthGuard
+    AuthGuard,
+    VotingService
 ];

@@ -91,6 +91,7 @@ export class ForumEditor implements OnInit {
   forbiddenUsernames = ['fuck', 'bitch'];
   loading$: Observable<boolean>;
   createdForum$: Observable<boolean>;
+  showSpinner: any;
   constructor(
     public _auth: AuthService,
     private _session: SessionService,

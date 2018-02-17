@@ -5,6 +5,7 @@ import { ADS_COMPONENTS } from './ads-right/ads-right.component';
 import { ShareComponent } from './social-share/social-share.component';
 import { ColorCard } from './wysiwyg/colorcard';
 import { LOADERS_COM } from './loading.component';
+import { VotingComponent } from '@shared/components/voting/voting.component';
 
 export const SHARED_COMPONENTS = [
     SignupDialog,
@@ -18,7 +19,8 @@ export const SHARED_COMPONENTS = [
     ADS_COMPONENTS,
     ShareComponent,
     ColorCard,
-    LOADERS_COM
+    ...LOADERS_COM,
+    VotingComponent
 ]
 
 
